@@ -14,7 +14,7 @@ builder.Services.AddDbContext<DvdshopContext>(option => option.UseLazyLoadingPro
 
 
 var app = builder.Build();
-app.UseSession();
+//app.UseSession();
 app.UseStaticFiles();
 
 app.MapControllerRoute(name: "default", pattern: "{area:exists}/{controller}/{action}");
