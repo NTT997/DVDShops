@@ -1,5 +1,7 @@
 using DVDShops.Middlewares;
 using DVDShops.Models;
+using DVDShops.Services.Artists;
+using DVDShops.Services.MailService;
 using DVDShops.Services.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,8 +14,9 @@ var connectionString = builder.Configuration["ConnectionStrings:DefaultConnectio
 builder.Services.AddDbContext<DvdshopContext>(option => option.UseLazyLoadingProxies().UseSqlServer(connectionString));
 
 //add scoped service
-builder.Services.AddScoped<IUserService, UserService>();
-
+builder.Services.AddScoped<IUserService, UserService>()
+                .AddScoped<IMailService, MailService>()
+                .AddScoped<IArtistService, ArtistService>();
 
 
 builder.Services.AddSession();

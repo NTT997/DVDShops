@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewData["Title"]</title>
-
+    @RenderSection("tableheader", false)
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
@@ -101,7 +101,6 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-
                                 <li class="nav-item">
                                     <a href="#" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
@@ -111,6 +110,15 @@
                             </ul>
                         </li>
 
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="artist" asp-action="view" asp-area="admin">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Artist
+                                </p>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -119,7 +127,9 @@
         </aside>
 
         <!-- Content Wrapper. Contains page content -->
-        @RenderBody()
+        <div class="content-wrapper">
+            @RenderBody()
+        </div>
         <!-- /.content-wrapper -->
         <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">
@@ -155,7 +165,7 @@
     <!-- ChartJS -->
     <script src="~/admin/plugins/chart.js/Chart.min.js"></script>
 
-    <!-- AdminLTE for demo purposes -->
+    @RenderSection("tablefooter", false)
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="~/admin/dist/js/pages/dashboard2.js"></script>
 </body>

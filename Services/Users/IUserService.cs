@@ -13,6 +13,6 @@ namespace DVDShops.Services.Users
         bool Create(User user);
         bool Update(User user);
         bool Delete(int id);
-        //bool UserActivation(string token);
+        bool VerifyUser(int userId, string verifyLink);
     }
 }
