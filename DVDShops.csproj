@@ -25,10 +25,7 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Areas\Admin\Views\" />
     <Folder Include="Controllers\" />
-    <Folder Include="Views\" />
-    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

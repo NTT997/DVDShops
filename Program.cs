@@ -20,7 +20,9 @@ builder.Services.AddSession();
 
 var app = builder.Build();
 app.UseSession();
-app.UseMiddleware<LoginAuthMiddleware>();
+
+//only comment this line to test in admin
+//app.UseMiddleware<LoginAuthMiddleware>();
 
 app.UseStaticFiles();
 
