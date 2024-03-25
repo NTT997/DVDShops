@@ -1,4 +1,6 @@
+using DVDShops.Middlewares;
 using DVDShops.Models;
+using DVDShops.Services.Users;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,11 +12,16 @@ var connectionString = builder.Configuration["ConnectionStrings:DefaultConnectio
 builder.Services.AddDbContext<DvdshopContext>(option => option.UseLazyLoadingProxies().UseSqlServer(connectionString));
 
 //add scoped service
+builder.Services.AddScoped<IUserService, UserService>();
 
 
+
+builder.Services.AddSession();
 
 var app = builder.Build();
 app.UseSession();
+app.UseMiddleware<LoginAuthMiddleware>();
+
 app.UseStaticFiles();
 
 app.MapControllerRoute(name: "default", pattern: "{area:exists}/{controller}/{action}");

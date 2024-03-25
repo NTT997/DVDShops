@@ -77,7 +77,7 @@ namespace DVDShops.Services.Users
 
         public User GetByName(string userName)
         {
-            return dbContext.Users.Find(userName);
+            return dbContext.Users.SingleOrDefault(user => user.UsersName == userName);
         }
 
     }
