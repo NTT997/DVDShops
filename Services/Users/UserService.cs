@@ -80,5 +80,16 @@ namespace DVDShops.Services.Users
             return dbContext.Users.SingleOrDefault(user => user.UsersName == userName);
         }
 
+        public bool VerifyUser(int userId, string link)
+        {
+            var account = GetById(userId);
+            var verifyLink = $"verifyaccount-{account.UsersName}";
+
+            if (verifyLink == link)
+            {
+                account.UsersActivate = true;
+            }
+            return Update(account);
+        }
     }
 }

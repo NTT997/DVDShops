@@ -4,12 +4,13 @@ namespace DVDShops.Areas.Admin.Controllers
 {
     [Area("admin")]
     [Route("admin")]
-    public class AdminController : Controller
+    public class DashboardController : Controller
     {
         [Route("")]
-        public IActionResult Index()
+        [Route("dashboard")]
+        public IActionResult Dashboard()
         {
-            return View("AdminIndex");
+            return View("Dashboard");
         }
 
         [Route("logout")]
