@@ -69,7 +69,7 @@ namespace DVDShops.Services.Movies
 
         public List<Movie> GetByProducer(int producerId)
         {
-            return dbContext.Movies.Where(movie => movie.ProdId == producerId).ToList();
+            return dbContext.Movies.Where(movie => movie.ProducerId == producerId).ToList();
         }
     }
 }

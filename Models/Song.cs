@@ -9,13 +9,13 @@ public partial class Song
 
     public string SongName { get; set; } = null!;
 
-    public float Price { get; set; }
+    public float SongPrice { get; set; }
 
     public string? Intro { get; set; }
 
     public int SoldUnit { get; set; }
 
-    public int ProdId { get; set; }
+    public int ProducerId { get; set; }
 
     public int GenreId { get; set; }
 
@@ -23,13 +23,17 @@ public partial class Song
 
     public int? AlbumId { get; set; }
 
+    public int CategoryId { get; set; }
+
     public virtual Album? Album { get; set; }
 
     public virtual Artist Artist { get; set; } = null!;
 
+    public virtual Category Category { get; set; } = null!;
+
     public virtual Genre Genre { get; set; } = null!;
 
-    public virtual Producer Prod { get; set; } = null!;
+    public virtual Producer Producer { get; set; } = null!;
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

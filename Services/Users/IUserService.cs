@@ -6,8 +6,8 @@ namespace DVDShops.Services.Users
     {
         User GetById(int id);
         List<User> GetAll();
-        List<User> GetUsersByName(string userName);
-        User GetByName(string userName);
+        List<User> GetUsersByName(string userProfileName);
+        User GetByEmail(string userEmail);
         List<User> GetUsersByEmail(string userEmail);
         List<User> GetUsersByActivated(bool activated);
         bool Create(User user);

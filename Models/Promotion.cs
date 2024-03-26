@@ -5,15 +5,19 @@ namespace DVDShops.Models;
 
 public partial class Promotion
 {
-    public int PromoId { get; set; }
+    public int PromotionId { get; set; }
 
-    public string PromoName { get; set; } = null!;
+    public string PromotionName { get; set; } = null!;
 
-    public int PromoPercent { get; set; }
+    public string? PromotionBanner { get; set; }
 
-    public DateOnly PromoStartDate { get; set; }
+    public int PromotionPercent { get; set; }
 
-    public DateOnly PromoExpireDate { get; set; }
+    public DateOnly PromotionStartDate { get; set; }
+
+    public DateOnly PromotionExpireDate { get; set; }
+
+    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

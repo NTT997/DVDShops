@@ -24,7 +24,7 @@ namespace DVDShops.Services.MailService
 
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress("DVDSshop", username));
-                message.To.Add(new MailboxAddress(to.UsersName, to.UsersEmail));
+                message.To.Add(new MailboxAddress(to.UsersProfileName, to.UsersEmail));
                 message.Subject = subject;
 
                 var bodyBuilder = new BodyBuilder();

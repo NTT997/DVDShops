@@ -13,7 +13,7 @@ public partial class Supplier
 
     public int SupplierPhone { get; set; }
 
-    public int SupplierAddress { get; set; }
+    public string SupplierAddress { get; set; } = null!;
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

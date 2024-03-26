@@ -7,25 +7,25 @@ public partial class Album
 {
     public int AlbumId { get; set; }
 
-    public int ProdId { get; set; }
+    public int ProducerId { get; set; }
 
     public int ArtistId { get; set; }
 
-    public string? AlbumIntro { get; set; }
+    public string? AlbumIntroduction { get; set; }
 
-    public float? Price { get; set; }
+    public float? AlbumPrice { get; set; }
 
     public DateOnly? IssueDate { get; set; }
 
     public int SoldUnit { get; set; }
 
-    public int FbId { get; set; }
+    public int FeedbackId { get; set; }
 
     public virtual Artist Artist { get; set; } = null!;
 
-    public virtual Feedback Fb { get; set; } = null!;
+    public virtual Feedback Feedback { get; set; } = null!;
 
-    public virtual Producer Prod { get; set; } = null!;
+    public virtual Producer Producer { get; set; } = null!;
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 

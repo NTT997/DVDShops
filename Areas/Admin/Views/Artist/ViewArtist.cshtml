@@ -43,7 +43,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @for (int i = 0; i < ViewBag.artistsList.Count + 50; i++)
+                                @foreach (var artist in ViewBag.artistsList)
                                 {
                                     <tr>
                                         <td>Trident</td>
@@ -54,8 +54,8 @@
                                         <td>Win 95+</td>
                                         <td> 4</td>
                                         <td class="d-flex justify-content-end">
-                                            <button type="button" class="btn btn-info">Edit</button> &nbsp;
-                                            <button type="button" class="btn btn-warning">Delete</button>
+                                            <button type="button" class="btn btn-info" asp-area="admin" asp-controller="artist" asp-action="edit" asp-route-id="@artist.ArtistId">Edit</button> &nbsp;
+                                            <button type="button" class="btn btn-warning" asp-area="admin" asp-controller="artist" asp-action="delete" asp-route-id="@artist.ArtistId">Delete</button>
                                         </td>
                                     </tr>
                                 }
