@@ -9,7 +9,7 @@ public partial class News
 
     public string NewsTitle { get; set; } = null!;
 
-    public int NewsImage { get; set; }
+    public string NewsImage { get; set; } = null!;
 
     public string NewsContent { get; set; } = null!;
 

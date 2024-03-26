@@ -57,9 +57,9 @@ namespace DVDShops.Services.Users
             return dbContext.Users.Where(user => user.UsersEmail.ToLower().Contains(userEmail.ToLower())).ToList();
         }
 
-        public List<User> GetUsersByName(string userName)
+        public List<User> GetUsersByName(string userProfileName)
         {
-            return dbContext.Users.Where(user => user.UsersName.ToLower().Contains(userName.ToLower())).ToList();
+            return dbContext.Users.Where(user => user.UsersProfileName.ToLower().Contains(userProfileName.ToLower())).ToList();
         }
 
         public bool Update(User user)
@@ -75,15 +75,15 @@ namespace DVDShops.Services.Users
             }
         }
 
-        public User GetByName(string userName)
+        public User GetByEmail(string userEmail)
         {
-            return dbContext.Users.SingleOrDefault(user => user.UsersName == userName);
+            return dbContext.Users.SingleOrDefault(user => user.UsersEmail == userEmail);
         }
 
         public bool VerifyUser(int userId, string link)
         {
             var account = GetById(userId);
-            var verifyLink = $"verifyaccount-{account.UsersName}";
+            var verifyLink = $"verifyaccount-{account.UsersEmail}";
 
             if (verifyLink == link)
             {

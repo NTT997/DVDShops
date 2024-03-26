@@ -47,7 +47,7 @@ namespace DVDShops.Services.Producers
 
         public List<Producer> GetByName(string producerName)
         {
-            return dbContext.Producers.Where(producers => producers.ProdName.ToLower().Contains(producerName.ToLower())).ToList();
+            return dbContext.Producers.Where(producers => producers.ProducerName.ToLower().Contains(producerName.ToLower())).ToList();
         }
 
         public bool Update(Producer producer)

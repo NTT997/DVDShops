@@ -21,5 +21,42 @@ namespace DVDShops.Areas.Admin.Controllers
             ViewBag.artistsList = artistService.GetAll();
             return View("ViewArtist");
         }
+
+        [HttpGet]
+        [Route("create")]
+        public IActionResult Create()
+        {
+            return View("CreateArtist");
+        }
+
+        [HttpPost]
+        [Route("create")]
+        public IActionResult Create(Artist artist)
+        {
+            return RedirectToAction("view", "artist", new { area = "admin" });
+        }
+
+        [Route("edit/{id}")]
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+
+            return View("EditArtist");
+        }
+
+        [Route("edit/{id}")]
+        [HttpPost]
+        public IActionResult Edit(Artist artist)
+        {
+
+            return RedirectToAction("view", "artist", new { area = "admin" });
+        }
+
+        [Route("delete/{id}")]
+        public IActionResult Delete(int id)
+        {
+
+            return RedirectToAction("view", "artist", new { area = "admin" });
+        }
     }
 }

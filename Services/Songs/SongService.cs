@@ -69,7 +69,7 @@ namespace DVDShops.Services.Songs
 
         public List<Song> GetByProducer(int producerId)
         {
-            return dbContext.Songs.Where(a => a.ProdId == producerId).ToList();
+            return dbContext.Songs.Where(a => a.ProducerId == producerId).ToList();
         }
 
         public List<Song> GetByArtist(int artistId)

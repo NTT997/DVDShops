@@ -23,9 +23,9 @@ namespace DVDShops.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string username, string password)
+        public IActionResult Login(string email, string password)
         {
-            var account = userService.GetByName(username);
+            var account = userService.GetByEmail(email);
             if (account != null)
             {
                 if (string.Equals(password, account.UsersPassword.Trim()))
