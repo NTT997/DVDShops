@@ -67,5 +67,10 @@ namespace DVDShops.Services.Artists
                 return false;
             }
         }
+
+        public Artist GetByName(string artistName)
+        {
+            return dbContext.Artists.SingleOrDefault(artist => artist.ArtistName.ToLower() == artistName.ToLower());
+        }
     }
 }
