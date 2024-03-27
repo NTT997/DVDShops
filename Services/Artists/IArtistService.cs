@@ -8,6 +8,7 @@ namespace DVDShops.Services.Artists
         List<Artist> GetArtistsByName(string artistName);
         List<Artist> GetByGenres(int genreId);
         Artist GetById(int id);
+        Artist GetByName(string artistName);
         bool Create(Artist artist);
         bool Update(Artist artist);
         bool Delete(int artistId);

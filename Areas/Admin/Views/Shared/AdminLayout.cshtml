@@ -30,7 +30,7 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link">Home</a>
+                    <a asp-area="admin" asp-controller="dashboard" asp-action="index" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="#" class="nav-link">Contact</a>
@@ -70,7 +70,7 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="#" class="brand-link">
+            <a asp-area="admin" asp-controller="dashboard" asp-action="index" class="brand-link">
                 <img src="~/admin/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">AdminLTE 3</span>
             </a>
@@ -112,10 +112,10 @@
 
 
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="artist" asp-action="view" asp-area="admin">
+                            <a class="nav-link" asp-controller="music" asp-action="view" asp-area="admin">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
-                                    Artist
+                                    Music
                                 </p>
                             </a>
                         </li>
