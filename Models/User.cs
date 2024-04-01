@@ -21,7 +21,7 @@ public partial class User
 
     public string? UsersAddress { get; set; }
 
-    public int? UsersPhone { get; set; }
+    public long? UsersPhone { get; set; }
 
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 

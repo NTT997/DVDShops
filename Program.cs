@@ -4,7 +4,9 @@ using DVDShops.Services.Albums;
 using DVDShops.Services.Artists;
 using DVDShops.Services.Genres;
 using DVDShops.Services.MailService;
+using DVDShops.Services.Producers;
 using DVDShops.Services.Songs;
+using DVDShops.Services.Suppliers;
 using DVDShops.Services.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 //configure connection to database
-var connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"] ;
+var connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
 builder.Services.AddDbContext<DvdshopContext>(option => option.UseLazyLoadingProxies().UseSqlServer(connectionString));
 
 //add scoped service
@@ -22,7 +24,9 @@ builder.Services.AddScoped<IUserService, UserService>()
                 .AddScoped<IArtistService, ArtistService>()
                 .AddScoped<ISongService, SongSerivce>()
                 .AddScoped<IAlbumService, AlbumService>()
-                .AddScoped<IGenreService, GenreService>();
+                .AddScoped<IGenreService, GenreService>()
+                .AddScoped<IProducerService, ProducerService>()
+                .AddScoped<ISupplierService, SupplierService>();
 
 
 builder.Services.AddSession();

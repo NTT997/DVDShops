@@ -1,0 +1,338 @@
+﻿@model DVDShops.Models.Artist;
+@inject DVDShops.Services.Artists.IArtistService artistService
+@inject DVDShops.Services.Genres.IGenreService genreService
+
+@{
+    ViewData["Title"] = "Artist Manage";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+}
+
+<!-- Header -->
+@section tableheader {
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+}
+
+<!-- Content -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Artist</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a asp-area="admin" asp-controller="dashboard" asp-action="index">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active">Artist</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- /.table -->
+            <div class="col-lg-8">
+                <div class="card">
+                    <!-- /.card-header -->
+                    <div class="card-header">
+                        <h3 class="card-title">Artist List</h3>
+                    </div>
+
+                    <div class="card-body table-responsive">
+                        <table id="artistsList" class="table table-bordered table-hover">
+                            <thead>
+                                <tr class="text-center">
+                                    <th>Artist Name</th>
+                                    <th>Artist Bio</th>
+                                    <th>Genre</th>
+                                    <th style="width:1rem">Option</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var artist in artistService.GetAllDynamic())
+                                {
+                                    <tr>
+                                        <td>@artist.GetType().GetProperty("ArtistName").GetValue(artist)</td>
+                                        <td>@artist.GetType().GetProperty("Bio").GetValue(artist)</td>
+                                        <td>@(string.Join(", ", artist.GetType().GetProperty("Genres").GetValue(artist)))</td>
+                                        <td class="d-flex justify-content-end">
+                                            <button type="button"
+                                                    class="btn btn-info"
+                                                    id="edit"
+                                                    onclick="editArt('@artist.GetType().GetProperty("ArtistName").GetValue(artist)')"
+                                                    name="@artist.GetType().GetProperty("ArtistName").GetValue(artist)"
+                                                    data-toggle="modal"
+                                                    data-target="#artistEdit">
+                                                Edit
+                                            </button> &nbsp;
+                                            <a class="btn btn-warning"
+                                               asp-area="admin" asp-controller="artist"
+                                               asp-action="DeleteArtist" asp-route-name="@artist.GetType().GetProperty("ArtistName").GetValue(artist)"
+                                               onclick="return confirm('Are You Sure To Delete This Record')">
+                                                Delete
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Artist Name</th>
+                                    <th>Artist Bio</th>
+                                    <th>Genre</th>
+                                    <th>Option</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+
+            <!-- /.form -->
+            <div class="col-lg-4 h-100">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">New Artist</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <form method="post" asp-controller="artist" asp-action="createArtist" asp-area="admin">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <!-- text input -->
+                                    <div class="form-group">
+                                        <label>Artist name</label>
+                                        <input type="text" class="form-control" placeholder="Enter ..." asp-for="ArtistName" required>
+                                        <span style="color: red" asp-validation-for="ArtistName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>Biography</label>
+                                        <textarea class="form-control" rows="3" placeholder="Enter ..." asp-for="Bio"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- checkbox -->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>Music Genres</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                @foreach (var genre in genreService.GetAll())
+                                {
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <div class="form-check col-sm-3">
+
+                                                <input class="form-check-input" type="checkbox" name="genres" value="@genre.GenreId">
+                                                <label class="form-check-label">@genre.GenreName</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </form>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
+
+<!--  popup modal for artist -->
+<div class="modal fade" id="artistEdit" data-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" asp-area="admin" asp-controller="artist" asp-action="editArtist">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Artist Profile</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="dismissModalData()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <!-- text input -->
+                                <div class="form-group" id="artName">
+                                    <label>Artist name</label>
+                                    <input type="text" class="form-control" placeholder="Enter ..." asp-for="ArtistName" id="artistName" required>
+                                    <span style="color: red" asp-validation-for="ArtistName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Biography</label>
+                                    <textarea class="form-control" rows="3" placeholder="Enter ..." asp-for="Bio" id="bio"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- checkbox -->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Music Genres</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            @foreach (var genre in genreService.GetAll())
+                            {
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <div class="form-check col-sm-3">
+                                            <input class="form-check-input" type="checkbox" id="@genre.GenreId" name="editGenres" value="@genre.GenreId">
+                                            <label class="form-check-label" for="@genre.GenreId">@genre.GenreName</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="dismissModalData()">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<!-- Footer -->
+@section tablefooter {
+    <!-- DataTables  & Plugins -->
+    <script src="~/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/jszip/jszip.min.js"></script>
+    <script src="~/admin/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/admin/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <!-- Page specific script -->
+    <script>
+        function dismissModalData() {
+            $('input[name="editGenres"]').prop('checked', false);
+        }
+
+        function editArt(artisName) {
+            $.ajax({
+                type: 'GET',
+                url: '/admin/artist/FindArtistByName',
+                data: { name: artisName },
+                cache: false,
+                success: function (res) {
+                    var resolvedResult = resolveReferences(res);
+
+                    for (var i = 0; i < resolvedResult.$values.length; i++) {
+                        var currentValue = resolvedResult.$values[i];
+
+                        if (currentValue.hasOwnProperty('ArtistName')) {
+                            $('#artistName').val(currentValue.ArtistName);
+                            $('#bio').val(currentValue.Bio);
+                            $('#' + currentValue.GenreId).prop('checked', true);
+                        }
+                    }
+
+                    var inputHiddenName = '<input type="hidden" name="hiddenName" value="' + currentValue.ArtistName + '">';
+                    $('#artName').append(inputHiddenName);
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
+        function resolveReferences(json) {
+            var byId = {};
+
+            function recurse(obj) {
+                if (obj && typeof obj === 'object') {
+                    if ('$id' in obj) {
+                        byId[obj.$id] = obj;
+                        delete obj.$id;
+                    }
+                    for (var key in obj) {
+                        if (obj.hasOwnProperty(key)) {
+                            obj[key] = recurse(obj[key]);
+                        }
+                    }
+                }
+                return obj;
+            }
+
+            function resolveRefs(obj) {
+                if (obj && typeof obj === 'object') {
+                    if ('$ref' in obj) {
+                        return byId[obj.$ref];
+                    }
+                    for (var key in obj) {
+                        if (obj.hasOwnProperty(key)) {
+                            obj[key] = resolveRefs(obj[key]);
+                        }
+                    }
+                }
+                return obj;
+            }
+
+            var resolved = recurse(json);
+            return resolveRefs(resolved);
+        }
+
+        $(function () {
+            $('#artistsList').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+
+
+    </script>
+}
