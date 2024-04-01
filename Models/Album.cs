@@ -19,11 +19,11 @@ public partial class Album
 
     public int SoldUnit { get; set; }
 
-    public int FeedbackId { get; set; }
+    public int? FeedbackId { get; set; }
 
     public virtual Artist Artist { get; set; } = null!;
 
-    public virtual Feedback Feedback { get; set; } = null!;
+    public virtual Feedback? Feedback { get; set; }
 
     public virtual Producer Producer { get; set; } = null!;
 

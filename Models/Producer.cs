@@ -11,6 +11,8 @@ public partial class Producer
 
     public string ProducerIntroduction { get; set; } = null!;
 
+    public bool DeleteStatus { get; set; }
+
     public virtual ICollection<Album> Albums { get; set; } = new List<Album>();
 
     public virtual ICollection<Game> Games { get; set; } = new List<Game>();

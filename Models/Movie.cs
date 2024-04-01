@@ -15,7 +15,7 @@ public partial class Movie
 
     public int ProducerId { get; set; }
 
-    public int ProductId { get; set; }
+    public int? ProductId { get; set; }
 
     public int GenreId { get; set; }
 
@@ -27,5 +27,5 @@ public partial class Movie
 
     public virtual Producer Producer { get; set; } = null!;
 
-    public virtual Product Product { get; set; } = null!;
+    public virtual Product? Product { get; set; }
 }

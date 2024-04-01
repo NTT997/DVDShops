@@ -5,7 +5,8 @@ namespace DVDShops.Services.Producers
     public interface IProducerService
     {
         List<Producer> GetAll();
-        List<Producer> GetByName(string producerName);
+        Producer GetByName(string producerName);
+        List<Producer> SearchByName(string producerName);
         Producer GetById(int producerID);
         bool Create(Producer producer);
         bool Update(Producer producer);

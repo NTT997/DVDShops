@@ -17,7 +17,7 @@ public partial class Game
 
     public int ProducerId { get; set; }
 
-    public int ProductId { get; set; }
+    public int? ProductId { get; set; }
 
     public int GenreId { get; set; }
 
@@ -29,7 +29,7 @@ public partial class Game
 
     public virtual Producer Producer { get; set; } = null!;
 
-    public virtual Product Product { get; set; } = null!;
+    public virtual Product? Product { get; set; }
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="~/admin/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="~/admin/dist/css/adminlte.min.css">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="~/admin/plugins/toastr/toastr.min.css">
 </head>
 <body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
     <div class="wrapper">
@@ -110,12 +112,29 @@
                             </ul>
                         </li>
 
-
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="music" asp-action="view" asp-area="admin">
+                            <a class="nav-link" asp-controller="artist" asp-action="view" asp-area="admin">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
-                                    Music
+                                    Artist
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="album" asp-action="view" asp-area="admin">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Albums
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="provider" asp-action="view" asp-area="admin">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Providers
                                 </p>
                             </a>
                         </li>
@@ -166,7 +185,29 @@
     <script src="~/admin/plugins/chart.js/Chart.min.js"></script>
 
     @RenderSection("tablefooter", false)
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="~/admin/dist/js/pages/dashboard2.js"></script>
+    <script>
+        $(document).ready(function () {
+            var status = '@TempData["status"]';
+            var title = '@TempData["title"]';
+            var message = '@TempData["message"]';
+
+            if (status && title && message) {
+                var type = 'bg-warning';
+
+                if (status == 'True') {
+                    type = 'bg-success';
+                }
+
+                $(document).Toasts('create', {
+                    class: type,
+                    title: title,
+                    autohide: true,
+                    delay: 3000,
+                    subtitle: '',
+                    body: message
+                })
+            }
+        });
+    </script>
 </body>
 </html>

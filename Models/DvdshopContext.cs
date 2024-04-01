@@ -55,7 +55,7 @@ public partial class DvdshopContext : DbContext
     {
         modelBuilder.Entity<Album>(entity =>
         {
-            entity.HasKey(e => e.AlbumId).HasName("PK__Albums__B0E1DDB2D5AE7DF3");
+            entity.HasKey(e => e.AlbumId).HasName("PK__Albums__B0E1DDB27564D009");
 
             entity.Property(e => e.AlbumId).HasColumnName("album_id");
             entity.Property(e => e.AlbumIntroduction)
@@ -76,7 +76,6 @@ public partial class DvdshopContext : DbContext
 
             entity.HasOne(d => d.Feedback).WithMany(p => p.Albums)
                 .HasForeignKey(d => d.FeedbackId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_album_feedback");
 
             entity.HasOne(d => d.Producer).WithMany(p => p.Albums)
@@ -87,7 +86,7 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Artist>(entity =>
         {
-            entity.HasKey(e => e.ArtistId).HasName("PK__Artists__6CD040016B988E73");
+            entity.HasKey(e => e.ArtistId).HasName("PK__Artists__6CD04001383AAEF6");
 
             entity.Property(e => e.ArtistId).HasColumnName("artist_id");
             entity.Property(e => e.ArtistName)
@@ -108,7 +107,7 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Cart>(entity =>
         {
-            entity.HasKey(e => e.CartId).HasName("PK__Carts__2EF52A27F40EAE3C");
+            entity.HasKey(e => e.CartId).HasName("PK__Carts__2EF52A2785AAC732");
 
             entity.Property(e => e.CartId).HasColumnName("cart_id");
             entity.Property(e => e.Amount).HasColumnName("amount");
@@ -125,7 +124,7 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__D54EE9B49BC02F9F");
+            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__D54EE9B4159893FF");
 
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
             entity.Property(e => e.CategoryName)
@@ -136,7 +135,7 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Feedback>(entity =>
         {
-            entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__7A6B2B8C34E91F9F");
+            entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__7A6B2B8CDD353E5D");
 
             entity.Property(e => e.FeedbackId).HasColumnName("feedback_id");
             entity.Property(e => e.FeedbackContent)
@@ -164,7 +163,7 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Game>(entity =>
         {
-            entity.HasKey(e => e.GameId).HasName("PK__Games__FFE11FCF1E2AADE0");
+            entity.HasKey(e => e.GameId).HasName("PK__Games__FFE11FCF9DCA9A25");
 
             entity.Property(e => e.GameId).HasColumnName("game_id");
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
@@ -203,13 +202,12 @@ public partial class DvdshopContext : DbContext
 
             entity.HasOne(d => d.Product).WithMany(p => p.Games)
                 .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_game_product");
         });
 
         modelBuilder.Entity<Genre>(entity =>
         {
-            entity.HasKey(e => e.GenreId).HasName("PK__Genres__18428D42ACB3456F");
+            entity.HasKey(e => e.GenreId).HasName("PK__Genres__18428D42F08778B5");
 
             entity.Property(e => e.GenreId).HasColumnName("genre_id");
             entity.Property(e => e.GenreDescription)
@@ -224,7 +222,7 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Invoice>(entity =>
         {
-            entity.HasKey(e => e.InvoiceId).HasName("PK__Invoices__F58DFD4971B7433F");
+            entity.HasKey(e => e.InvoiceId).HasName("PK__Invoices__F58DFD4952771708");
 
             entity.Property(e => e.InvoiceId).HasColumnName("invoice_id");
             entity.Property(e => e.OrderId).HasColumnName("order_id");
@@ -242,7 +240,7 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Movie>(entity =>
         {
-            entity.HasKey(e => e.MovieId).HasName("PK__Movies__83CDF7491522F47D");
+            entity.HasKey(e => e.MovieId).HasName("PK__Movies__83CDF749E4421A58");
 
             entity.Property(e => e.MovieId).HasColumnName("movie_id");
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
@@ -280,13 +278,12 @@ public partial class DvdshopContext : DbContext
 
             entity.HasOne(d => d.Product).WithMany(p => p.Movies)
                 .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_movie_product");
         });
 
         modelBuilder.Entity<News>(entity =>
         {
-            entity.HasKey(e => e.NewsId).HasName("PK__News__4C27CCD815E416D4");
+            entity.HasKey(e => e.NewsId).HasName("PK__News__4C27CCD8FE40C1D1");
 
             entity.Property(e => e.NewsId).HasColumnName("news_id");
             entity.Property(e => e.NewsContent)
@@ -310,7 +307,7 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Orders__46596229CBD64AC3");
+            entity.HasKey(e => e.OrderId).HasName("PK__Orders__465962298660AB7B");
 
             entity.Property(e => e.OrderId).HasColumnName("order_id");
             entity.Property(e => e.CartId).HasColumnName("cart_id");
@@ -337,9 +334,10 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Producer>(entity =>
         {
-            entity.HasKey(e => e.ProducerId).HasName("PK__Producer__EA7F30C84B102849");
+            entity.HasKey(e => e.ProducerId).HasName("PK__Producer__EA7F30C8A14D4C90");
 
             entity.Property(e => e.ProducerId).HasColumnName("producer_id");
+            entity.Property(e => e.DeleteStatus).HasColumnName("delete_status");
             entity.Property(e => e.ProducerIntroduction)
                 .HasMaxLength(500)
                 .IsUnicode(false)
@@ -352,7 +350,7 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.ProductId).HasName("PK__Products__47027DF51E9EBD03");
+            entity.HasKey(e => e.ProductId).HasName("PK__Products__47027DF5ABA8627C");
 
             entity.Property(e => e.ProductId).HasColumnName("product_id");
             entity.Property(e => e.AlbumId).HasColumnName("album_id");
@@ -408,7 +406,7 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Promotion>(entity =>
         {
-            entity.HasKey(e => e.PromotionId).HasName("PK__Promotio__2CB9556BAE3E99CC");
+            entity.HasKey(e => e.PromotionId).HasName("PK__Promotio__2CB9556B0EB06CFF");
 
             entity.Property(e => e.PromotionId).HasColumnName("promotion_id");
             entity.Property(e => e.PromotionBanner)
@@ -426,7 +424,7 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Report>(entity =>
         {
-            entity.HasKey(e => e.ReportId).HasName("PK__Reports__779B7C58D36D1C00");
+            entity.HasKey(e => e.ReportId).HasName("PK__Reports__779B7C58095FC5DE");
 
             entity.Property(e => e.ReportId).HasColumnName("report_id");
             entity.Property(e => e.ReportContent)
@@ -442,7 +440,7 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Song>(entity =>
         {
-            entity.HasKey(e => e.SongId).HasName("PK__Songs__A535AE1CD45D1ED7");
+            entity.HasKey(e => e.SongId).HasName("PK__Songs__A535AE1CE057CF49");
 
             entity.Property(e => e.SongId).HasColumnName("song_id");
             entity.Property(e => e.AlbumId).HasColumnName("album_id");
@@ -488,9 +486,10 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Supplier>(entity =>
         {
-            entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__6EE594E80F27AD54");
+            entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__6EE594E8D3EB8D3A");
 
             entity.Property(e => e.SupplierId).HasColumnName("supplier_id");
+            entity.Property(e => e.DeleteStatus).HasColumnName("delete_status");
             entity.Property(e => e.SupplierAddress)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -508,9 +507,9 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UsersId).HasName("PK__Users__EAA7D14BE5C1EDF8");
+            entity.HasKey(e => e.UsersId).HasName("PK__Users__EAA7D14B0AF759FE");
 
-            entity.HasIndex(e => e.UsersEmail, "UQ__Users__D156B4FEA2DD49B1").IsUnique();
+            entity.HasIndex(e => e.UsersEmail, "UQ__Users__D156B4FEB9904763").IsUnique();
 
             entity.Property(e => e.UsersId).HasColumnName("users_id");
             entity.Property(e => e.IsAdmin).HasColumnName("is_admin");
