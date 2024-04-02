@@ -1,4 +1,5 @@
 ﻿using DVDShops.Models;
+using System.Diagnostics;
 
 namespace DVDShops.Services.Artists
 {
@@ -27,11 +28,11 @@ namespace DVDShops.Services.Artists
             return dbContext.Artists.Find(artistId);
         }
 
-        public bool Delete(int artistId)
+        public bool Delete(Artist artist)
         {
             try
             {
-                dbContext.Artists.Add(GetById(artistId));
+                dbContext.Artists.Remove(artist);
                 return dbContext.SaveChanges() > 0;
             }
             catch (Exception)
@@ -40,14 +41,10 @@ namespace DVDShops.Services.Artists
             }
         }
 
-        public List<Artist> GetAll()
-        {
-            return dbContext.Artists.ToList();
-        }
-
         public List<Artist> GetArtistsByName(string artistName)
         {
-            return dbContext.Artists.Where(a => a.ArtistName.ToLower().Contains(artistName.ToLower())).ToList();
+            artistName = artistName.ToLower();
+            return dbContext.Artists.Where(a => a.ArtistName.ToLower() == artistName).ToList();
         }
 
         public List<Artist> GetByGenres(int genreId)
@@ -62,10 +59,50 @@ namespace DVDShops.Services.Artists
                 dbContext.Entry(artist).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 return dbContext.SaveChanges() > 0;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Debug.WriteLine(e.Message);
                 return false;
             }
+        }
+
+        public Artist GetByName(string artistName)
+        {
+            artistName = artistName.ToLower();
+            return dbContext.Artists.FirstOrDefault(a => a.ArtistName.ToLower() == artistName);
+        }
+
+        public List<Artist> SearchArtistsByName(string artistName)
+        {
+            return dbContext.Artists.Where(a => a.ArtistName.ToLower().Contains(artistName.ToLower())).ToList();
+        }
+
+        public dynamic GetAllDynamic()
+        {
+            var result = dbContext.Artists.Join(dbContext.Genres,
+                                                a => a.GenreId,
+                                                g => g.GenreId,
+                                                (a, g) => new
+                                                {
+                                                    ArtistId = a.ArtistId,
+                                                    ArtistName = a.ArtistName,
+                                                    Bio = a.Bio,
+                                                    Genres = g.GenreName
+                                                })
+                                                .GroupBy(ag => ag.ArtistName)
+                                                .Select(group => new
+                                                {
+                                                    ArtistName = group.Key,
+                                                    Bio = group.Select(ag => ag.Bio).FirstOrDefault(),
+                                                    Genres = group.Select(ag => ag.Genres).ToList(),
+                                                })
+                                                .ToList();
+            return result;
+        }
+
+        public List<Artist> GetAllArtists()
+        {
+            return dbContext.Artists.ToList();
         }
     }
 }

@@ -5,11 +5,13 @@ namespace DVDShops.Models;
 
 public partial class Producer
 {
-    public int ProdId { get; set; }
+    public int ProducerId { get; set; }
 
-    public string ProdName { get; set; } = null!;
+    public string ProducerName { get; set; } = null!;
 
-    public string ProdIntro { get; set; } = null!;
+    public string ProducerIntroduction { get; set; } = null!;
+
+    public bool DeleteStatus { get; set; }
 
     public virtual ICollection<Album> Albums { get; set; } = new List<Album>();
 

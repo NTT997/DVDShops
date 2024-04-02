@@ -1,0 +1,378 @@
+﻿@model DVDShops.Models.Producer;
+
+@{
+    ViewData["Title"] = "Provider Manage";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+}
+
+<!-- Header -->
+@section tableheader {
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="~/admin/plugins/toastr/toastr.min.css">
+}
+
+<!-- Content -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Providers</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a asp-area="admin" asp-controller="dashboard" asp-action="index">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active">Providers</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <!-- Custom Tabs -->
+                <div class="card">
+                    <div class="card-header d-flex p-0">
+                        <h3 class="card-title p-3"></h3>
+                        <ul class="nav nav-pills ml-auto p-2">
+                            <li class="nav-item"><a class="nav-link active" href="#producers" data-toggle="tab">Producers</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#suppliers" data-toggle="tab">Suppliers</a></li>
+                        </ul>
+                    </div><!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <!-- /.tab-pane Producer-->
+                            <div class="tab-pane active" id="producers">
+                                <div class="card">
+                                    <!-- /.card-header -->
+                                    <div class="card-header d-flex justify-content-between align-item-center">
+                                        <div class="card-title">Producer List</div>
+                                        <div class="ml-auto">
+                                            <a href="#" data-toggle="modal" data-target="#new_producer">New Producer</a>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="card-body table-responsive">
+                                        <!-- id is for table script -->
+                                        <table id="producerList" class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr class="text-center">
+                                                    <th>Producer Name</th>
+                                                    <th>Introduction</th>
+                                                    <th>Delete Status</th>
+                                                    <th style="width:1rem">Option</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var producer in ViewBag.ProducerList)
+                                                {
+
+                                                    <tr>
+                                                        <td>@producer.ProducerName</td>
+                                                        <td>@producer.ProducerIntroduction</td>
+                                                        <td>@(producer.DeleteStatus ? "Yes" : "No")</td>
+                                                        <td class="d-flex justify-content-between">
+                                                            <button class="btn btn-info"
+                                                                    id="edit"
+                                                                    data-toggle="modal"
+                                                                    data-target="#edit_producer"
+                                                                    onclick="editProducer('@producer.ProducerId')">
+                                                                Edit
+                                                            </button> &nbsp;
+                                                            <a class="btn btn-warning"
+                                                               asp-area="admin" asp-controller="provider"
+                                                               asp-action="deleteProducer" asp-route-producerId="@producer.ProducerId"
+                                                               onclick="return confirm('Are You Sure?')">
+                                                                @(producer.DeleteStatus ? "Recover" : "Delete")
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                            <!-- /.card-footer -->
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Producer Name</th>
+                                                    <th>Introduction</th>
+                                                    <th>Delete Status</th>
+                                                    <th>Option</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                            <!-- /.tab-pane Producer-->
+                            <!-- /.tab-pane Supplier-->
+                            <div class="tab-pane" id="suppliers">
+                                <div class="card">
+                                    <!-- /.card-header -->
+                                    <div class="card-header d-flex justify-content-between align-item-center">
+                                        <div class="card-title">Supplier List</div>
+                                        <div class="ml-auto">
+                                            <a asp-area="admin" asp-controller="provider" asp-action="addSupplier" class="text-info">New Supplier</a>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="card-body table-responsive">
+                                        <!-- id is for table script -->
+                                        <table id="supplierList" class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr class="text-center">
+                                                    <th>Name</th>
+                                                    <th>Email</th>
+                                                    <th>Phone</th>
+                                                    <th>Address</th>
+                                                    <th>Delete Status</th>
+                                                    <th style="width:1rem">Option</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var supplier in ViewBag.SupplierList)
+                                                {
+                                                    <tr>
+                                                        <td>@supplier.SupplierName</td>
+                                                        <td>@supplier.SupplierEmail</td>
+                                                        <td>@supplier.SupplierPhone</td>
+                                                        <td>@supplier.SupplierAddress</td>
+                                                        <td>@(supplier.DeleteStatus ? "Yes" : "No")</td>
+                                                        <td class="d-flex justify-content-end">
+                                                            <a class="btn btn-info"
+                                                               asp-area="admin" asp-controller="provider"
+                                                               asp-action="editSupplier" asp-route-supplierId="@supplier.SupplierId">
+                                                                Edit
+                                                            </a> &nbsp;
+                                                            <a class="btn btn-warning"
+                                                               asp-area="admin" asp-controller="provider"
+                                                               asp-action="deleteSupplier" asp-route-supplierId="@supplier.SupplierId"
+                                                               onclick="return confirm('Are You Sure?')">
+                                                                @(supplier.DeleteStatus ? "Recover" : "Delete")
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                            <!-- /.card-footer -->
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Email</th>
+                                                    <th>Phone</th>
+                                                    <th>Address</th>
+                                                    <th>Delete Status</th>
+                                                    <th>Option</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                            <!-- /.tab-pane Supplier-->
+                        </div>
+                        <!-- /.tab-content -->
+                    </div><!-- /.card-body -->
+                </div>
+                <!-- ./card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div>
+</section>
+
+<!--  popup modal for new producer -->
+<div class="modal fade" id="new_producer" data-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" asp-area="admin" asp-controller="provider" asp-action="addProducer">
+                <div class="modal-header">
+                    <h4 class="modal-title">Producer Profile</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <!-- text input -->
+                                <div class="form-group">
+                                    <label>Producer Name</label>
+                                    <input type="text" class="form-control" placeholder="Enter ..." asp-for="ProducerName" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Introduction</label>
+                                    <textarea class="form-control" rows="3" placeholder="Enter ..." asp-for="ProducerIntroduction"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">ADD</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!--  popup modal for edit producer -->
+<div class="modal fade" id="edit_producer" data-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" asp-area="admin" asp-controller="provider" asp-action="editProducer">
+                <div class="modal-header">
+                    <h4 class="modal-title">Producer Profile</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <!-- text input -->
+                                <input type="hidden" asp-for="ProducerId" id="pId" />
+                                <div class="form-group" id="oldName">
+                                    <label>Producer Name</label>
+                                    <input type="text" class="form-control" placeholder="Enter ..." asp-for="ProducerName" id="pName" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Introduction</label>
+                                    <textarea class="form-control" rows="3" placeholder="Enter ..." asp-for="ProducerIntroduction" id="pIntro"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- Footer -->
+@section tablefooter {
+    <!-- DataTables  & Plugins -->
+    <script src="~/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/jszip/jszip.min.js"></script>
+    <script src="~/admin/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/admin/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <script>
+        $(function () {
+            $('#producerList').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+        $(function () {
+            $('#supplierList').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+        function editProducer(producerId) {
+            $.ajax({
+                type: 'GET',
+                url: '/admin/provider/FindProducerById',
+                data: { producerId: producerId },
+                cache: false,
+                success: function (res) {
+                    if (res.hasOwnProperty('ProducerId')) {
+                        $('#pId').val(res.ProducerId);
+                        $('#pName').val(res.ProducerName);
+                        $('#pIntro').val(res.ProducerIntroduction);
+
+                        var oldName = '<input type="hidden" name="oldName" value="' + res.ProducerName + '">';
+                        $('#oldName').append(oldName);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+        function resolveReferences(json) {
+            var byId = {};
+            function recurse(obj) {
+                if (obj && typeof obj === 'object') {
+                    if ('$id' in obj) {
+                        byId[obj.$id] = obj;
+                        delete obj.$id;
+                    }
+                    for (var key in obj) {
+                        if (obj.hasOwnProperty(key)) {
+                            obj[key] = recurse(obj[key]);
+                        }
+                    }
+                }
+                return obj;
+            }
+            function resolveRefs(obj) {
+                if (obj && typeof obj === 'object') {
+                    if ('$ref' in obj) {
+                        return byId[obj.$ref];
+                    }
+                    for (var key in obj) {
+                        if (obj.hasOwnProperty(key)) {
+                            obj[key] = resolveRefs(obj[key]);
+                        }
+                    }
+                }
+                return obj;
+            }
+            var resolved = recurse(json);
+            return resolveRefs(resolved);
+        }
+    </script>
+}

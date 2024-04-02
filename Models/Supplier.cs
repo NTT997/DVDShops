@@ -11,9 +11,11 @@ public partial class Supplier
 
     public string SupplierEmail { get; set; } = null!;
 
-    public int SupplierPhone { get; set; }
+    public long SupplierPhone { get; set; }
 
-    public int SupplierAddress { get; set; }
+    public string SupplierAddress { get; set; } = null!;
+
+    public bool DeleteStatus { get; set; }
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

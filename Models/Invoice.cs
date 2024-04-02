@@ -5,9 +5,11 @@ namespace DVDShops.Models;
 
 public partial class Invoice
 {
-    public int InvId { get; set; }
+    public int InvoiceId { get; set; }
 
     public int Total { get; set; }
+
+    public string ShipAddress { get; set; } = null!;
 
     public int OrderId { get; set; }
 

@@ -11,23 +11,17 @@ public partial class Order
 
     public DateOnly OrderDate { get; set; }
 
-    public int PId { get; set; }
+    public bool OrderStatus { get; set; }
 
-    public int OrderQuantity { get; set; }
+    public int CartId { get; set; }
 
-    public int InvId { get; set; }
+    public int InvoiceId { get; set; }
 
-    public int ShipmentId { get; set; }
+    public virtual Cart Cart { get; set; } = null!;
 
-    public virtual Invoice Inv { get; set; } = null!;
+    public virtual Invoice Invoice { get; set; } = null!;
 
     public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
-
-    public virtual Product PIdNavigation { get; set; } = null!;
-
-    public virtual Shipment Shipment { get; set; } = null!;
-
-    public virtual ICollection<Shipment> Shipments { get; set; } = new List<Shipment>();
 
     public virtual User Users { get; set; } = null!;
 }

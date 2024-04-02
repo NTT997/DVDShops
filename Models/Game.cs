@@ -15,17 +15,21 @@ public partial class Game
 
     public float Price { get; set; }
 
-    public int ProdId { get; set; }
+    public int ProducerId { get; set; }
 
-    public int PId { get; set; }
+    public int? ProductId { get; set; }
 
     public int GenreId { get; set; }
 
+    public int CategoryId { get; set; }
+
+    public virtual Category Category { get; set; } = null!;
+
     public virtual Genre Genre { get; set; } = null!;
 
-    public virtual Product PIdNavigation { get; set; } = null!;
+    public virtual Producer Producer { get; set; } = null!;
 
-    public virtual Producer Prod { get; set; } = null!;
+    public virtual Product? Product { get; set; }
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

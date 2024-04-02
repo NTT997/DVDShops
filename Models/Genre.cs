@@ -9,7 +9,7 @@ public partial class Genre
 
     public string GenreName { get; set; } = null!;
 
-    public string? GenreDescriptin { get; set; }
+    public string? GenreDescription { get; set; }
 
     public virtual ICollection<Artist> Artists { get; set; } = new List<Artist>();
 
