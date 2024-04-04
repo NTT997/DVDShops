@@ -68,7 +68,7 @@
                                                     <th>Producer Name</th>
                                                     <th>Introduction</th>
                                                     <th>Delete Status</th>
-                                                    <th style="width:1rem">Option</th>
+                                                    <th style="width:auto">Option</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -79,7 +79,7 @@
                                                         <td>@producer.ProducerName</td>
                                                         <td>@producer.ProducerIntroduction</td>
                                                         <td>@(producer.DeleteStatus ? "Yes" : "No")</td>
-                                                        <td class="d-flex justify-content-between">
+                                                        <td class="text-center">
                                                             <button class="btn btn-info"
                                                                     id="edit"
                                                                     data-toggle="modal"
@@ -134,7 +134,7 @@
                                                     <th>Phone</th>
                                                     <th>Address</th>
                                                     <th>Delete Status</th>
-                                                    <th style="width:1rem">Option</th>
+                                                    <th style="width:auto">Option</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -146,7 +146,7 @@
                                                         <td>@supplier.SupplierPhone</td>
                                                         <td>@supplier.SupplierAddress</td>
                                                         <td>@(supplier.DeleteStatus ? "Yes" : "No")</td>
-                                                        <td class="d-flex justify-content-end">
+                                                        <td class="text-center">
                                                             <a class="btn btn-info"
                                                                asp-area="admin" asp-controller="provider"
                                                                asp-action="editSupplier" asp-route-supplierId="@supplier.SupplierId">

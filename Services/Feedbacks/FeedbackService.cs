@@ -54,7 +54,7 @@ namespace DVDShops.Services.Feedbacks
 
         public List<Feedback> GetByProductId(int productId)
         {
-            return dbContext.Feedbacks.Where(f => f.ProductId == productId).ToList();
+            return dbContext.Feedbacks.Where(f => f.FeedbackId == productId).ToList();
         }
 
         Feedback IFeedbackService.GetById(int id)

@@ -1,0 +1,126 @@
+﻿@model DVDShops.Models.Artist;
+@inject DVDShops.Services.Genres.IGenreService genreService
+@inject DVDShops.Services.ArtistsGenres.IArtistGenreService agService
+
+@{
+    ViewData["Title"] = "Artist Manage";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+}
+
+<!-- Content -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Artist Profile</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a asp-area="admin" asp-controller="artist" asp-action="view">Back</a>
+                    </li>
+                    <li class="breadcrumb-item active">Artist Profile</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="col-lg-6 mx-auto">
+            <div class="card card-primary">
+                <!-- /.card-header -->
+                <form method="post" asp-controller="artist" asp-action="editArtist" asp-area="admin" enctype="multipart/form-data">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <!-- text input -->
+                                <input type="hidden" asp-for="ArtistId" />
+                                <input type="hidden" name="oldName" value="@Model.ArtistName" />
+                                <div class="form-group">
+                                    <label>Artist name</label>
+                                    <input type="text" class="form-control" placeholder="Enter Name..." asp-for="ArtistName" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Biography</label>
+                                    <textarea class="form-control" rows="3" placeholder="Enter Bio..." asp-for="ArtistBiography"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <label>Artist Photo</label>
+                            <input type="hidden" asp-for="ArtistPhoto" />
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input type="file" name="userPhoto" id="file_input" accept="image/*" onchange="ShowImageAdd(event)" placeholder="Choose an Image" />
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="text-center img-thumbnail">
+                                    <img alt="user-photo" id="user_image" width="100px" height="100px" src="~/admin/images/user/@Model.ArtistPhoto" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- checkbox -->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Music Genres</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            @foreach (var genre in genreService.GetAll())
+                            {
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <div class="form-check col-sm-3">
+                                            @{
+                                                var isChecked = agService.GetByArtistId(Model.ArtistId).Any(ag => ag.GenreId == genre.GenreId);
+                                            }
+                                            <input class="form-check-input" type="checkbox" name="genres" value="@genre.GenreId" @(isChecked ? "checked" : "")>
+                                            <label class="form-check-label">@genre.GenreName</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </div>
+                </form>
+                <!-- /.card-body -->
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+@section tablefooter {
+    <!-- Page specific script -->
+    <script>
+        function ShowImageAdd(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const userImage = document.getElementById("user_image");
+                    userImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+}

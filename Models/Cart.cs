@@ -13,11 +13,7 @@ public partial class Cart
 
     public int Quantity { get; set; }
 
-    public double Amount { get; set; }
+    public virtual Product Product { get; set; } = null!;
 
-    public int PromotionId { get; set; }
-
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
-
-    public virtual Promotion Promotion { get; set; } = null!;
+    public virtual User Users { get; set; } = null!;
 }

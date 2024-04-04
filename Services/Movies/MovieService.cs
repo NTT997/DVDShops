@@ -64,7 +64,7 @@ namespace DVDShops.Services.Movies
         }
         public List<Movie> GetByGenre(int genreId)
         {
-            return dbContext.Movies.Where(movie => movie.GenreId == genreId).ToList();
+            return dbContext.Movies.Where(movie => movie.CategoryId == genreId).ToList();
         }
 
         public List<Movie> GetByProducer(int producerId)

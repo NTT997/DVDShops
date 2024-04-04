@@ -22,6 +22,17 @@ namespace DVDShops.Controllers
             return View("login");
         }
 
+        [Route("feedback")]
+        [HttpGet]
+        public IActionResult fEEDBACK()
+        {
+            if(HttpContext.Session.GetString("role") != null)
+            {
+
+            }
+            return View("login");
+        }
+
         [HttpPost]
         public IActionResult Login(string email, string password)
         {

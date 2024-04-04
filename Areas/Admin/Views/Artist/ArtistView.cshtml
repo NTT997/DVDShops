@@ -1,6 +1,7 @@
 ﻿@model DVDShops.Models.Artist;
 @inject DVDShops.Services.Artists.IArtistService artistService
 @inject DVDShops.Services.Genres.IGenreService genreService
+@inject DVDShops.Services.ArtistsGenres.IArtistGenreService artistGenreService
 
 @{
     ViewData["Title"] = "Artist Manage";
@@ -38,7 +39,7 @@
     <div class="container-fluid">
         <div class="row">
             <!-- /.table -->
-            <div class="col-lg-8">
+            <div class="col-lg-7">
                 <div class="card">
                     <!-- /.card-header -->
                     <div class="card-header">
@@ -50,31 +51,35 @@
                             <thead>
                                 <tr class="text-center">
                                     <th>Artist Name</th>
-                                    <th>Artist Bio</th>
+                                    <th>Artist Biography</th>
+                                    <th>Artist Photo</th>
                                     <th>Genre</th>
-                                    <th style="width:1rem">Option</th>
+                                    <th style="width: auto">Option</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var artist in artistService.GetAllDynamic())
+                                @foreach (var artist in artistService.GetAllArtists())
                                 {
                                     <tr>
-                                        <td>@artist.GetType().GetProperty("ArtistName").GetValue(artist)</td>
-                                        <td>@artist.GetType().GetProperty("Bio").GetValue(artist)</td>
-                                        <td>@(string.Join(", ", artist.GetType().GetProperty("Genres").GetValue(artist)))</td>
-                                        <td class="d-flex justify-content-end">
-                                            <button type="button"
-                                                    class="btn btn-info"
-                                                    id="edit"
-                                                    onclick="editArt('@artist.GetType().GetProperty("ArtistName").GetValue(artist)')"
-                                                    name="@artist.GetType().GetProperty("ArtistName").GetValue(artist)"
-                                                    data-toggle="modal"
-                                                    data-target="#artistEdit">
+                                        <td>@artist.ArtistName</td>
+                                        <td>@artist.ArtistBiography</td>
+                                        <td class="text-center">
+                                            <img alt="No Photo" width="50px" height="50px" src="~/admin/images/user/@artist.ArtistPhoto" />
+                                        </td>
+                                        <td>
+                                            @string.Join(", ", artistGenreService.GetByArtistId(artist.ArtistId).Select(genre => genre.Genre.GenreName))
+                                        </td>
+
+                                        <td class="text-center">
+                                            <a type="button"
+                                               class="btn btn-info"
+                                               asp-area="admin" asp-controller="artist"
+                                               asp-action="editArtist" asp-route-artistId="@artist.ArtistId">
                                                 Edit
-                                            </button> &nbsp;
+                                            </a> &nbsp;
                                             <a class="btn btn-warning"
                                                asp-area="admin" asp-controller="artist"
-                                               asp-action="DeleteArtist" asp-route-name="@artist.GetType().GetProperty("ArtistName").GetValue(artist)"
+                                               asp-action="DeleteArtist" asp-route-artistId="@artist.ArtistId"
                                                onclick="return confirm('Are You Sure To Delete This Record')">
                                                 Delete
                                             </a>
@@ -85,9 +90,10 @@
                             <tfoot>
                                 <tr>
                                     <th>Artist Name</th>
-                                    <th>Artist Bio</th>
+                                    <th>Artist Biography</th>
+                                    <th>Artist Photo</th>
                                     <th>Genre</th>
-                                    <th>Option</th>
+                                    <th style="width: auto">Option</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -98,21 +104,20 @@
             </div>
 
             <!-- /.form -->
-            <div class="col-lg-4 h-100">
+            <div class="col-lg-5 h-100">
                 <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title">New Artist</h3>
                     </div>
                     <!-- /.card-header -->
-                    <form method="post" asp-controller="artist" asp-action="createArtist" asp-area="admin">
+                    <form method="post" asp-controller="artist" asp-action="createArtist" asp-area="admin" enctype="multipart/form-data">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-sm-12">
                                     <!-- text input -->
                                     <div class="form-group">
                                         <label>Artist name</label>
-                                        <input type="text" class="form-control" placeholder="Enter ..." asp-for="ArtistName" required>
-                                        <span style="color: red" asp-validation-for="ArtistName" class="text-danger"></span>
+                                        <input type="text" class="form-control" placeholder="Enter Name..." asp-for="ArtistName" required>
                                     </div>
                                 </div>
                             </div>
@@ -120,7 +125,21 @@
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <label>Biography</label>
-                                        <textarea class="form-control" rows="3" placeholder="Enter ..." asp-for="Bio"></textarea>
+                                        <textarea class="form-control" rows="3" placeholder="Enter Bio..." asp-for="ArtistBiography"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label>Artist Photo</label>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input type="file" name="userPhoto" id="file_input" accept="image/*" onchange="ShowImageAdd(event)" placeholder="Choose an Image" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="text-center img-thumbnail">
+                                        <img alt="user-photo" id="user_image" width="100px" height="100px" />
                                     </div>
                                 </div>
                             </div>
@@ -140,7 +159,6 @@
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <div class="form-check col-sm-3">
-
                                                 <input class="form-check-input" type="checkbox" name="genres" value="@genre.GenreId">
                                                 <label class="form-check-label">@genre.GenreName</label>
                                             </div>
@@ -151,7 +169,7 @@
                         </div>
 
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Add</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
                         </div>
                     </form>
                     <!-- /.card-body -->
@@ -164,76 +182,6 @@
     </div>
     <!-- /.container-fluid -->
 </section>
-
-<!--  popup modal for artist -->
-<div class="modal fade" id="artistEdit" data-backdrop="static" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <form method="post" asp-area="admin" asp-controller="artist" asp-action="editArtist">
-                <div class="modal-header">
-                    <h4 class="modal-title">Edit Artist Profile</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="dismissModalData()">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <!-- text input -->
-                                <div class="form-group" id="artName">
-                                    <label>Artist name</label>
-                                    <input type="text" class="form-control" placeholder="Enter ..." asp-for="ArtistName" id="artistName" required>
-                                    <span style="color: red" asp-validation-for="ArtistName" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>Biography</label>
-                                    <textarea class="form-control" rows="3" placeholder="Enter ..." asp-for="Bio" id="bio"></textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- checkbox -->
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>Music Genres</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            @foreach (var genre in genreService.GetAll())
-                            {
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <div class="form-check col-sm-3">
-                                            <input class="form-check-input" type="checkbox" id="@genre.GenreId" name="editGenres" value="@genre.GenreId">
-                                            <label class="form-check-label" for="@genre.GenreId">@genre.GenreName</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="dismissModalData()">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </div>
-            </form>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
 
 <!-- Footer -->
 @section tablefooter {
@@ -253,72 +201,16 @@
 
     <!-- Page specific script -->
     <script>
-        function dismissModalData() {
-            $('input[name="editGenres"]').prop('checked', false);
-        }
-
-        function editArt(artisName) {
-            $.ajax({
-                type: 'GET',
-                url: '/admin/artist/FindArtistByName',
-                data: { name: artisName },
-                cache: false,
-                success: function (res) {
-                    var resolvedResult = resolveReferences(res);
-
-                    for (var i = 0; i < resolvedResult.$values.length; i++) {
-                        var currentValue = resolvedResult.$values[i];
-
-                        if (currentValue.hasOwnProperty('ArtistName')) {
-                            $('#artistName').val(currentValue.ArtistName);
-                            $('#bio').val(currentValue.Bio);
-                            $('#' + currentValue.GenreId).prop('checked', true);
-                        }
-                    }
-
-                    var inputHiddenName = '<input type="hidden" name="hiddenName" value="' + currentValue.ArtistName + '">';
-                    $('#artName').append(inputHiddenName);
-                },
-                error: function (xhr, status, error) {
-                    console.error(error);
-                }
-            });
-        }
-
-        function resolveReferences(json) {
-            var byId = {};
-
-            function recurse(obj) {
-                if (obj && typeof obj === 'object') {
-                    if ('$id' in obj) {
-                        byId[obj.$id] = obj;
-                        delete obj.$id;
-                    }
-                    for (var key in obj) {
-                        if (obj.hasOwnProperty(key)) {
-                            obj[key] = recurse(obj[key]);
-                        }
-                    }
-                }
-                return obj;
+        function ShowImageAdd(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const userImage = document.getElementById("user_image");
+                    userImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
             }
-
-            function resolveRefs(obj) {
-                if (obj && typeof obj === 'object') {
-                    if ('$ref' in obj) {
-                        return byId[obj.$ref];
-                    }
-                    for (var key in obj) {
-                        if (obj.hasOwnProperty(key)) {
-                            obj[key] = resolveRefs(obj[key]);
-                        }
-                    }
-                }
-                return obj;
-            }
-
-            var resolved = recurse(json);
-            return resolveRefs(resolved);
         }
 
         $(function () {

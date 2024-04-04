@@ -7,13 +7,13 @@ public partial class Invoice
 {
     public int InvoiceId { get; set; }
 
-    public int Total { get; set; }
+    public int? OrderId { get; set; }
 
-    public string ShipAddress { get; set; } = null!;
+    public DateOnly InvoiceDate { get; set; }
 
-    public int OrderId { get; set; }
+    public double TotalAmount { get; set; }
 
-    public virtual Order Order { get; set; } = null!;
+    public virtual ICollection<InvoiceDetail> InvoiceDetails { get; set; } = new List<InvoiceDetail>();
 
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+    public virtual Order? Order { get; set; }
 }

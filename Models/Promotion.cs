@@ -17,7 +17,5 @@ public partial class Promotion
 
     public DateOnly PromotionExpireDate { get; set; }
 
-    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
-
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }
