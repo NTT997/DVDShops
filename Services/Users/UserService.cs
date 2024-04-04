@@ -49,7 +49,7 @@ namespace DVDShops.Services.Users
 
         public List<User> GetUsersByActivated(bool activated)
         {
-            return dbContext.Users.Where(user => user.UsersActivate == activated).ToList();
+            return dbContext.Users.Where(user => user.UsersActivated == activated).ToList();
         }
 
         public List<User> GetUsersByEmail(string userEmail)
@@ -87,7 +87,7 @@ namespace DVDShops.Services.Users
 
             if (verifyLink == link)
             {
-                account.UsersActivate = true;
+                account.UsersActivated = true;
             }
             return Update(account);
         }
