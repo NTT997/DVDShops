@@ -1,230 +1,288 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+﻿<!DOCTYPE html>
+<html lang="en">
+
 <head>
-    <title>Shop Around</title>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" href="~/css/style.css" type="text/css" media="all" />
-    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
-    <!--[if lte IE 6]><link rel="stylesheet" href="css/ie6.css" type="text/css" media="all" /><![endif]-->
-   <link href="~/css/Login.css" rel="stylesheet" />
+    <meta charset="utf-8">
+    <title>EShopper - Bootstrap Shop Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/css/style.css" rel="stylesheet">
 </head>
+
 <body>
-    <!-- Shell -->
-    <div class="shell">
-        <!-- Header -->
-        <div id="header">
-            <nav class="navbar navbar-expand-lg bg-body-tertiary"  data-bs-theme="dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">DVD-Shop</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-       
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-           @* Home *@
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        @* Game *@
-        <li class="nav-item">
-          <a class="nav-link active" href="#"  aria-current="page">
-           Game
-          </a>
-        </li>
-        @* Music *@
-        <li class="nav-item dropdown">
-          <a class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            Music
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Viet Nam</a></li>
-            <li><a class="dropdown-item" href="#">US/UK</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Others</a></li>
-          </ul>
-        </li>
-        &nbsp;
-        @* Movie *@
-        <li class="nav-item dropdown">
-          <a class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            Movie
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">International films</a></li>
-            <li><a class="dropdown-item" href="#">Domestic films</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Others</a></li>
-          </ul>
-        </li>
-        &nbsp;
-       @*  Others *@
-        <li class="nav-item dropdown">
-          <a class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            Others
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Forum</a></li>
-            <li><a class="dropdown-item" href="#">Contact</a></li>
-            <li><a class="dropdown-item" href="#">About Us</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Others</a></li>
-          </ul>
-        </li>
-      </ul>
-      &nbsp;
-      @*  Search *@
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-success" type="submit">Search</button>
-      </form>
-      &nbsp;
-      @* Login *@
-      <div>
-                            <a class="btn btn-success  cd-signin" asp-action="login" asp asp-controller="login">Login/Register</a>
-    </div>
-    </div>
-  </div>
-</nav>
-        <!-- End Header -->
-        <!-- Main -->
-        <div id="main">
-            <div class="cl">&nbsp;</div>
-            <!-- Content -->
-            <div id="content">
-                @RenderBody();
+    <!-- Topbar Start -->
+    <div class="container-fluid">
+        <div class="row bg-secondary py-2 px-xl-5">
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="d-inline-flex align-items-center">
+                    <a class="text-dark" href="">FAQs</a>
+                    <span class="text-muted px-2">|</span>
+                    <a class="text-dark" href="">Help</a>
+                    <span class="text-muted px-2">|</span>
+                    <a class="text-dark" href="">Support</a>
+                </div>
             </div>
-            <!-- End Content -->
-            <!-- Sidebar -->
-            <div id="sidebar">
-                <!-- Search -->
-                <div class="box search">
-                    <h2>Search by <span></span></h2>
-                    <div class="box-content">
-                        <form action="#" method="post">
-                            
-                            <label>Category</label>
-                            <select class="field">
-                                <option value="">-- Select Category --</option>
-                            </select>
-                            <div class="inline-field">
-                                <label>Price</label>
-                                <select class="field small-field">
-                                    <option value="">$10</option>
-                                </select>
-                                <label>to:</label>
-                                <select class="field small-field">
-                                    <option value="">$50</option>
-                                </select>
+            <div class="col-lg-6 text-center text-lg-right">
+                <div class="d-inline-flex align-items-center">
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a class="text-dark pl-2" href="">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row align-items-center py-3 px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+                <a href="" class="text-decoration-none">
+                    <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">DVDs Shop</span>Simp(le) Team</h1>
+                </a>
+            </div>
+            <div class="col-lg-6 col-6 text-left">
+                <form action="">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for products">
+                        <div class="input-group-append">
+                            <span class="input-group-text bg-transparent text-primary">
+                                <i class="fa fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-3 col-6 text-right">
+                <a href="" class="btn border">
+                    <i class="fas fa-heart text-primary"></i>
+                    <span class="badge">0</span>
+                </a>
+                <a href="" class="btn border">
+                    <i class="fas fa-shopping-cart text-primary"></i>
+                    <span class="badge">0</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+    <!-- Navbar Start -->
+    <div class="container-fluid mb-5">
+        <div class="row border-top px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+                <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100" data-toggle="collapse" href="#navbar-vertical" style="height: 65px; margin-top: -1px; padding: 0 30px;">
+                    <h6 class="m-0">Categories</h6>
+                    <i class="fa fa-angle-down text-dark"></i>
+                </a>
+                <nav class="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0" id="navbar-vertical">
+                    <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link" data-toggle="dropdown">Games<i class="fa fa-angle-down float-right mt-1"></i></a>
+                            <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
+                                <a href="" class="dropdown-item">PS5</a>
+                                <a href="" class="dropdown-item">XONE</a>
+                                <a href="" class="dropdown-item">STEAM</a>
+                                <a href="" class="dropdown-item">OTHERS</a>
                             </div>
-                            <input type="submit" class="search-submit" value="Search" />
-                            <p>
-                                <a href="#" class="bul">Advanced search</a><br />
-                                <a href="#" class="bul">Contact Customer Support</a>
-                            </p>
+                        </div>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link" data-toggle="dropdown">Music<i class="fa fa-angle-down float-right mt-1"></i></a>
+                            <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
+                                <a href="" class="dropdown-item">US/UK</a>
+                                <a href="" class="dropdown-item">GLOBAL</a>
+                                <a href="" class="dropdown-item">KPOP</a>
+                                <a href="" class="dropdown-item">OTHERS</a>
+                            </div>
+                        </div>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link" data-toggle="dropdown">Movies<i class="fa fa-angle-down float-right mt-1"></i></a>
+                            <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
+                                <a href="" class="dropdown-item">Romance</a>
+                                <a href="" class="dropdown-item">ACTION</a>
+                                <a href="" class="dropdown-item">PSYCHOLOGICAL</a>
+                                <a href="" class="dropdown-item">OTHERS</a>
+                            </div>
+                        </div>
+                        <a href="#" class="nav-item nav-link">News</a>
+                        <a href="#" class="nav-item nav-link">Forum</a>
+                    </div>
+                </nav>
+            </div>
+            <div class="col-lg-9">
+                <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
+                    <a href="" class="text-decoration-none d-block d-lg-none">
+                        <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
+                    </a>
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                        <div class="navbar-nav mr-auto py-0">
+                            <a asp-controller="index" asp-action="index" class="nav-item nav-link active">Home</a>
+                            <a asp-controller="shop" asp-action="shop" class="nav-item nav-link">Shop</a>
+
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
+                                <div class="dropdown-menu rounded-0 m-0">
+                                    <a asp-controller="cart" asp-action="cart" class="dropdown-item">Shopping Cart</a>
+                                    <a asp-controller="checkout" asp-action="checkout" class="dropdown-item">Checkout</a>
+                                </div>
+                            </div>
+                            <a href="contact.html" class="nav-item nav-link">Contact</a>
+                        </div>
+                        <div class="navbar-nav ml-auto py-0">
+                            <a asp-controller="login" asp-action="login" class="nav-item nav-link">Login</a>
+                            <a href="" class="nav-item nav-link">Register</a>
+                        </div>
+                    </div>
+                </nav>
+                <div id="header-carousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active" style="height: 410px;">
+                            <img class="img-fluid" src="~/css/images/mai.jpg" alt="Image">
+                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                    <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
+                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Mai - Tran Thanh</h3>
+                                    <a href="https://www.youtube.com/watch?v=EX6clvId19s" target="_blank" class="btn btn-light py-2 px-3">View Trailer</a>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" style="height: 410px;">
+                            <img class="img-fluid" src="~/css/images/lol.jpg" alt="Image">
+                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                    <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
+                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">League of Legends</h3>
+                                    <a href="https://www.youtube.com/watch?v=aR-KAldshAE" target="_blank" class="btn btn-light py-2 px-3">View Trailer</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
+                        <div class="btn btn-dark" style="width: 45px; height: 45px;">
+                            <span class="carousel-control-prev-icon mb-n2"></span>
+                        </div>
+                    </a>
+                    <a class="carousel-control-next" href="#header-carousel" data-slide="next">
+                        <div class="btn btn-dark" style="width: 45px; height: 45px;">
+                            <span class="carousel-control-next-icon mb-n2"></span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Navbar End -->
+   @RenderBody()
+    <!-- Footer Start -->
+    <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
+        <div class="row px-xl-5 pt-5">
+            <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
+                <a href="" class="text-decoration-none">
+                    <h1 class="mb-4 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border border-white px-3 mr-1">DVDs Shop</span>Simp(le) Team</h1>
+                </a>
+                <p>Dolore erat dolor sit lorem vero amet. Sed sit lorem magna, ipsum no sit erat lorem et magna ipsum dolore amet erat.</p>
+                <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, New York, USA</p>
+                <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@example.com</p>
+                <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
+            </div>
+            <div class="col-lg-8 col-md-12">
+                <div class="row">
+                    <div class="col-md-4 mb-5">
+                        <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
+                        <div class="d-flex flex-column justify-content-start">
+                            <a class="text-dark mb-2" asp-controller="index" asp-action="index"><i class="fa fa-angle-right mr-2"></i>Home</a>
+                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
+                            <a class="text-dark mb-2" href="detail.html"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
+                            <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
+                            <a class="text-dark mb-2" href="checkout.html"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
+                            <a class="text-dark" href="contact.html"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-5">
+                        <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
+                        <div class="d-flex flex-column justify-content-start">
+                            <a class="text-dark mb-2" href="index.html"><i class="fa fa-angle-right mr-2"></i>Home</a>
+                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
+                            <a class="text-dark mb-2" href="detail.html"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
+                            <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
+                            <a class="text-dark mb-2" href="checkout.html"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
+                            <a class="text-dark" href="contact.html"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-5">
+                        <h5 class="font-weight-bold text-dark mb-4">Newsletter</h5>
+                        <form action="">
+                            <div class="form-group">
+                                <input type="text" class="form-control border-0 py-4" placeholder="Your Name" required="required" />
+                            </div>
+                            <div class="form-group">
+                                <input type="email" class="form-control border-0 py-4" placeholder="Your Email"
+                                       required="required" />
+                            </div>
+                            <div>
+                                <button class="btn btn-primary btn-block border-0 py-3" type="submit">Subscribe Now</button>
+                            </div>
                         </form>
                     </div>
                 </div>
-                <!-- End Search -->
-                <!-- Categories -->
-                <div class="box categories">
-                    <h2>Categories <span></span></h2>
-                    <div class="box-content">
-                        <ul>
-                            <li><a href="#">Category 1</a></li>
-                            <li><a href="#">Category 2</a></li>
-                            <li><a href="#">Category 3</a></li>
-                            <li><a href="#">Category 4</a></li>
-                            <li><a href="#">Category 5</a></li>
-                            <li><a href="#">Category 6</a></li>
-                            <li><a href="#">Category 7</a></li>
-                            <li><a href="#">Category 8</a></li>
-                            <li><a href="#">Category 9</a></li>
-                            <li><a href="#">Category 10</a></li>
-                            <li><a href="#">Category 11</a></li>
-                            <li><a href="#">Category 12</a></li>
-                            <li class="last"><a href="#">Category 13</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <!-- End Categories -->
             </div>
-            <!-- End Sidebar -->
-            <div class="cl">&nbsp;</div>
         </div>
-        <!-- End Main -->
-        <!-- Side Full -->
-        <div class="side-full">
-            <!-- More Products -->
-            <div class="more-products">
-                <div class="more-products-holder">
-                    <ul>
-                        <li><a href="#"><img src="css/images/small1.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small2.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small3.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small4.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small5.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small6.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small7.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small1.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small2.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small3.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small4.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small5.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small6.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small7.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small1.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small2.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small3.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small4.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small5.jpg" alt="" /></a></li>
-                        <li><a href="#"><img src="css/images/small6.jpg" alt="" /></a></li>
-                        <li class="last"><a href="#"><img src="css/images/small7.jpg" alt="" /></a></li>
-                    </ul>
-                </div>
-                <div class="more-nav"> <a href="#" class="prev">previous</a> <a href="#" class="next">next</a> </div>
+        <div class="row border-top border-light mx-xl-5 py-4">
+            <div class="col-md-6 px-xl-0">
+                <p class="mb-md-0 text-center text-md-left text-dark">
+                    &copy; <a class="text-dark font-weight-semi-bold" href="#">Simp(le)</a>. All Rights Reserved. Designed
+                    by
+                    <a class="text-dark font-weight-semi-bold" href="https://htmlcodex.com">Simp(le) Team</a>
+                </p>
             </div>
-            <!-- End More Products -->
-            <!-- Text Cols -->
-            <div class="cols">
-                <div class="cl">&nbsp</div>
-                <div class="col">
-                    <h3 class="ico ico1">News 0</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec imperdiet, metus ac cursus auctor, arcu felis ornare dui.</p>
-                    <p class="more"><a href="#" class="bul">Detail</a></p>
-                </div>
-                <div class="col">
-                    <h3 class="ico ico2">News 1</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec imperdiet, metus ac cursus auctor, arcu felis ornare dui.</p>
-                    <p class="more"><a href="#" class="bul">Detail</a></p>
-                </div>
-                <div class="col">
-                    <h3 class="ico ico3">News 2</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec imperdiet, metus ac cursus auctor, arcu felis ornare dui.</p>
-                    <p class="more"><a href="#" class="bul">Detail</a></p>
-                </div>
-                <div class="col col-last">
-                    <h3 class="ico ico4">New 3</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec imperdiet, metus ac cursus auctor, arcu felis ornare dui.</p>
-                    <p class="more"><a href="#" class="bul">Detail</a></p>
-                </div>
-                <div class="cl">&nbsp;</div>
+            <div class="col-md-6 px-xl-0 text-center text-md-right">
+                <img class="img-fluid" src="~/css/images/payments.png" alt="">
             </div>
-            <!-- End Text Cols -->
         </div>
-        <!-- End Side Full -->
-        <!-- Footer -->
-        <div id="footer">
-            <p class="left"> <a href="#">  &nbsp; DVD-Shop</a>  </p>
-            <p class="right"> &copy; 2024 DVD-Shop Design by Simp(le) Team</a> </p>
-        </div>
-        <!-- End Footer -->
     </div>
-    <!-- End Shell -->
+    <!-- Footer End -->
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="mail/jqBootstrapValidation.min.js"></script>
+    <script src="mail/contact.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
 </body>
-<script src="~/js/jquery-1.4.1.min.js" type="text/javascript"></script>
-<script src="~/js/jquery.jcarousel.pack.js" type="text/javascript"></script>
-<script src="~/js/jquery-func.js" type="text/javascript"></script>
-<script src="~/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/modernizr.min.js"></script>
+
 </html>
