@@ -7,6 +7,7 @@ using DVDShops.Services.Producers;
 using DVDShops.Services.Songs;
 using DVDShops.Services.SongsGenres;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics;
 
 namespace DVDShops.Areas.Admin.Controllers
@@ -42,6 +43,13 @@ namespace DVDShops.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult AddSong()
         {
+            ViewBag.ArtistId = 0;
+            if (HttpContext.Request.Query.ContainsKey("artistId"))
+            {
+                var artistId = HttpContext.Request.Query["artistId"];
+                ViewBag.ArtistId = int.Parse(artistId);
+            }
+
             return View("SongAdd");
         }
 
@@ -181,7 +189,7 @@ namespace DVDShops.Areas.Admin.Controllers
                 }
 
                 var oldFile = Path.Combine(env.WebRootPath, "admin/download/song", song.DownloadLink);
-                if(System.IO.File.Exists(oldFile))
+                if (System.IO.File.Exists(oldFile))
                 {
                     System.IO.File.Delete(oldFile);
                 }

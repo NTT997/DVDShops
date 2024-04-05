@@ -25,7 +25,7 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item">
-                        <a asp-area="admin" asp-controller="album" asp-action="view">Back</a>
+                        <a asp-area="admin" asp-controller="song" asp-action="view">Back</a>
                     </li>
                     <li class="breadcrumb-item active">Songs</li>
                 </ol>
@@ -38,7 +38,7 @@
 <!-- /.add-album -->
 <section class="content-header">
     <div class="container-fluid">
-        <div class="col-lg-8 mx-auto">
+        <div class="col-lg-10 col-12 mx-auto">
             <div class="card card-primary">
                 <div class="card-header">
                     <h3 class="card-title">Song Profile</h3>
@@ -58,18 +58,17 @@
                             <input type="text" class="form-control" asp-for="SongIntroduction" placeholder="Enter Intro..." required>
                         </div>
                         <!-- Add Genres -->
-                        <div class="row">
+                        <div class="row mb-0">
                             <div class="col-sm-12">
-                                <div class="form-group">
+                                <div class="form-group mb-0">
                                     <label>Music Genres</label>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-12">
+                        <div class="row mt-0">
+                            <div class="col-12 col-xl-10 mx-auto">
                                 <div class="form-group">
-                                    <label>Multiple</label>
                                     <select class="duallistbox" multiple="multiple" name="genres">
                                         @foreach (var genre in genreService.GetAll())
                                         {
@@ -91,7 +90,7 @@
 
                         <div class="row">
                             <!-- /.producer col -->
-                            <div class="col-md-5">
+                            <div class="col-md-6 col-xl-4">
                                 <div class="form-group">
                                     <label>Producer</label>
                                     <select class="form-control select2bs4" style="width: 100%;" asp-for="ProducerId">
@@ -104,7 +103,7 @@
                                 </div>
                             </div>
                             <!-- /.artist col -->
-                            <div class="col-md-5">
+                            <div class="col-md-6 col-xl-4">
                                 <div class="form-group">
                                     <label>Artist</label>
                                     <select class="form-control select2bs4" style="width: 100%;" asp-for="ArtistId">
@@ -116,25 +115,23 @@
                                     </select>
                                 </div>
                             </div>
-                            
-                        </div>
-                        <div class="row">
                             <!-- /.producer col -->
-                            <div class="col-md-5">
+                            <div class="col-md-6 col-xl-4">
                                 <div class="form-group ">
                                     <label>Current File Name</label>
                                     <div class="form-group">
                                         <input type="text" asp-for="DownloadLink" class="form-control" disabled />
-                                        <input type="hidden" asp-for="DownloadLink"/>
+                                        <input type="hidden" asp-for="DownloadLink" />
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="col-md-5">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7">
                                 <div class="form-group">
                                     <label>Change File</label>
                                     <div class="form-group">
-                                        <input type="file" name="songFile" id="file_input" accept="audio/*" placeholder="Choose an File"/>
+                                        <input type="file" name="songFile" id="file_input" accept="audio/*" placeholder="Choose an File" />
                                     </div>
                                 </div>
                             </div>

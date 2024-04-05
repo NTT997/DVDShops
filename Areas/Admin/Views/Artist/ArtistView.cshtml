@@ -40,7 +40,7 @@
     <div class="container-fluid">
         <div class="row">
             <!-- /.table -->
-            <div class="col-lg-7">
+            <div class="col-11 col-xl-8 mx-auto">
                 <div class="card">
                     <!-- /.card-header -->
                     <div class="card-header">
@@ -54,7 +54,9 @@
                                     <th>Artist Name</th>
                                     <th>Artist Biography</th>
                                     <th>Artist Photo</th>
-                                    <th>Genre</th>
+                                    <th>Genres</th>
+                                    <th>Songs</th>
+                                    <th>Albums</th>
                                     <th style="width: auto">Option</th>
                                 </tr>
                             </thead>
@@ -69,6 +71,32 @@
                                         </td>
                                         <td>
                                             @string.Join(", ", artistGenreService.GetByArtistId(artist.ArtistId).Select(genre => genre.Genre.GenreName))
+                                        </td>
+                                        <td>
+                                            @if (artist.Songs.Count > 0)
+                                            {
+                                                @string.Join(", ", artist.Songs.Select(song => song.SongName))
+                                            }
+                                            else
+                                            {
+                                                <a class="text-info" asp-area="admin" asp-controller="song"
+                                                   asp-action="addSong">
+                                                    Add
+                                                </a>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (artist.Albums.Count > 0)
+                                            {
+                                                @string.Join(", ", artist.Albums.Select(album => album.AlbumName))
+                                            }
+                                            else
+                                            {
+                                                <a class="text-info" asp-area="admin" asp-controller="album"
+                                                   asp-action="addAlbum">
+                                                    Add
+                                                </a>
+                                            }
                                         </td>
 
                                         <td class="text-center">
@@ -89,11 +117,13 @@
                                 }
                             </tbody>
                             <tfoot>
-                                <tr>
+                                <tr class="text-center">
                                     <th>Artist Name</th>
                                     <th>Artist Biography</th>
                                     <th>Artist Photo</th>
-                                    <th>Genre</th>
+                                    <th>Genres</th>
+                                    <th>Songs</th>
+                                    <th>Albums</th>
                                     <th style="width: auto">Option</th>
                                 </tr>
                             </tfoot>
@@ -103,9 +133,10 @@
                 </div>
                 <!-- /.card -->
             </div>
-
+        </div>
+        <div class="row">
             <!-- /.form -->
-            <div class="col-lg-5 h-100">
+            <div class="col-11 col-xl-8 mx-auto">
                 <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title">New Artist</h3>
@@ -113,6 +144,20 @@
                     <!-- /.card-header -->
                     <form method="post" asp-controller="artist" asp-action="createArtist" asp-area="admin" enctype="multipart/form-data">
                         <div class="card-body">
+                            <div class="row">
+                                <label>Artist Photo</label>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input type="file" name="artistPhoto" id="file_input" accept="image/*" onchange="ShowImageAdd(event)" placeholder="Choose an Image" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="text-center img-thumbnail">
+                                        <img alt="user-photo" id="user_image" width="100px" height="100px" />
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-sm-12">
                                     <!-- text input -->
@@ -127,20 +172,6 @@
                                     <div class="form-group">
                                         <label>Biography</label>
                                         <textarea class="form-control" rows="3" placeholder="Enter Bio..." asp-for="ArtistBiography"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <label>Artist Photo</label>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <input type="file" name="artistPhoto" id="file_input" accept="image/*" onchange="ShowImageAdd(event)" placeholder="Choose an Image" />
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="text-center img-thumbnail">
-                                        <img alt="user-photo" id="user_image" width="100px" height="100px" />
                                     </div>
                                 </div>
                             </div>
@@ -168,9 +199,9 @@
                     <!-- /.card-body -->
                 </div>
             </div>
-
-            <!-- /.col -->
         </div>
+
+        <!-- /.col -->
         <!-- /.row -->
     </div>
     <!-- /.container-fluid -->

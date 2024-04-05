@@ -1,10 +1,11 @@
-﻿@inject DVDShops.Services.Albums.IAlbumService albumService
-@inject DVDShops.Services.AlbumsSongs.IAlbumsSongsService asService
+﻿@inject DVDShops.Services.Games.IGameService gameService
+@inject DVDShops.Services.GamesGenres.IGameGenreService ggService
 
 @{
-    ViewData["Title"] = "Album Manage";
+    ViewData["Title"] = "Game Manage";
     Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
 }
+
 <!-- Header -->
 @section tableheader {
     <link rel="stylesheet" href="~/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
@@ -12,19 +13,18 @@
     <link rel="stylesheet" href="~/admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 }
 
-<!-- Content -->
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Album</h1>
+                <h1>Games</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item">
                         <a asp-area="admin" asp-controller="dashboard" asp-action="index">Home</a>
                     </li>
-                    <li class="breadcrumb-item active">Album</li>
+                    <li class="breadcrumb-item active">Games</li>
                 </ol>
             </div>
         </div>
@@ -38,9 +38,9 @@
             <div class="col-12 col-lg-11 mx-auto">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-item-center">
-                        <div class="card-title">Album List</div>
+                        <div class="card-title">Game List</div>
                         <div class="ml-auto">
-                            <a asp-area="admin" asp-controller="album" asp-action="addAlbum" class="text-info">New Album</a>
+                            <a asp-area="admin" asp-controller="game" asp-action="addGame" class="text-info">New Game</a>
                         </div>
                     </div>
 
@@ -48,47 +48,47 @@
                         <table id="album_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>Album Name</th>
+                                    <th>Game Title</th>
+                                    <th>Description</th>
+                                    <th>Trailer</th>
                                     <th>Producer</th>
-                                    <th>Artist</th>
-                                    <th>Introduction</th>
-                                    <th>Issue Date</th>
-                                    <th>Songs</th>
-                                    <th style="width: auto">Review</th>
+                                    <th>Genres</th>
+                                    <th>Link</th>
                                     <th style="width: auto">Option</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in albumService.GetAll())
+                                @foreach (var item in gameService.GetAll())
                                 {
                                     <tr>
-                                        <td>@item.AlbumName</td>
+                                        <td>@item.GameTitle</td>
+                                        <td>@item.GameDescription</td>
+                                        <td>@item.GameTrailer</td>
                                         <td>@item.Producer.ProducerName</td>
-                                        <td>@item.Artist.ArtistName</td>
-                                        <td>@item.AlbumIntroduction</td>
-                                        <td>@item.IssueDate</td>
                                         <td>
-                                            @(string.Join(", ", asService.GetByAlbumId(item.AlbumId).Select(song => song.Song.SongName)))
+                                            @string.Join(", ", item.GamesGenres.Select(genre => genre.Genre.GenreName))
                                         </td>
-                                        @if (item.ReviewId == null)
+                                        @if (item.DownloadLink == null)
                                         {
-                                            <td class="text-center">NO FEEDBACK</td>
+                                            <td class="text-center">No link</td>
                                         }
                                         else
                                         {
                                             <td class="text-center">
-                                                <button class="info-box-icon bg-info btn"><i class="far fa-envelope"></i></button>
+                                                <a class="info-box-icon bg-info btn" asp-area="admin"
+                                                   asp-controller="download" asp-action="song" asp-route-fileName="@item.DownloadLink"><i class="fas fa-download"></i></a>
                                             </td>
                                         }
                                         <td class="text-center">
                                             <a type="button" class="btn btn-info"
-                                               asp-area="admin" asp-controller="album"
-                                               asp-action="editAlbum" asp-route-albumId="@item.AlbumId">
+                                               asp-area="admin" asp-controller="game"
+                                               asp-action="editgame" asp-route-gameId="@item.GameId">
                                                 Edit
                                             </a>
                                             <a type="button" class="btn btn-warning"
-                                               asp-area="admin" asp-controller="album" onclick="return confirm('Are you Sure?')"
-                                               asp-action="deleteAlbum" asp-route-albumId="@item.AlbumId">
+                                               asp-area="admin" asp-controller="game"
+                                               onclick="return confirm('Are you Sure?')"
+                                               asp-action="deleteGame" asp-route-gameId="@item.GameId">
                                                 Delete
                                             </a>
                                         </td>
@@ -97,13 +97,12 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th>Album Name</th>
+                                    <th>Game Title</th>
+                                    <th>Description</th>
+                                    <th>Trailer</th>
                                     <th>Producer</th>
-                                    <th>Artist</th>
-                                    <th>Introduction</th>
-                                    <th>Issue Date</th>
-                                    <th>Songs</th>
-                                    <th style="width: auto">Review</th>
+                                    <th>Genres</th>
+                                    <th>Link</th>
                                     <th style="width: auto">Option</th>
                                 </tr>
                             </tfoot>
