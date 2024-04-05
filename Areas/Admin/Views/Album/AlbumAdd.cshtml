@@ -1,6 +1,7 @@
 ﻿@model DVDShops.Models.Album;
 @inject DVDShops.Services.Producers.IProducerService producerService
 @inject DVDShops.Services.Artists.IArtistService artistService
+@inject DVDShops.Services.Songs.ISongService songService
 
 @{
     ViewData["Title"] = "Album Manage";
@@ -10,6 +11,7 @@
 @section tableheader {
     <link rel="stylesheet" href="~/admin/plugins/select2/css/select2.min.css">
     <link rel="stylesheet" href="~/admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
 }
 
 <!-- Content -->
@@ -87,6 +89,19 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>Songs</label>
+                                    <select class="duallistbox" multiple="multiple" name="songs">
+                                        @foreach (var song in songService.GetAll())
+                                        {
+                                            <option value="@song.SongId">@song.SongName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- /.card-body -->
 
@@ -103,12 +118,15 @@
 @section tablefooter {
     <!-- Select2 -->
     <script src="~/admin/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/admin/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
     <script>
         $(function () {
             //Initialize Select2 Elements
             $('.select2bs4').select2({
                 theme: 'bootstrap4'
             })
+            //Bootstrap Duallistbox
+            $('.duallistbox').bootstrapDualListbox()
         })
 
         $(document).ready(function () {

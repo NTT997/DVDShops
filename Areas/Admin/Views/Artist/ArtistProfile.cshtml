@@ -7,6 +7,13 @@
     Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
 }
 
+<!-- Header -->
+@section tableheader {
+    <link rel="stylesheet" href="~/admin/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+}
+
 <!-- Content -->
 <section class="content-header">
     <div class="container-fluid">
@@ -59,45 +66,43 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <input type="file" name="userPhoto" id="file_input" accept="image/*" onchange="ShowImageAdd(event)" placeholder="Choose an Image" />
+                                    <input type="file" name="artistPhoto" id="file_input" accept="image/*" onchange="ShowImageAdd(event)" placeholder="Choose an Image" />
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="text-center img-thumbnail">
-                                    <img alt="user-photo" id="user_image" width="100px" height="100px" src="~/admin/images/user/@Model.ArtistPhoto" />
+                                    <img alt="user-photo" id="user_image" width="100px" height="100px" src="~/admin/images/artist/@Model.ArtistPhoto" />
                                 </div>
                             </div>
                         </div>
 
                         <!-- checkbox -->
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-12">
                                 <div class="form-group">
                                     <label>Music Genres</label>
+                                    <select class="duallistbox" multiple="multiple" name="genres">
+                                        @foreach (var genre in genreService.GetAll())
+                                        {
+                                            var isChecked = agService.GetByArtistId(Model.ArtistId).Any(sg => sg.GenreId == genre.GenreId);
+                                            if (isChecked)
+                                            {
+                                                <option value="@genre.GenreId" selected>@genre.GenreName</option>
+
+                                            }
+                                            else
+                                            {
+                                                <option value="@genre.GenreId">@genre.GenreName</option>
+                                            }
+                                        }
+                                    </select>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row">
-                            @foreach (var genre in genreService.GetAll())
-                            {
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <div class="form-check col-sm-3">
-                                            @{
-                                                var isChecked = agService.GetByArtistId(Model.ArtistId).Any(ag => ag.GenreId == genre.GenreId);
-                                            }
-                                            <input class="form-check-input" type="checkbox" name="genres" value="@genre.GenreId" @(isChecked ? "checked" : "")>
-                                            <label class="form-check-label">@genre.GenreName</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
                         </div>
                     </div>
 
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">Add</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
                 <!-- /.card-body -->
@@ -109,6 +114,8 @@
 
 <!-- Footer -->
 @section tablefooter {
+    <!-- Select2 -->
+    <script src="~/admin/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
     <!-- Page specific script -->
     <script>
         function ShowImageAdd(event) {
@@ -122,5 +129,9 @@
                 reader.readAsDataURL(file);
             }
         }
+        $(function () {
+            //Bootstrap Duallistbox
+            $('.duallistbox').bootstrapDualListbox()
+        })
     </script>
 }
