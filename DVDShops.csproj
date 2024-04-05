@@ -135,6 +135,7 @@
     <None Include="wwwroot\lib\owlcarousel\owl.carousel.min.js" />
     <None Include="wwwroot\vendor\jquery\jquery-ui.min.js" />
     <None Include="wwwroot\vendor\jquery\jquery.min.js" />
+
   </ItemGroup>
 
 </Project>
