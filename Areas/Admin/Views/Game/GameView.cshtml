@@ -63,7 +63,7 @@
                                     <tr>
                                         <td>@item.GameTitle</td>
                                         <td>@item.GameDescription</td>
-                                        <td>@item.GameTrailer</td>
+                                        <td class ="text-justify"><a href="@item.GameTrailer">@item.GameTrailer</a></td>
                                         <td>@item.Producer.ProducerName</td>
                                         <td>
                                             @string.Join(", ", item.GamesGenres.Select(genre => genre.Genre.GenreName))
@@ -74,9 +74,8 @@
                                         }
                                         else
                                         {
-                                            <td class="text-center">
-                                                <a class="info-box-icon bg-info btn" asp-area="admin"
-                                                   asp-controller="download" asp-action="song" asp-route-fileName="@item.DownloadLink"><i class="fas fa-download"></i></a>
+                                            <td class="text-justify">
+                                                <a href="@item.DownloadLink">@item.DownloadLink</a>
                                             </td>
                                         }
                                         <td class="text-center">

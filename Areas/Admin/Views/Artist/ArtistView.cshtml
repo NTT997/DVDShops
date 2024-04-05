@@ -67,7 +67,7 @@
                                         <td>@artist.ArtistName</td>
                                         <td>@artist.ArtistBiography</td>
                                         <td class="text-center">
-                                            <img alt="No Photo" width="50px" height="50px" src="~/admin/images/artist/@artist.ArtistPhoto" />
+                                            <img alt="No Photo" width="50px" height="50px" src="~/images/artist/@artist.ArtistPhoto" />
                                         </td>
                                         <td>
                                             @string.Join(", ", artistGenreService.GetByArtistId(artist.ArtistId).Select(genre => genre.Genre.GenreName))

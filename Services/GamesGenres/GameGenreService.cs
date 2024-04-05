@@ -40,6 +40,16 @@ namespace DVDShops.Services.GamesGenres
             return dbContext.GamesGenres.ToList();
         }
 
+        public List<GamesGenre> GetByGameId(int gameId)
+        {
+            return dbContext.GamesGenres.Where(gg => gg.GameId == gameId).ToList();
+        }
+
+        public List<GamesGenre> GetByGenreID(int genreId)
+        {
+            return dbContext.GamesGenres.Where(gg => gg.GenreId == genreId).ToList();
+        }
+
         public GamesGenre GetById(int id)
         {
             return dbContext.GamesGenres.Find(id);
