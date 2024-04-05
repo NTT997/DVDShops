@@ -43,7 +43,9 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="wwwroot\admin\images\user\" />
+
+    <Folder Include="Controllers\" />
+
   </ItemGroup>
 
 </Project>
