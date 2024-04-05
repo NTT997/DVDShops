@@ -68,7 +68,7 @@ namespace DVDShops.Services.Albums
         public Album GetByName(string albumName)
         {
             albumName = albumName.Trim();
-            return dbContext.Albums.Where(album => album.AlbumName.ToLower() == albumName).OrderByDescending(a => a.AlbumId).FirstOrDefault();
+            return dbContext.Albums.SingleOrDefault(album => album.AlbumName.ToLower() == albumName);
         }
     }
 }

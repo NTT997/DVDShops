@@ -1,6 +1,5 @@
 ﻿using DVDShops.Models;
 using DVDShops.Services.Albums;
-using DVDShops.Services.AlbumsSongs;
 using DVDShops.Services.Artists;
 using DVDShops.Services.Producers;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +14,11 @@ namespace DVDShops.Areas.Admin.Controllers
         private IAlbumService albumService;
         private IArtistService artistService;
         private IProducerService producerService;
-        private IAlbumsSongsService albumsSongsService;
-        public AlbumController(IAlbumService albumService, IArtistService artistService, IProducerService producerService, IAlbumsSongsService albumsSongsService)
+        public AlbumController(IAlbumService albumService, IArtistService artistService, IProducerService producerService)
         {
             this.albumService = albumService;
             this.artistService = artistService;
             this.producerService = producerService;
-            this.albumsSongsService = albumsSongsService;
         }
         private void SetTempData(bool status, string title, string array)
         {
@@ -63,7 +60,7 @@ namespace DVDShops.Areas.Admin.Controllers
 
         [Route("addAlbum")]
         [HttpPost]
-        public IActionResult AddAlbum(Album album, string issueDate, List<string> songs)
+        public IActionResult AddAlbum(Album album, string issueDate)
         {
             if (string.IsNullOrEmpty(issueDate))
             {
@@ -76,13 +73,6 @@ namespace DVDShops.Areas.Admin.Controllers
             if (string.IsNullOrWhiteSpace(album.AlbumName) || string.IsNullOrWhiteSpace(album.AlbumIntroduction))
             {
                 SetTempData(false, "Create Album Failed!", "Some Input Field Is White Space Only!");
-                TempData["issue"] = issueDate;
-                return View("AlbumAdd", album);
-            }
-
-            if (songs.Count() < 1)
-            {
-                SetTempData(false, "Create Album Failed!", "Choose Atleast 1 Song");
                 TempData["issue"] = issueDate;
                 return View("AlbumAdd", album);
             }
@@ -102,28 +92,14 @@ namespace DVDShops.Areas.Admin.Controllers
             }
 
             album.CategoryId = 2;
-            var result = albumService.Create(album);
-
-            if (!result)
+            if (albumService.Create(album))
+            {
+                SetTempData(true, "Create Album Success!", "New Album Just Added!");
+            }
+            else
             {
                 SetTempData(false, "Create Album Failed!", "Something Wrong!");
-                TempData["issue"] = issueDate;
-                return View("AlbumAdd", album);
             }
-
-            var newAlbum = albumService.GetByName(album.AlbumName);
-            int[] songIds = songs.Select(int.Parse).ToArray();
-            foreach (var songId in songIds)
-            {
-                var newAs = new AlbumsSong
-                {
-                    SongId = songId,
-                    AlbumId = newAlbum.AlbumId,
-                };
-                albumsSongsService.Create(newAs);
-            }
-
-            SetTempData(true, "Create Album Success!", $"Album {album.AlbumName} Just Added!");
             return RedirectToAction("view");
         }
 
@@ -138,7 +114,7 @@ namespace DVDShops.Areas.Admin.Controllers
 
         [Route("editAlbum")]
         [HttpPost]
-        public IActionResult EditAlbum(Album album, string issueDate, List<string> songs)
+        public IActionResult EditAlbum(Album album, string issueDate)
         {
             if (string.IsNullOrEmpty(issueDate))
             {
@@ -155,12 +131,6 @@ namespace DVDShops.Areas.Admin.Controllers
                 return View("AlbumEdit", album.AlbumId);
             }
 
-            if (songs.Count() < 1)
-            {
-                SetTempData(false, "Create Album Failed!", "Choose Atleast 1 Song");
-                return View("AlbumAdd", album.AlbumId);
-            }
-
             if (album.ProducerId < 0)
             {
                 SetTempData(false, "Update Album Failed!", "Please Choose a Producer!");
@@ -175,31 +145,14 @@ namespace DVDShops.Areas.Admin.Controllers
                 return View("AlbumEdit", album.AlbumId);
             }
 
-            var result = albumService.Update(album);
-            if(!result)
+            if (albumService.Update(album))
             {
-                SetTempData(false, "Update Album Failed!", "Cannot Update Now!");
-                TempData["issue"] = issueDate;
-                return View("AlbumEdit", album.AlbumId);
-            }
-
-            var updateSong = albumsSongsService.GetByAlbumId(album.AlbumId);
-            foreach (var song in updateSong)
-            {
-                albumsSongsService.Delete(song.Id);
-            }
-
-            int[] songIds = songs.Select(int.Parse).ToArray();
-            foreach (var songId in songIds)
-            {
-                var newAs = new AlbumsSong
-                {
-                    SongId = songId,
-                    AlbumId = album.AlbumId,
-                };
-                albumsSongsService.Create(newAs);
-            }
                 SetTempData(true, "Update Album Success!", $"Album {album.AlbumName} Just Updated!");
+            }
+            else
+            {
+                SetTempData(false, "Update Album Failed!", "Something Wrong!");
+            }
             return RedirectToAction("view");
         }
     }

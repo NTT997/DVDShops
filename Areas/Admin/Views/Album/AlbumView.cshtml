@@ -1,5 +1,4 @@
 ﻿@inject DVDShops.Services.Albums.IAlbumService albumService
-@inject DVDShops.Services.AlbumsSongs.IAlbumsSongsService asService
 
 @{
     ViewData["Title"] = "Album Manage";
@@ -53,7 +52,6 @@
                                     <th>Artist</th>
                                     <th>Introduction</th>
                                     <th>Issue Date</th>
-                                    <th>Songs</th>
                                     <th style="width: auto">Review</th>
                                     <th style="width: auto">Option</th>
                                 </tr>
@@ -67,9 +65,6 @@
                                         <td>@item.Artist.ArtistName</td>
                                         <td>@item.AlbumIntroduction</td>
                                         <td>@item.IssueDate</td>
-                                        <td>
-                                            @(string.Join(", ", asService.GetByAlbumId(item.AlbumId).Select(song => song.Song.SongName)))
-                                        </td>
                                         @if (item.ReviewId == null)
                                         {
                                             <td class="text-center">NO FEEDBACK</td>
@@ -87,7 +82,7 @@
                                                 Edit
                                             </a>
                                             <a type="button" class="btn btn-warning"
-                                               asp-area="admin" asp-controller="album" onclick="return confirm('Are you Sure?')"
+                                               asp-area="admin" asp-controller="album"
                                                asp-action="deleteAlbum" asp-route-albumId="@item.AlbumId">
                                                 Delete
                                             </a>
@@ -102,7 +97,6 @@
                                     <th>Artist</th>
                                     <th>Introduction</th>
                                     <th>Issue Date</th>
-                                    <th>Songs</th>
                                     <th style="width: auto">Review</th>
                                     <th style="width: auto">Option</th>
                                 </tr>
