@@ -65,7 +65,7 @@ namespace DVDShops.Areas.Admin.Controllers
                 }
 
                 artist.ArtistPhoto = Guid.NewGuid().ToString() + "_" + artistPhoto.FileName;
-                var path = Path.Combine(env.WebRootPath, "admin/images/artist", artist.ArtistPhoto);
+                var path = Path.Combine(env.WebRootPath, "/images/artist", artist.ArtistPhoto);
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     artistPhoto.CopyTo(stream);
@@ -141,14 +141,14 @@ namespace DVDShops.Areas.Admin.Controllers
                     return View("view", artist);
                 }
 
-                var oldFile = Path.Combine(env.WebRootPath, "admin/images/artist", artist.ArtistPhoto);
+                var oldFile = Path.Combine(env.WebRootPath, "/images/artist", artist.ArtistPhoto);
                 if (System.IO.File.Exists(oldFile))
                 {
                     System.IO.File.Delete(oldFile);
                 }
 
                 artist.ArtistPhoto = Guid.NewGuid().ToString() + "_" + artistPhoto.FileName;
-                var path = Path.Combine(env.WebRootPath, "admin/images/artist", artist.ArtistPhoto);
+                var path = Path.Combine(env.WebRootPath, "/images/artist", artist.ArtistPhoto);
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     artistPhoto.CopyTo(stream);

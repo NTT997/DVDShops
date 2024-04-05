@@ -1,11 +1,9 @@
-﻿@model DVDShops.Models.Song;
+﻿@model DVDShops.Models.Game;
 @inject DVDShops.Services.Producers.IProducerService producerService
-@inject DVDShops.Services.Artists.IArtistService artistService
 @inject DVDShops.Services.Genres.IGenreService genreService
-@inject DVDShops.Services.SongsGenres.ISongGenreService sgService
 
 @{
-    ViewData["Title"] = "Song Manage";
+    ViewData["Title"] = "Game Manage";
     Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
 }
 
@@ -20,14 +18,14 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 id="title">Edit Song Profile</h1>
+                <h1 id="title">Game Song</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item">
-                        <a asp-area="admin" asp-controller="song" asp-action="view">Back</a>
+                        <a asp-area="admin" asp-controller="game" asp-action="view">Back</a>
                     </li>
-                    <li class="breadcrumb-item active">Songs</li>
+                    <li class="breadcrumb-item active">Games</li>
                 </ol>
             </div>
         </div>
@@ -41,47 +39,36 @@
         <div class="col-lg-10 col-12 mx-auto">
             <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">Song Profile</h3>
+                    <h3 class="card-title">Game Profile</h3>
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form method="post" asp-area="admin" asp-controller="song" asp-action="editSong" enctype="multipart/form-data">
+                <form method="post" asp-area="admin" asp-controller="game" asp-action="addGame">
                     <div class="card-body">
-                        <input type="hidden" asp-for="SongId" />
-                        <input type="hidden" asp-for="CategoryId" />
                         <div class="row form-group">
-                            <label for="name">Song Name</label>
-                            <input type="text" class="form-control" asp-for="SongName" placeholder="Enter Name..." required>
+                            <label for="name">Game Title</label>
+                            <input type="text" class="form-control" asp-for="GameTitle" placeholder="Enter Title..." required>
                         </div>
                         <div class="row form-group">
                             <label for="name">Introduction</label>
-                            <input type="text" class="form-control" asp-for="SongIntroduction" placeholder="Enter Intro..." required>
+                            <input type="text" class="form-control" asp-for="GameDescription" placeholder="Enter Description..." required>
                         </div>
                         <!-- Add Genres -->
-                        <div class="row mb-0">
+                        <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group mb-0">
-                                    <label>Music Genres</label>
+                                    <label>Game Genres</label>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row mt-0">
+                        <div class="row">
                             <div class="col-12 col-xl-10 mx-auto">
                                 <div class="form-group">
                                     <select class="duallistbox" multiple="multiple" name="genres">
                                         @foreach (var genre in genreService.GetAll())
                                         {
-                                            var isSelected = sgService.GetBySongId(Model.SongId).Any(sg => sg.GenreId == genre.GenreId);
-                                            if (isSelected)
-                                            {
-                                                <option value="@genre.GenreId" selected>@genre.GenreName</option>
-
-                                            }
-                                            else
-                                            {
-                                                <option value="@genre.GenreId">@genre.GenreName</option>
-                                            }
+                                            <option value="@genre.GenreId">@genre.GenreName</option>
                                         }
                                     </select>
                                 </div>
@@ -90,59 +77,41 @@
 
                         <div class="row">
                             <!-- /.producer col -->
-                            <div class="col-md-6 col-xl-4">
+                            <div class="col-12 col-md-6 col-lg-4">
                                 <div class="form-group">
                                     <label>Producer</label>
                                     <select class="form-control select2bs4" style="width: 100%;" asp-for="ProducerId">
-                                        <option selected="selected" value="-1">Select a Producer</option>
+                                        <option selected="selected" value="-1" class="form-control">Select a Producer</option>
                                         @foreach (var producer in producerService.GetAll())
                                         {
-                                            <option value="@producer.ProducerId">@producer.ProducerName</option>
+                                            <option value="@producer.ProducerId" class="form-control">@producer.ProducerName</option>
                                         }
                                     </select>
                                 </div>
                             </div>
-                            <!-- /.artist col -->
-                            <div class="col-md-6 col-xl-4">
+                            <div class="col-12 col-md-6 col-lg-4">
                                 <div class="form-group">
-                                    <label>Artist</label>
-                                    <select class="form-control select2bs4" style="width: 100%;" asp-for="ArtistId">
-                                        <option selected="selected" value="-1">Select an Artist</option>
-                                        @foreach (var artist in artistService.GetAllArtists())
-                                        {
-                                            <option value="@artist.ArtistId">@artist.ArtistName</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-                            <!-- /.producer col -->
-                            <div class="col-md-6 col-xl-4">
-                                <div class="form-group ">
-                                    <label>Current File Name</label>
+                                    <label>Trailer link</label>
                                     <div class="form-group">
-                                        <input type="text" asp-for="DownloadLink" class="form-control" disabled />
-                                        <input type="hidden" asp-for="DownloadLink" />
+                                        <input type="text" asp-for="GameTrailer" class="form-control" required/>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-7">
+                            <div class="col-12 col-md-6 col-lg-4">
                                 <div class="form-group">
-                                    <label>Change File</label>
+                                    <label>download link</label>
                                     <div class="form-group">
-                                        <input type="file" name="songFile" id="file_input" accept="audio/*" placeholder="Choose an File" />
+                                        <input type="text" asp-for="DownloadLink" class="form-control" required/>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <!-- /.card-body -->
 
                     <div class="card-footer d-flex justify-content-end">
-                        <a class="btn btn-warning" asp-area="admin" asp-controller="song" asp-action="view" onclick="return confirm('Are you Sure?')">CANCLE</a> &nbsp;
-                        <button type="submit" class="btn btn-info">Save</button>
+                        <a class="btn btn-warning" asp-area="admin" asp-controller="game" asp-action="view" onclick="return confirm('Are you Sure?')">CANCLE</a> &nbsp;
+                        <button type="submit" class="btn btn-info">ADD</button>
                     </div>
                 </form>
             </div>
@@ -164,4 +133,5 @@
             $('.duallistbox').bootstrapDualListbox()
         })
     </script>
+
 }

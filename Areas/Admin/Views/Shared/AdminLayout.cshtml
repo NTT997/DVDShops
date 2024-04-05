@@ -43,7 +43,7 @@
             <ul class="navbar-nav ml-auto">
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item">
-                    <a class="nav-link" asp-controller="admin" asp-action="logout">
+                    <a class="nav-link" asp-controller="dashboard" asp-action="logout" asp-area="admin">
                         <i class="fas fa-sign-out-alt"></i>
                     </a>
                 </li>
@@ -126,6 +126,14 @@
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Songs
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="game" asp-action="view" asp-area="admin">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Games
                                 </p>
                             </a>
                         </li>

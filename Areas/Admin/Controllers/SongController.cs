@@ -7,7 +7,9 @@ using DVDShops.Services.Producers;
 using DVDShops.Services.Songs;
 using DVDShops.Services.SongsGenres;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics;
+using static System.Net.WebRequestMethods;
 
 namespace DVDShops.Areas.Admin.Controllers
 {
@@ -42,13 +44,20 @@ namespace DVDShops.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult AddSong()
         {
+            ViewBag.ArtistId = 0;
+            if (HttpContext.Request.Query.ContainsKey("artistId"))
+            {
+                var artistId = HttpContext.Request.Query["artistId"];
+                ViewBag.ArtistId = int.Parse(artistId);
+            }
+
             return View("SongAdd");
         }
 
         [Route("addSong")]
         [HttpPost]
         public IActionResult AddSong(Song song, IFormFile songFile, List<string> genres)
-        {
+        {            
             if (string.IsNullOrWhiteSpace(song.SongName) || string.IsNullOrWhiteSpace(song.SongIntroduction))
             {
                 SetTempData(false, "Create Song Failed!", "Some Input Field Is White Space Only!");
@@ -82,7 +91,7 @@ namespace DVDShops.Areas.Admin.Controllers
                     return View("SongAdd", song);
                 }
                 song.DownloadLink = Guid.NewGuid().ToString() + "_" + songFile.FileName;
-                var path = Path.Combine(env.WebRootPath, "admin/download/song", song.DownloadLink);
+                var path = Path.Combine(env.WebRootPath, "/download/song", song.DownloadLink);
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     songFile.CopyTo(stream);
@@ -114,7 +123,7 @@ namespace DVDShops.Areas.Admin.Controllers
                 };
                 songGenreService.Create(newSg);
             }
-
+            SetTempData(true, "Create Song Success!", $"{song.SongName} Created!");
             return RedirectToAction("view");
         }
 
@@ -180,14 +189,14 @@ namespace DVDShops.Areas.Admin.Controllers
                     return View("SongEdit", song);
                 }
 
-                var oldFile = Path.Combine(env.WebRootPath, "admin/download/song", song.DownloadLink);
-                if(System.IO.File.Exists(oldFile))
+                var oldFile = Path.Combine(env.WebRootPath, "/download/song", song.DownloadLink);
+                if (System.IO.File.Exists(oldFile))
                 {
                     System.IO.File.Delete(oldFile);
                 }
 
                 song.DownloadLink = Guid.NewGuid().ToString() + "_" + songFile.FileName;
-                var path = Path.Combine(env.WebRootPath, "admin/download/song", song.DownloadLink);
+                var path = Path.Combine(env.WebRootPath, "/download/song", song.DownloadLink);
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     songFile.CopyTo(stream);
