@@ -1,11 +1,7 @@
 ﻿using DVDShops.Models;
 using DVDShops.Services.Artists;
 using DVDShops.Services.ArtistsGenres;
-using DVDShops.Services.Genres;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace DVDShops.Areas.Admin.Controllers
 {
@@ -39,7 +35,7 @@ namespace DVDShops.Areas.Admin.Controllers
 
         [Route("createArtist")]
         [HttpPost]
-        public IActionResult CreateArtist(Artist artist, List<string> genres, IFormFile userPhoto)
+        public IActionResult CreateArtist(Artist artist, List<string> genres, IFormFile artistPhoto)
         {
             if (string.IsNullOrWhiteSpace(artist.ArtistName))
             {
@@ -58,13 +54,21 @@ namespace DVDShops.Areas.Admin.Controllers
                 SetTempData(false, "Create Artist Failed!", "Choose Atleast 1 Genre");
                 return RedirectToAction("view", artist);
             }
-            if (userPhoto != null && userPhoto.Length > 0)
+
+            if (artistPhoto != null && artistPhoto.Length > 0)
             {
-                artist.ArtistPhoto = $"{artist.ArtistName}-{userPhoto.FileName}";
-                var path = Path.Combine(env.WebRootPath, "admin/images/user", artist.ArtistPhoto);
+                string fileExtension = Path.GetExtension(artistPhoto.FileName);
+                if (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png" && fileExtension != ".ico")
+                {
+                    SetTempData(false, "Update Artist Failed!", "Please Choose Correct File Extension!");
+                    return View("view", artist);
+                }
+
+                artist.ArtistPhoto = Guid.NewGuid().ToString() + "_" + artistPhoto.FileName;
+                var path = Path.Combine(env.WebRootPath, "admin/images/artist", artist.ArtistPhoto);
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
-                    userPhoto.CopyTo(stream);
+                    artistPhoto.CopyTo(stream);
                 }
             }
             else
@@ -105,7 +109,7 @@ namespace DVDShops.Areas.Admin.Controllers
 
         [Route("editArtist")]
         [HttpPost]
-        public IActionResult EditArtist(Artist artist, List<string> genres, IFormFile userPhoto, string oldName)
+        public IActionResult EditArtist(Artist artist, List<string> genres, IFormFile artistPhoto, string oldName)
         {
             if (string.IsNullOrWhiteSpace(artist.ArtistName))
             {
@@ -128,21 +132,33 @@ namespace DVDShops.Areas.Admin.Controllers
                 return View("ArtistProfile", artist);
             }
 
-            if (userPhoto != null && userPhoto.Length > 0)
+            if (artistPhoto != null && artistPhoto.Length > 0)
             {
-                Debug.WriteLine("===================");
-                artist.ArtistPhoto = $"{artist.ArtistName}-{userPhoto.FileName}";
-                var path = Path.Combine(env.WebRootPath, "admin/images/user", artist.ArtistPhoto);
+                string fileExtension = Path.GetExtension(artistPhoto.FileName);
+                if (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png" && fileExtension != ".ico")
+                {
+                    SetTempData(false, "Update Artist Failed!", "Please Choose Correct File Extension!");
+                    return View("view", artist);
+                }
+
+                var oldFile = Path.Combine(env.WebRootPath, "admin/images/artist", artist.ArtistPhoto);
+                if (System.IO.File.Exists(oldFile))
+                {
+                    System.IO.File.Delete(oldFile);
+                }
+
+                artist.ArtistPhoto = Guid.NewGuid().ToString() + "_" + artistPhoto.FileName;
+                var path = Path.Combine(env.WebRootPath, "admin/images/artist", artist.ArtistPhoto);
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
-                    userPhoto.CopyTo(stream);
+                    artistPhoto.CopyTo(stream);
                 }
             }
 
             var result = artistService.Update(artist);
             if (!result)
             {
-                SetTempData(true, "Update Artist Success!", "Artist's Profile Updated!");
+                SetTempData(false, "Update Artist Failed!", "Cannot Update Now!");
                 return View("ArtistProfile", artist);
             }
 
@@ -164,7 +180,6 @@ namespace DVDShops.Areas.Admin.Controllers
             }
 
             SetTempData(true, "Update Artist Success!", "Artist's Profile Updated!");
-
             return RedirectToAction("view");
         }
 

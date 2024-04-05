@@ -95,24 +95,6 @@
                         <!-- Add icons to the links using the .nav-icon class
                              with font-awesome or any other icon font library -->
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>
-                                    admin feature
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>function v1</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="nav-item">
                             <a class="nav-link" asp-controller="artist" asp-action="view" asp-area="admin">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
@@ -135,6 +117,15 @@
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Providers
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="song" asp-action="view" asp-area="admin">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Songs
                                 </p>
                             </a>
                         </li>
