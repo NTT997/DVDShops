@@ -44,7 +44,7 @@
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form method="post" asp-area="admin" asp-controller="song" asp-action="addSong" enctype="multipart/form-data">
+                <form method="post" asp-area="admin" asp-controller="song" asp-action="addSong">
                     <div class="card-body">
                         <div class="row form-group">
                             <label for="name">Song Name</label>
@@ -52,7 +52,7 @@
                         </div>
                         <div class="row form-group">
                             <label for="name">Introduction</label>
-                            <input type="text" class="form-control" asp-for="SongIntroduction" placeholder="Enter Intro..." required>
+                            <textarea type="text" class="form-control" asp-for="SongIntroduction" placeholder="Enter Description..." required> </textarea>
                         </div>
                         <!-- Add Genres -->
                         <div class="row">
@@ -78,7 +78,7 @@
 
                         <div class="row">
                             <!-- /.producer col -->
-                            <div class="col-xl-4 col-md-6">
+                            <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
                                     <label>Producer</label>
                                     <select class="form-control select2bs4" style="width: 100%;" asp-for="ProducerId">
@@ -91,7 +91,7 @@
                                 </div>
                             </div>
                             <!-- /.artist col -->
-                            <div class="col-xl-4 col-md-6">
+                            <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
                                     <label>Artist</label>
                                     <select class="form-control select2bs4" style="width: 100%;" asp-for="ArtistId">
@@ -103,11 +103,11 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-md-12">
+                            <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label>Song File</label>
+                                    <label>Song Dl Link</label>
                                     <div class="form-group">
-                                        <input type="file" name="songFile" id="file_input" accept="audio/*" placeholder="Choose an File" />
+                                        <input type="text" placeholder="Enter Dl Link..." class="form-control" asp-for="DownloadLink"/>
                                     </div>
                                 </div>
                             </div>

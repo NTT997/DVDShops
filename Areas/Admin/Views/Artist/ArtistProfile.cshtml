@@ -43,14 +43,15 @@
                         <div class="row" >
                             <input type="hidden" asp-for="ArtistPhoto" />
                             <div class="col-sm-6 col-12">
-                                <label>Artist Photo</label>
+                                <label>Change Photo</label>
                                 <div class="form-group">
                                     <input type="file" name="artistPhoto" id="file_input" accept="image/*" onchange="ShowImageAdd(event)" placeholder="Choose an Image" />
                                 </div>
                             </div>
                             <div class="col-sm-6 col-12">
+                                <label>Current Photo</label>
                                 <div class="text-center">
-                                    <img alt="user-photo" id="user_image" width="100px" height="100px" src="~/admin/images/artist/@Model.ArtistPhoto" />
+                                    <img alt="user-photo" id="user_image" width="100px" height="100px" src="~/images/artist/@Model.ArtistPhoto" />
                                 </div>
                             </div>
                         </div>
@@ -100,8 +101,9 @@
                         </div>
                     </div>
 
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">Save</button>
+                    <div class="card-footer d-flex justify-content-end">
+                        <a class="btn btn-warning" asp-area="admin" asp-controller="artist" asp-action="view" onclick="return confirm('Are you Sure?')">CANCLE</a> &nbsp;
+                        <button type="submit" class="btn btn-primary">SAVE</button>
                     </div>
                 </form>
                 <!-- /.card-body -->

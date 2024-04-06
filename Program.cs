@@ -8,6 +8,8 @@ using DVDShops.Services.Games;
 using DVDShops.Services.GamesGenres;
 using DVDShops.Services.Genres;
 using DVDShops.Services.MailService;
+using DVDShops.Services.Movies;
+using DVDShops.Services.Moviesgenres;
 using DVDShops.Services.Producers;
 using DVDShops.Services.Songs;
 using DVDShops.Services.SongsGenres;
@@ -42,6 +44,8 @@ builder.Services.AddScoped<IAlbumService, AlbumService>()
 builder.Services.AddScoped<IGameService, GameService>()
                 .AddScoped<IGameGenreService, GameGenreService>();
 
+builder.Services.AddScoped<IMovieService, MovieService>()
+                .AddScoped<IMovieGenreService, MovieGenreService>();
 
 builder.Services.AddSession();
 

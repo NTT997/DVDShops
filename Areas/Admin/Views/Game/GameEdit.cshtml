@@ -1,10 +1,9 @@
 ﻿@model DVDShops.Models.Game;
 @inject DVDShops.Services.Producers.IProducerService producerService
 @inject DVDShops.Services.Genres.IGenreService genreService
-@inject DVDShops.Services.GamesGenres.IGameGenreService ggService
 
 @{
-    ViewData["Title"] = "Song Manage";
+    ViewData["Title"] = "Game Manage";
     Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
 }
 
@@ -54,7 +53,7 @@
                         </div>
                         <div class="row form-group">
                             <label for="name">Introduction</label>
-                            <input type="text" class="form-control" asp-for="GameDescription" placeholder="Enter Description..." required>
+                            <textarea type="text" class="form-control" asp-for="GameDescription" placeholder="Enter Description..." required> </textarea>
                         </div>
                         <!-- Add Genres -->
                         <div class="row mb-0">
