@@ -50,7 +50,7 @@ namespace DVDShops.Services.Movies
         {
             try
             {
-                dbContext.Movies.Add(movie);
+                dbContext.Entry(movie).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 return dbContext.SaveChanges() > 0;
             }
             catch (Exception)
@@ -58,18 +58,16 @@ namespace DVDShops.Services.Movies
                 return false;
             }
         }
-        public List<Movie> GetByTitle(string movieTitle)
+        public List<Movie> SearchByTitle(string movieTitle)
         {
-            return dbContext.Movies.Where(movie => movie.MovieTitle.ToLower().Contains(movieTitle.ToLower())).ToList();
-        }
-        public List<Movie> GetByGenre(int genreId)
-        {
-            return dbContext.Movies.Where(movie => movie.CategoryId == genreId).ToList();
+            movieTitle = movieTitle.Trim();
+            return dbContext.Movies.Where(movie => movie.MovieTitle.ToLower().Contains(movieTitle)).ToList();
         }
 
-        public List<Movie> GetByProducer(int producerId)
+        public Movie GetByTitle(string movieTitle)
         {
-            return dbContext.Movies.Where(movie => movie.ProducerId == producerId).ToList();
+            movieTitle = movieTitle.Trim();
+            return dbContext.Movies.Where(movie => movie.MovieTitle.ToLower() == movieTitle).OrderByDescending(m => m.MovieId).FirstOrDefault();
         }
     }
 }

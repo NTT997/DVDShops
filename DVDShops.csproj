@@ -46,6 +46,8 @@
 
     <Folder Include="Controllers\" />
 
+    <Folder Include="wwwroot\images\artist\" />
+
   </ItemGroup>
 
   <ItemGroup>

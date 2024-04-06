@@ -1,0 +1,247 @@
+﻿@inject DVDShops.Services.Users.IUserService userService
+
+@{
+    ViewData["Title"] = "Users Manage";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+}
+
+<!-- Header -->
+@section tableheader {
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+}
+
+<!-- Content -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Users</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a asp-area="admin" asp-controller="dashboard" asp-action="index">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active">Users</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <!-- Custom Tabs -->
+                <div class="card">
+                    <div class="card-header d-flex p-0">
+                        <h3 class="card-title p-3"></h3>
+                        <ul class="nav nav-pills ml-auto p-2">
+                            <li class="nav-item"><a class="nav-link active" href="#users" data-toggle="tab">Users</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#admins" data-toggle="tab">Administrators</a></li>
+                        </ul>
+                    </div><!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <!-- /.tab-pane User-->
+                            <div class="tab-pane active" id="users">
+                                <div class="card">
+                                    <!-- /.card-header -->
+                                    <div class="card-header d-flex justify-content-between align-item-center">
+                                        <div class="card-title">User List</div>
+                                        <div class="ml-auto">
+                                            <a asp-area="admin" asp-controller="user" asp-action="newUser">New User</a>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="card-body table-responsive">
+                                        <!-- id is for table script -->
+                                        <table id="userList" class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr class="text-center">
+                                                    <th>Email</th>
+                                                    <th>Profile Name</th>
+                                                    <th>D.O.B</th>
+                                                    <th>Address</th>
+                                                    <th>Phone</th>
+                                                    <th>Activated</th>
+                                                    <th>Customer</th>
+                                                    <th>Cancle</th>
+                                                    <th>Delete Status</th>
+                                                    <th style="width:auto">Option</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var user in userService.GetAll().Where(u => u.IsAdmin == false))
+                                                {
+                                                    <tr>
+                                                        <td>@user.UsersEmail</td>
+                                                        <td>@user.UsersProfileName</td>
+                                                        <td>d.ob</td>
+                                                        <td>@user.UsersAddress</td>
+                                                        <td>@user.UsersPhone</td>
+                                                        <td>@(user.UsersActivated ? "Yes" : "No")</td>
+                                                        <td>@(user.IsCustomer ? "Yes" : "No")</td>
+                                                        <td>@(user.IsCancel ? "Yes" : "No")</td>
+                                                        <td>@(user.DeleteStatus ? "Yes" : "No")</td>                                                        
+                                                        <td class="text-center">
+                                                            <a class="btn btn-info" asp-area="admin" asp-controller="user" asp-action="editUser">
+                                                                Edit
+                                                            </a> &nbsp;
+                                                            <a class="btn btn-warning"
+                                                               asp-area="admin" asp-controller="user"
+                                                               asp-action="deleteUser" asp-route-userId="@user.UsersId"
+                                                               onclick="return confirm('Are You Sure?')">
+                                                                @(user.DeleteStatus ? "Recover" : "Delete")
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                            <!-- /.card-footer -->
+                                            <tfoot>
+                                                <tr class="text-center">
+                                                    <th>Email</th>
+                                                    <th>Profile Name</th>
+                                                    <th>D.O.B</th>
+                                                    <th>Address</th>
+                                                    <th>Phone</th>
+                                                    <th>Activated</th>
+                                                    <th>Customer</th>
+                                                    <th>Cancle</th>
+                                                    <th>Delete Status</th>
+                                                    <th style="width:auto">Option</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                            <!-- /.tab-pane User-->
+                            <!-- /.tab-pane Administrator-->
+                            <div class="tab-pane" id="admins">
+                                <div class="card">
+                                    <!-- /.card-header -->
+                                    <div class="card-header d-flex justify-content-between align-item-center">
+                                        <div class="card-title">Administrator List</div>
+                                        <div class="ml-auto">
+                                            <a asp-area="admin" asp-controller="user" asp-action="addAdmin" class="text-info">New Administrator</a>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="card-body table-responsive">
+                                        <!-- id is for table script -->
+                                        <table id="adminList" class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr class="text-center">
+                                                    <th>Email</th>
+                                                    <th>Profile Name</th>
+                                                    <th>D.O.B</th>
+                                                    <th>Address</th>
+                                                    <th>Phone</th>
+                                                    <th>Delete Status</th>
+                                                    <th style="width:auto">Option</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var user in userService.GetAll().Where(u => u.IsAdmin == true))
+                                                {
+                                                    <tr>
+                                                        <td>@user.UsersEmail</td>
+                                                        <td>@user.UsersProfileName</td>
+                                                        <td>d.ob</td>
+                                                        <td>@user.UsersAddress</td>
+                                                        <td>@user.UsersPhone</td>
+                                                        <td>@(user.DeleteStatus ? "Yes" : "No")</td>
+                                                        <td class="text-center">
+                                                            <a class="btn btn-info" asp-area="admin" asp-controller="user" asp-action="editAdmin">
+                                                                Edit
+                                                            </a> &nbsp;
+                                                            <a class="btn btn-warning"
+                                                               asp-area="admin" asp-controller="user"
+                                                               asp-action="deleteAdmin" asp-route-userId="@user.UsersId"
+                                                               onclick="return confirm('Are You Sure?')">
+                                                                @(user.DeleteStatus ? "Recover" : "Delete")
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                            <!-- /.card-footer -->
+                                            <tfoot>
+                                                <tr class="text-center">
+                                                    <th>Email</th>
+                                                    <th>Profile Name</th>
+                                                    <th>D.O.B</th>
+                                                    <th>Address</th>
+                                                    <th>Phone</th>
+                                                    <th>Delete Status</th>
+                                                    <th style="width:auto">Option</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                            <!-- /.tab-pane Supplier-->
+                        </div>
+                        <!-- /.tab-content -->
+                    </div><!-- /.card-body -->
+                </div>
+                <!-- ./card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+@section tablefooter {
+    <!-- DataTables  & Plugins -->
+    <script src="~/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/jszip/jszip.min.js"></script>
+    <script src="~/admin/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/admin/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <script>
+        $(function () {
+            $('#userList').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+        $(function () {
+            $('#adminList').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+    </script>
+
+}

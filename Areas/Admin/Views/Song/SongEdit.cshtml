@@ -55,7 +55,7 @@
                         </div>
                         <div class="row form-group">
                             <label for="name">Introduction</label>
-                            <input type="text" class="form-control" asp-for="SongIntroduction" placeholder="Enter Intro..." required>
+                            <textarea type="text" class="form-control" asp-for="SongIntroduction" placeholder="Enter Description..." required> </textarea>
                         </div>
                         <!-- Add Genres -->
                         <div class="row mb-0">
@@ -115,23 +115,24 @@
                                     </select>
                                 </div>
                             </div>
-                            <!-- /.producer col -->
-                            <div class="col-md-6 col-xl-4">
-                                <div class="form-group ">
-                                    <label>Current File Name</label>
-                                    <div class="form-group">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12 col-4">
+                                <div class="form-group">
+                                    <label>Current Dl Link</label>
+                                    <div class="d-flex align-items-center">
                                         <input type="text" asp-for="DownloadLink" class="form-control" disabled />
                                         <input type="hidden" asp-for="DownloadLink" />
+                                        <button class="btn btn-info" type="button" onclick="toggleHidden()"><i class="fas fa-retweet"></i></button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-7">
-                                <div class="form-group">
-                                    <label>Change File</label>
+                            <div class="col-md-6 col-sm-12 col-4">
+                                <div class="form-group invisible" id="newLink">
+                                    <label>Change Dl Link</label>
                                     <div class="form-group">
-                                        <input type="file" name="songFile" id="file_input" accept="audio/*" placeholder="Choose an File" />
+                                        <input type="text" name="newLink" class="form-control" placeholder="Enter New Link..." />
                                     </div>
                                 </div>
                             </div>
@@ -155,6 +156,9 @@
     <script src="~/admin/plugins/select2/js/select2.full.min.js"></script>
     <script src="~/admin/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
     <script>
+        function toggleHidden() {
+            $('#newLink').toggleClass('invisible');
+        }
         $(function () {
             //Initialize Select2 Elements
             $('.select2bs4').select2({

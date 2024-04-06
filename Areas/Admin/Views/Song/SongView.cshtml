@@ -83,9 +83,7 @@
                                         }
                                         else
                                         {
-                                            <td class="text-center">
-                                                <a class="info-box-icon bg-info btn" asp-area="admin" asp-controller="download" asp-action="song" asp-route-fileName="@item.DownloadLink"><i class="fas fa-download"></i></a>
-                                            </td>
+                                            <td class="text-center">@item.DownloadLink</td>
                                         }
                                         <td class="text-center">
                                             <a type="button" class="btn btn-info"

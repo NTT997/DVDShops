@@ -109,7 +109,7 @@
                                             <a class="btn btn-warning"
                                                asp-area="admin" asp-controller="artist"
                                                asp-action="DeleteArtist" asp-route-artistId="@artist.ArtistId"
-                                               onclick="return confirm('Are You Sure To Delete This Record')">
+                                               onclick="return confirm('Are You Sure?')">
                                                 Delete
                                             </a>
                                         </td>
@@ -252,7 +252,6 @@
                 "responsive": true,
             });
         });
-
 
     </script>
 }

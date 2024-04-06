@@ -1,4 +1,5 @@
-﻿using DVDShops.Models;
+﻿using DVDShops.Helpers;
+using DVDShops.Models;
 using DVDShops.Services.Games;
 using DVDShops.Services.GamesGenres;
 using DVDShops.Services.SongsGenres;
@@ -53,9 +54,9 @@ namespace DVDShops.Areas.Admin.Controllers
                 return View("GameAdd", game);
             }
 
-            var pattern = @"\bhttps?://(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b(?:/[-a-zA-Z0-9@:%._\+~#=]*)?";
-            if (!Regex.IsMatch(game.GameTrailer, pattern) || !Regex.IsMatch(game.DownloadLink, pattern))
+            if (!CheckRegex.CheckLink(game.GameTrailer) || !CheckRegex.CheckLink(game.DownloadLink))
             {
+                
                 SetTempData(false, "Create Game Failed!", "Url is Invalid!");
                 return View("GameAdd", game);
             }
@@ -77,7 +78,7 @@ namespace DVDShops.Areas.Admin.Controllers
 
             if (!result)
             {
-                SetTempData(false, "Create Game Failed!", "Something Wrong, Could Not Create Song!");
+                SetTempData(false, "Create Game Failed!", "Something Wrong, Could Not Create Game!");
                 return View("GameAdd", game);
             }
 
@@ -109,7 +110,6 @@ namespace DVDShops.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult GameEdit(Game game, string newTrailer, string newLink, List<string> genres)
         {
-            var pattern = @"\bhttps?://(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b(?:/[-a-zA-Z0-9@:%._\+~#=]*)?";
             if (!string.IsNullOrWhiteSpace(newTrailer))
             {
                 if (newTrailer.Trim() == game.GameTrailer)
@@ -118,7 +118,7 @@ namespace DVDShops.Areas.Admin.Controllers
                     return View("GameEdit", game);
                 }
 
-                if (!Regex.IsMatch(newTrailer, pattern))
+                if (!CheckRegex.CheckLink(newTrailer))
                 {
                     SetTempData(false, "Update Game Failed!", "Trailer Link Invalid!");
                     return View("GameEdit", game);
@@ -138,13 +138,16 @@ namespace DVDShops.Areas.Admin.Controllers
                     return View("GameEdit", game);
                 }
 
-                if (!Regex.IsMatch(newLink, pattern))
+                if (!CheckRegex.CheckLink(newLink))
                 {
                     SetTempData(false, "Update Game Failed!", "Download Link Invalid!");
                     return View("GameEdit", game);
                 }
 
-                game.DownloadLink = newLink;
+                if (!string.IsNullOrEmpty(newLink))
+                {
+                    game.DownloadLink = newLink;
+                }
             }
 
             if (string.IsNullOrWhiteSpace(game.GameTitle) || string.IsNullOrWhiteSpace(game.GameDescription))
