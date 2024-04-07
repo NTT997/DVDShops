@@ -4,7 +4,6 @@ using DVDShops.Services.AlbumsSongs;
 using DVDShops.Services.Artists;
 using DVDShops.Services.Producers;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace DVDShops.Areas.Admin.Controllers
 {

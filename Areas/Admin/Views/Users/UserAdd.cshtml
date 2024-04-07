@@ -1,0 +1,138 @@
+﻿@model DVDShops.Models.User;
+
+@{
+    ViewData["Title"] = "User Manage";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+}
+
+<!-- Content -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 id="title">New User</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a asp-area="admin" asp-controller="user" asp-action="view">Back</a>
+                    </li>
+                    <li class="breadcrumb-item active">Users</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+</section>
+
+<!-- /.add-album -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="col-lg-7 col-11 mx-auto">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">User Profile</h3>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+                <form method="post" asp-area="admin" asp-controller="user" asp-action="addUser">
+                    <div class="card-body">
+                        <div class="row form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" class="form-control" asp-for="UsersEmail" placeholder="Enter Email..." required>
+                        </div>
+
+                        <div class="row form-group">
+                            <label for="password">Password</label>
+                            <input id="password" type="password" class="form-control" asp-for="UsersPassword" 
+                                   placeholder="Enter Password..." min="6" maxlength="12"
+                                   required data-toggle="tooltip" data-placement="top" title="Password should be 6-12 characters">
+                        </div>
+
+                        <div class="row form-group">
+                            <label for="repassword">Confirm Password</label>
+                            <input id="repassword" type="password" class="form-control" name="confirmPassword" onkeyup="rePassword()"
+                                   placeholder="Confirm Password..." min="6" maxlength="12"
+                                   required data-toggle="tooltip" data-placement="top" title="Confirm Password">
+                        </div>
+
+                        <div class="row form-group">
+                            <label for="profile_name">Full Name</label>
+                            <input id="profile_name" type="text" class="form-control" asp-for="UsersProfileName" placeholder="Enter Full Name..." required>
+                        </div>
+
+                        <div class="row form-group">
+                            <label for="address">Address</label>
+                            <input id="address" type="text" class="form-control" asp-for="UsersAddress" placeholder="Enter Address..." required>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-12 col-md-5">
+                                <label for="date">D.O.B</label>
+                                <input id="date" type="date" class="form-control" name="dob" placeholder="Enter DoB..." required>
+                            </div>
+                            
+                            <div class="col-12 col-md-5">
+                                <label>Phone Number</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" name="userPhone" placeholder="Enter Phone..." required
+                                           data-inputmask='"mask": "999 999 9999"' data-mask>
+                                </div>
+                            </div
+
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label>Role</label>
+                                <select asp-for="IsAdmin" class="form-control" style="width: 100%">
+                                    <option value=false selected>Member</option>
+                                    <option value=true>Admin</option>
+                                </select>
+                                </div>                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer d-flex justify-content-end">
+                        <a class="btn btn-warning" asp-area="admin" asp-controller="user" asp-action="view" onclick="return confirm('Are you Sure?')">CANCLE</a> &nbsp;
+                        <button type="submit" class="btn btn-info">ADD</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section tablefooter {
+    <!-- InputMask -->
+    <script src="~/admin/plugins/moment/moment.min.js"></script>
+    <script src="~/admin/plugins/inputmask/jquery.inputmask.min.js"></script>
+
+    <script>
+        function rePassword() {
+            var confirmPasswordInput = $('#repassword');
+            var passwordInput = $('#password');
+
+            if (confirmPasswordInput.val() !== passwordInput.val()) {
+                confirmPasswordInput[0].style.borderColor = 'red'; // Set border color to red
+            } else {
+                confirmPasswordInput[0].style.borderColor = 'green'; // Set border color to green
+            }
+        }
+
+        $(document).ready(function () {
+            var date = '@TempData["dob"]';
+            if (date) {
+                var formattedDate = new Date(date).toISOString().split('T')[0];
+                $('#date').val(date);
+            }
+        })        
+
+        $(function () {
+            $('[data-mask]').inputmask();
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+    </script>
+}

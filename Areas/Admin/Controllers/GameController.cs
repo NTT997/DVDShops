@@ -2,11 +2,7 @@
 using DVDShops.Models;
 using DVDShops.Services.Games;
 using DVDShops.Services.GamesGenres;
-using DVDShops.Services.SongsGenres;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
 
 namespace DVDShops.Areas.Admin.Controllers
 {

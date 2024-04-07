@@ -2,7 +2,6 @@
 using DVDShops.Services.Producers;
 using DVDShops.Services.Suppliers;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 

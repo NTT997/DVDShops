@@ -1,17 +1,8 @@
 ﻿using DVDShops.Helpers;
 using DVDShops.Models;
-using DVDShops.Services.Albums;
-using DVDShops.Services.AlbumsGenres;
-using DVDShops.Services.Artists;
-using DVDShops.Services.ArtistsGenres;
-using DVDShops.Services.Producers;
 using DVDShops.Services.Songs;
 using DVDShops.Services.SongsGenres;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
-using static System.Net.WebRequestMethods;
 
 namespace DVDShops.Areas.Admin.Controllers
 {
