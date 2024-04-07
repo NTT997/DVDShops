@@ -19,7 +19,5 @@ public partial class Producer
 
     public virtual ICollection<Movie> Movies { get; set; } = new List<Movie>();
 
-    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
-
     public virtual ICollection<Song> Songs { get; set; } = new List<Song>();
 }

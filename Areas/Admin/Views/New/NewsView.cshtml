@@ -1,0 +1,36 @@
+﻿@model List<DVDShops.Models.News>
+
+<h2>News List</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Image</th>
+            <th>Content</th>
+            <th>Source</th>
+            <th>Publish Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var news in Model)
+        {
+            <tr>
+                <td>@news.NewsId</td>
+                <td>@news.NewsTitle</td>
+                <td>@news.NewsImage</td>
+                <td>@news.NewsContent</td>
+                <td>@news.NewsSource</td>
+                <td>@news.PublishDate.ToString()</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@news.NewsId">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@news.NewsId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create">Add New News</a>

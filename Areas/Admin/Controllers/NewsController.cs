@@ -5,81 +5,89 @@ using System.Linq;
 namespace DVDShops.Areas.Admin.Controllers
 {
     [Area("admin")]
-    [Route("admin/feedback")]
-    public class FeedbackController : Controller
+    [Route("admin/news")]
+    public class NewsController : Controller
     {
         private readonly DvdshopContext _context;
 
-        public FeedbackController(DvdshopContext context)
+        public NewsController(DvdshopContext context)
         {
             _context = context;
         }
 
+        [Route("")]
         public IActionResult Index()
         {
-            var feedbackList = _context.Feedback.ToList();
-            return View(feedbackList);
+            var newsList = _context.News.ToList();
+            return View(newsList);
         }
 
         [HttpGet]
+        [Route("create")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(Feedback feedback)
+        [Route("create")]
+        public IActionResult Create(News news)
         {
             if (ModelState.IsValid)
             {
-                _context.Feedback.Add(feedback);
+                _context.News.Add(news);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(feedback);
+            return View(news);
         }
 
         [HttpGet]
+        [Route("edit/{id}")]
         public IActionResult Edit(int id)
         {
-            var feedback = _context.Feedback.Find(id);
-            if (feedback == null)
+            var news = _context.News.Find(id);
+            if (news == null)
             {
                 return NotFound();
             }
-            return View(feedback);
+            return View(news);
         }
 
         [HttpPost]
-        public IActionResult Edit(Feedback feedback)
+        [Route("edit/{id}")]
+        public IActionResult Edit(int id, News news)
         {
             if (ModelState.IsValid)
             {
-                _context.Feedback.Update(feedback);
+                _context.News.Update(news);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(feedback);
+            return View(news);
         }
 
         [HttpGet]
+        [Route("delete/{id}")]
         public IActionResult Delete(int id)
         {
-            var feedback = _context.Feedback.Find(id);
-            if (feedback == null)
+            var news = _context.News.Find(id);
+            if (news == null)
             {
                 return NotFound();
             }
-            return View(feedback);
+            return View(news);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [Route("delete/{id}")]
+        [ActionName("Delete")]
         public IActionResult DeleteConfirmed(int id)
         {
-            var feedback = _context.Feedback.Find(id);
-            if (feedback != null)
+            var news = _context.News.Find(id);
+            if (news != null)
             {
-                _context.Feedback.Remove(feedback);
+                _context.News.Remove(news);
                 _context.SaveChanges();
             }
             return RedirectToAction("Index");

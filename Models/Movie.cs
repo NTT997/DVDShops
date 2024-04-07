@@ -9,23 +9,19 @@ public partial class Movie
 
     public string MovieTitle { get; set; } = null!;
 
-    public string MovieIntro { get; set; } = null!;
+    public string GameDescription { get; set; } = null!;
 
     public string MovieTrailer { get; set; } = null!;
 
+    public string? DownloadLink { get; set; }
+
     public int ProducerId { get; set; }
-
-    public int? ProductId { get; set; }
-
-    public int GenreId { get; set; }
 
     public int CategoryId { get; set; }
 
     public virtual Category Category { get; set; } = null!;
 
-    public virtual Genre Genre { get; set; } = null!;
+    public virtual ICollection<MoviesGenre> MoviesGenres { get; set; } = new List<MoviesGenre>();
 
     public virtual Producer Producer { get; set; } = null!;
-
-    public virtual Product? Product { get; set; }
 }

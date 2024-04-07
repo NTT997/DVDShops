@@ -1,6 +1,5 @@
-
-    @inject DVDShops.Services.
-
+@inject DVDShops.Services.Feedbacks.IFeedbackService feedbackService
+@model DVDShops.Models.Feedback;
     @{
     ViewData["Title"] = "Feedback";
     Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
@@ -129,4 +128,4 @@
             });
         });
         </script>
-    }
+}

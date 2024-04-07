@@ -13,13 +13,13 @@ public partial class Order
 
     public bool OrderStatus { get; set; }
 
-    public int CartId { get; set; }
+    public double TotalAmount { get; set; }
 
-    public int InvoiceId { get; set; }
+    public string ShipAddress { get; set; } = null!;
 
-    public virtual Cart Cart { get; set; } = null!;
+    public string? Note { get; set; }
 
-    public virtual Invoice Invoice { get; set; } = null!;
+    public virtual ICollection<InvoiceDetail> InvoiceDetails { get; set; } = new List<InvoiceDetail>();
 
     public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
 

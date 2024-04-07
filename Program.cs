@@ -8,6 +8,7 @@ using DVDShops.Services.Producers;
 using DVDShops.Services.Songs;
 using DVDShops.Services.Suppliers;
 using DVDShops.Services.Users;
+using DVDShops.Services.Feedbacks;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,7 @@ builder.Services.AddScoped<IUserService, UserService>()
                 .AddScoped<IAlbumService, AlbumService>()
                 .AddScoped<IGenreService, GenreService>()
                 .AddScoped<IProducerService, ProducerService>()
+                .AddScoped<IFeedbackService, FeedbackService>()
                 .AddScoped<ISupplierService, SupplierService>();
 
 

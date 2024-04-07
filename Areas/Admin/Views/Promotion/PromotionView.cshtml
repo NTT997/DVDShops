@@ -1,0 +1,41 @@
+﻿@model IEnumerable<DVDShops.Models.Promotion>
+
+@{
+    ViewData["Title"] = "All Promotions";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+}
+
+<h2>All Promotions</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add New Promotion</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Percent</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.PromotionId</td>
+                <td>@item.PromotionName</td>
+                <td>@item.PromotionPercent</td>
+                <td>@item.PromotionStartDate.ToString("yyyy-MM-dd")</td>
+                <td>@item.PromotionEndDate.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.PromotionId" class="btn btn-sm btn-primary">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.PromotionId" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

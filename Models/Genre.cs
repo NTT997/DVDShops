@@ -11,13 +11,13 @@ public partial class Genre
 
     public string? GenreDescription { get; set; }
 
-    public virtual ICollection<Artist> Artists { get; set; } = new List<Artist>();
+    public virtual ICollection<AlbumsGenre> AlbumsGenres { get; set; } = new List<AlbumsGenre>();
 
-    public virtual ICollection<Game> Games { get; set; } = new List<Game>();
+    public virtual ICollection<ArtistsGenre> ArtistsGenres { get; set; } = new List<ArtistsGenre>();
 
-    public virtual ICollection<Movie> Movies { get; set; } = new List<Movie>();
+    public virtual ICollection<GamesGenre> GamesGenres { get; set; } = new List<GamesGenre>();
 
-    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
+    public virtual ICollection<MoviesGenre> MoviesGenres { get; set; } = new List<MoviesGenre>();
 
-    public virtual ICollection<Song> Songs { get; set; } = new List<Song>();
+    public virtual ICollection<SongsGenre> SongsGenres { get; set; } = new List<SongsGenre>();
 }
