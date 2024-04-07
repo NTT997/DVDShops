@@ -44,8 +44,6 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
 
-    <Folder Include="Controllers\" />
-
     <Folder Include="wwwroot\images\artist\" />
 
   </ItemGroup>
