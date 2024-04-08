@@ -7,7 +7,6 @@ namespace DVDShops.Controllers
     {
 
         [Route("")]
-        [Route("index")]
         [Route("~/")]
         public IActionResult Index()
         {
