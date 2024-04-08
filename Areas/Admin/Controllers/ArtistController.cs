@@ -64,8 +64,8 @@ namespace DVDShops.Areas.Admin.Controllers
                     return View("view", artist);
                 }
 
-                artist.ArtistPhoto = Guid.NewGuid().ToString() + "_" + artistPhoto.FileName;
-                var path = Path.Combine(env.WebRootPath, "admin/images/artist", artist.ArtistPhoto);
+                artist.ArtistPhoto = Guid.NewGuid().ToString() + "-" + artistPhoto.FileName;
+                var path = Path.Combine(env.WebRootPath, "images/artist", artist.ArtistPhoto);
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     artistPhoto.CopyTo(stream);
@@ -141,14 +141,14 @@ namespace DVDShops.Areas.Admin.Controllers
                     return View("view", artist);
                 }
 
-                var oldFile = Path.Combine(env.WebRootPath, "admin/images/artist", artist.ArtistPhoto);
+                var oldFile = Path.Combine(env.WebRootPath, "images/artist", artist.ArtistPhoto);
                 if (System.IO.File.Exists(oldFile))
                 {
                     System.IO.File.Delete(oldFile);
                 }
 
-                artist.ArtistPhoto = Guid.NewGuid().ToString() + "_" + artistPhoto.FileName;
-                var path = Path.Combine(env.WebRootPath, "admin/images/artist", artist.ArtistPhoto);
+                artist.ArtistPhoto = Guid.NewGuid().ToString() + "-" + artistPhoto.FileName;
+                var path = Path.Combine(env.WebRootPath, "images/artist", artist.ArtistPhoto);
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     artistPhoto.CopyTo(stream);
@@ -190,11 +190,11 @@ namespace DVDShops.Areas.Admin.Controllers
 
             if (artistService.Delete(artistId))
             {
-                SetTempData(true, "Delete Artist Success!", $"BYE Artist {deleteArtist.ArtistName}!");
+                SetTempData(true, "Delete Artist Success!", $"{deleteArtist.ArtistName} Already Deleted!");
             }
             else
             {
-                SetTempData(false, "Delete Artist Failed!", $"Cannot Delete Artist {deleteArtist.ArtistName}!");
+                SetTempData(false, "Delete Artist Failed!", $"Cannot Delete {deleteArtist.ArtistName} When {deleteArtist.ArtistName} Have Albums Being Sold!");
             }
 
             return RedirectToAction("view");

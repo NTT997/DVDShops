@@ -33,7 +33,7 @@
     <div class="container-fluid">
         <div class="row">
             <!-- /.table -->
-            <div class="col-lg-12">
+            <div class="col-12 col-lg-11 mx-auto">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-item-center">
                         <div class="card-title">Song List</div>
@@ -65,8 +65,14 @@
                                         <td>@item.Producer.ProducerName</td>
                                         <td>@item.Artist.ArtistName</td>
                                         <td>
-                                            Album SOng
-                                            @* @string.Join(", ", songGenreService.GetBySongId(item.SongId).Select(genre => genre.Genre.GenreName)) *@
+                                            @if (item.AlbumsSongs.Count > 0)
+                                            {
+                                                @string.Join(", ", item.AlbumsSongs.Select(item => item.Album.AlbumName))
+                                            }
+                                            else
+                                            {
+                                                <span>Not in Any Album</span>
+                                            }
                                         </td>
                                         <td>
                                             @string.Join(", ", songGenreService.GetBySongId(item.SongId).Select(genre => genre.Genre.GenreName))
@@ -77,9 +83,7 @@
                                         }
                                         else
                                         {
-                                            <td class="text-center">
-                                                <a class="info-box-icon bg-info btn" asp-area="admin" asp-controller="download" asp-action="song" asp-route-fileName="@item.DownloadLink"><i class="fas fa-download"></i></a>
-                                            </td>
+                                            <td class="text-center">@item.DownloadLink</td>
                                         }
                                         <td class="text-center">
                                             <a type="button" class="btn btn-info"

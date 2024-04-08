@@ -9,7 +9,7 @@ public partial class Movie
 
     public string MovieTitle { get; set; } = null!;
 
-    public string GameDescription { get; set; } = null!;
+    public string MovieDescription { get; set; } = null!;
 
     public string MovieTrailer { get; set; } = null!;
 

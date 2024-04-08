@@ -4,7 +4,6 @@ using DVDShops.Services.AlbumsSongs;
 using DVDShops.Services.Artists;
 using DVDShops.Services.Producers;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace DVDShops.Areas.Admin.Controllers
 {
@@ -45,11 +44,11 @@ namespace DVDShops.Areas.Admin.Controllers
 
             if (albumService.Delete(albumId))
             {
-                SetTempData(true, "Delete Album Success!", $"Bye {album.AlbumName}!");
+                SetTempData(true, "Delete Album Success!", $"{album.AlbumName} Already Delete!");
             }
             else
             {
-                SetTempData(false, "Delete Album Failed!", "This Album Cannot be Deleted This Way!");
+                SetTempData(false, "Delete Album Failed!", "Cannot Delete Albums Being Sold!");
             }
             return RedirectToAction("view");
         }

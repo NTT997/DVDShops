@@ -1,13 +1,8 @@
-﻿using DVDShops.Models;
-using DVDShops.Services.Albums;
-using DVDShops.Services.AlbumsGenres;
-using DVDShops.Services.Artists;
-using DVDShops.Services.ArtistsGenres;
-using DVDShops.Services.Producers;
+﻿using DVDShops.Helpers;
+using DVDShops.Models;
 using DVDShops.Services.Songs;
 using DVDShops.Services.SongsGenres;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace DVDShops.Areas.Admin.Controllers
 {
@@ -42,16 +37,29 @@ namespace DVDShops.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult AddSong()
         {
+            ViewBag.ArtistId = 0;
+            if (HttpContext.Request.Query.ContainsKey("artistId"))
+            {
+                var artistId = HttpContext.Request.Query["artistId"];
+                ViewBag.ArtistId = int.Parse(artistId);
+            }
+
             return View("SongAdd");
         }
 
         [Route("addSong")]
         [HttpPost]
-        public IActionResult AddSong(Song song, IFormFile songFile, List<string> genres)
+        public IActionResult AddSong(Song song, List<string> genres)
         {
-            if (string.IsNullOrWhiteSpace(song.SongName) || string.IsNullOrWhiteSpace(song.SongIntroduction))
+            if (string.IsNullOrWhiteSpace(song.SongName) || string.IsNullOrWhiteSpace(song.SongIntroduction) || string.IsNullOrWhiteSpace(song.DownloadLink))
             {
                 SetTempData(false, "Create Song Failed!", "Some Input Field Is White Space Only!");
+                return View("SongAdd", song);
+            }
+
+            if (!CheckRegex.CheckLink(song.DownloadLink))
+            {
+                SetTempData(false, "Create Song Failed!", "Url is Invalid!");
                 return View("SongAdd", song);
             }
 
@@ -70,27 +78,6 @@ namespace DVDShops.Areas.Admin.Controllers
             if (song.ArtistId < 0)
             {
                 SetTempData(false, "Create Song Failed!", "Please Choose an Artist!");
-                return View("SongAdd", song);
-            }
-
-            if (songFile != null && songFile.Length > 0)
-            {
-                string fileExtension = Path.GetExtension(songFile.FileName);
-                if (fileExtension != ".mp3" && fileExtension != ".wav" && fileExtension != ".ogg")
-                {
-                    SetTempData(false, "Create Song Failed!", "Please Choose Correct File Extension!");
-                    return View("SongAdd", song);
-                }
-                song.DownloadLink = Guid.NewGuid().ToString() + "_" + songFile.FileName;
-                var path = Path.Combine(env.WebRootPath, "admin/download/song", song.DownloadLink);
-                using (var stream = new FileStream(path, FileMode.Create))
-                {
-                    songFile.CopyTo(stream);
-                }
-            }
-            else
-            {
-                SetTempData(false, "Create Song Failed!", "Please Upload The Song!");
                 return View("SongAdd", song);
             }
 
@@ -114,7 +101,7 @@ namespace DVDShops.Areas.Admin.Controllers
                 };
                 songGenreService.Create(newSg);
             }
-
+            SetTempData(true, "Create Song Success!", $"{song.SongName} Created!");
             return RedirectToAction("view");
         }
 
@@ -123,6 +110,11 @@ namespace DVDShops.Areas.Admin.Controllers
         public IActionResult DeleteSong(int songId)
         {
             var song = songService.GetById(songId);
+            if (song.AlbumsSongs.Any(als => als.SongId == song.SongId))
+            {
+                SetTempData(false, "Delete Song Failed!", "This Song Cannot be Deleted This Way!");
+                return RedirectToAction("view");
+            }
 
             if (songService.Delete(songId))
             {
@@ -145,8 +137,27 @@ namespace DVDShops.Areas.Admin.Controllers
 
         [Route("editSong")]
         [HttpPost]
-        public IActionResult EditSong(Song song, IFormFile songFile, List<string> genres)
+        public IActionResult EditSong(Song song, List<string> genres, string newLink)
         {
+            if (!string.IsNullOrWhiteSpace(newLink))
+            {
+                if (newLink.Trim() == song.DownloadLink)
+                {
+                    SetTempData(false, "Update Song Failed!", "New Download Link Cannot be The Same As Current Link!");
+                    return View("SongEdit", song);
+                }
+
+                if (!CheckRegex.CheckLink(newLink))
+                {
+                    SetTempData(false, "Update Song Failed!", "Download Link Invalid!");
+                    return View("SongEdit", song);
+                }
+                if (!string.IsNullOrEmpty(newLink))
+                {
+                    song.DownloadLink = newLink;
+                }
+            }
+
             if (string.IsNullOrWhiteSpace(song.SongName) || string.IsNullOrWhiteSpace(song.SongIntroduction))
             {
                 SetTempData(false, "Update Song Failed!", "Some Input Field Is White Space Only!");
@@ -169,29 +180,6 @@ namespace DVDShops.Areas.Admin.Controllers
             {
                 SetTempData(false, "Update Song Failed!", "Please Choose an Artist!");
                 return View("SongEdit", song);
-            }
-
-            if (songFile != null && songFile.Length > 0)
-            {
-                string fileExtension = Path.GetExtension(songFile.FileName);
-                if (fileExtension != ".mp3" && fileExtension != ".wav" && fileExtension != ".ogg")
-                {
-                    SetTempData(false, "Update Song Failed!", "Please Choose Correct File Extension!");
-                    return View("SongEdit", song);
-                }
-
-                var oldFile = Path.Combine(env.WebRootPath, "admin/download/song", song.DownloadLink);
-                if(System.IO.File.Exists(oldFile))
-                {
-                    System.IO.File.Delete(oldFile);
-                }
-
-                song.DownloadLink = Guid.NewGuid().ToString() + "_" + songFile.FileName;
-                var path = Path.Combine(env.WebRootPath, "admin/download/song", song.DownloadLink);
-                using (var stream = new FileStream(path, FileMode.Create))
-                {
-                    songFile.CopyTo(stream);
-                }
             }
 
             var result = songService.Update(song);

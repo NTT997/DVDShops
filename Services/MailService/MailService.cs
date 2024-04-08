@@ -12,7 +12,7 @@ namespace DVDShops.Services.MailService
             this.configuration = configuration;
         }
 
-        public bool SendMail(User to, string subject, string content)
+        public bool SendMail(User toUser, string subject, string content)
         {
             try
             {
@@ -20,11 +20,11 @@ namespace DVDShops.Services.MailService
                 var port = int.Parse(configuration["EmailSettings:Smtp:Port"]);
                 var username = configuration["EmailSettings:Smtp:Username"];
                 var password = configuration["EmailSettings:Smtp:Password"];
-                var enable = bool.Parse(configuration["EmailSettings:Smtp:UseSsl"]);
+                var useSsl = bool.Parse(configuration["EmailSettings:Smtp:UseSsl"]);
 
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("DVDSshop", username));
-                message.To.Add(new MailboxAddress(to.UsersProfileName, to.UsersEmail));
+                message.From.Add(new MailboxAddress("DVDSshop", "DVDSshop"));
+                message.To.Add(new MailboxAddress(toUser.UsersProfileName, toUser.UsersEmail));
                 message.Subject = subject;
 
                 var bodyBuilder = new BodyBuilder();
@@ -33,7 +33,7 @@ namespace DVDShops.Services.MailService
 
                 using (var client = new SmtpClient())
                 {
-                    client.Connect(host, port, enable);
+                    client.Connect(host, port, MailKit.Security.SecureSocketOptions.StartTls);
                     client.Authenticate(username, password);
                     client.Send(message);
                     client.Disconnect(true);
