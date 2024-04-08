@@ -1,64 +1,203 @@
 ﻿using DVDShops.Models;
-using DVDShops.Services;
+using DVDShops.Services.Artists;
+using DVDShops.Services.ArtistsGenres;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace DVDShops.Areas.Admin.Controllers
 {
     [Area("admin")]
-    [Route("admin/[controller]")]
-    [ApiController]
-    public class FeedbackController : ControllerBase
+    [Route("admin/artist")]
+    public class ArtistController : Controller
     {
-        private readonly IFeedbackService _feedbackService;
-
-        public FeedbackController(IFeedbackService feedbackService)
+        private IArtistService artistService;
+        private IArtistGenreService artistGenreService;
+        private IWebHostEnvironment env;
+        public ArtistController(IArtistService artistService, IArtistGenreService artistGenreService, IWebHostEnvironment env)
         {
-            _feedbackService = feedbackService;
+            this.artistService = artistService;
+            this.artistGenreService = artistGenreService;
+            this.env = env;
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<Feedback>> GetAllFeedbacks()
+        [Route("view")]
+        [Route("")]
+        public IActionResult ArtistView(Artist artist)
         {
-            var feedbacks = _feedbackService.GetAllFeedbacks();
-            return Ok(feedbacks);
+            return View("ArtistView", artist);
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<Feedback> GetFeedbackById(int id)
+        private void SetTempData(bool status, string title, string array)
         {
-            var feedback = _feedbackService.GetFeedbackById(id);
-            if (feedback == null)
-            {
-                return NotFound();
-            }
-            return Ok(feedback);
+            TempData["status"] = status.ToString();
+            TempData["title"] = title;
+            TempData["message"] = array;
         }
 
+        [Route("createArtist")]
         [HttpPost]
-        public IActionResult AddFeedback(Feedback feedback)
+        public IActionResult CreateArtist(Artist artist, List<string> genres, IFormFile artistPhoto)
         {
-            _feedbackService.AddFeedback(feedback);
-            return CreatedAtAction(nameof(GetFeedbackById), new { id = feedback.FeedbackId }, feedback);
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult UpdateFeedback(int id, Feedback feedback)
-        {
-            if (id != feedback.FeedbackId)
+            if (string.IsNullOrWhiteSpace(artist.ArtistName))
             {
-                return BadRequest();
+                SetTempData(false, "Create Artist Failed!", "Artist's Name Is Must Have!");
+                return RedirectToAction("view", artist);
             }
 
-            _feedbackService.UpdateFeedback(feedback);
-            return NoContent();
+            if (artistService.GetByName(artist.ArtistName) != null)
+            {
+                SetTempData(false, "Create Artist Failed!", "Artist Already Existed!");
+                return RedirectToAction("view", artist);
+            }
+
+            if (genres.Count() < 1)
+            {
+                SetTempData(false, "Create Artist Failed!", "Choose Atleast 1 Genre");
+                return RedirectToAction("view", artist);
+            }
+
+            if (artistPhoto != null && artistPhoto.Length > 0)
+            {
+                string fileExtension = Path.GetExtension(artistPhoto.FileName);
+                if (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png" && fileExtension != ".ico")
+                {
+                    SetTempData(false, "Update Artist Failed!", "Please Choose Correct File Extension!");
+                    return View("view", artist);
+                }
+
+                artist.ArtistPhoto = Guid.NewGuid().ToString() + "-" + artistPhoto.FileName;
+                var path = Path.Combine(env.WebRootPath, "images/artist", artist.ArtistPhoto);
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    artistPhoto.CopyTo(stream);
+                }
+            }
+            else
+            {
+                artist.ArtistPhoto = "no-image.jpg";
+            }
+
+            var result = artistService.Create(artist);
+            if (!result)
+            {
+                SetTempData(false, "Create Artist Failed!", "Something Wrong, Could Not Create Artist!");
+                return RedirectToAction("view");
+            }
+
+            var newArtist = artistService.GetByName(artist.ArtistName);
+            int[] genreIds = genres.Select(int.Parse).ToArray();
+            foreach (var genreId in genreIds)
+            {
+                var newAg = new ArtistsGenre
+                {
+                    ArtistId = newArtist.ArtistId,
+                    GenreId = genreId,
+                };
+                artistGenreService.Create(newAg);
+            }
+
+            SetTempData(true, "Create Artist Success!", "New Artist Has Been Added!");
+            return RedirectToAction("view");
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeleteFeedback(int id)
+        [Route("editArtist")]
+        [HttpGet]
+        public IActionResult EditArtist(int artistId)
         {
-            _feedbackService.DeleteFeedback(id);
-            return NoContent();
+            var artist = artistService.GetById(artistId);
+            return View("ArtistProfile", artist);
+        }
+
+        [Route("editArtist")]
+        [HttpPost]
+        public IActionResult EditArtist(Artist artist, List<string> genres, IFormFile artistPhoto, string oldName)
+        {
+            if (string.IsNullOrWhiteSpace(artist.ArtistName))
+            {
+                SetTempData(false, "Update Artist Failed!", "Artist's Name Is Must Have!");
+                return View("ArtistProfile", artist);
+            }
+
+            if (artist.ArtistName != oldName)
+            {
+                if (artistService.GetByName(artist.ArtistName) != null)
+                {
+                    SetTempData(false, "Update Artist Failed!", "Artist Already Existed!");
+                    return View("ArtistProfile", artist);
+                }
+            }
+
+            if (genres.Count() < 1)
+            {
+                SetTempData(false, "Update Artist Failed!", "Choose Atleast 1 Genre");
+                return View("ArtistProfile", artist);
+            }
+
+            if (artistPhoto != null && artistPhoto.Length > 0)
+            {
+                string fileExtension = Path.GetExtension(artistPhoto.FileName);
+                if (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png" && fileExtension != ".ico")
+                {
+                    SetTempData(false, "Update Artist Failed!", "Please Choose Correct File Extension!");
+                    return View("view", artist);
+                }
+
+                var oldFile = Path.Combine(env.WebRootPath, "images/artist", artist.ArtistPhoto);
+                if (System.IO.File.Exists(oldFile))
+                {
+                    System.IO.File.Delete(oldFile);
+                }
+
+                artist.ArtistPhoto = Guid.NewGuid().ToString() + "-" + artistPhoto.FileName;
+                var path = Path.Combine(env.WebRootPath, "images/artist", artist.ArtistPhoto);
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    artistPhoto.CopyTo(stream);
+                }
+            }
+
+            var result = artistService.Update(artist);
+            if (!result)
+            {
+                SetTempData(false, "Update Artist Failed!", "Cannot Update Now!");
+                return View("ArtistProfile", artist);
+            }
+
+            var ag = artistGenreService.GetByArtistId(artist.ArtistId);
+            foreach (var item in ag)
+            {
+                artistGenreService.Delete(item.Id);
+            }
+
+            int[] genreIds = genres.Select(int.Parse).ToArray();
+            foreach (var genreId in genreIds)
+            {
+                var newAg = new ArtistsGenre
+                {
+                    ArtistId = artist.ArtistId,
+                    GenreId = genreId,
+                };
+                artistGenreService.Create(newAg);
+            }
+
+            SetTempData(true, "Update Artist Success!", "Artist's Profile Updated!");
+            return RedirectToAction("view");
+        }
+
+        [Route("deleteArtist")]
+        public IActionResult DeleteArtist(int artistId)
+        {
+            var deleteArtist = artistService.GetById(artistId);
+
+            if (artistService.Delete(artistId))
+            {
+                SetTempData(true, "Delete Artist Success!", $"{deleteArtist.ArtistName} Already Deleted!");
+            }
+            else
+            {
+                SetTempData(false, "Delete Artist Failed!", $"Cannot Delete {deleteArtist.ArtistName} When {deleteArtist.ArtistName} Have Albums Being Sold!");
+            }
+
+            return RedirectToAction("view");
         }
     }
 }
