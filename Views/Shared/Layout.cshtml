@@ -11,6 +11,7 @@
     <!-- Favicon -->
     <link href="~/img/favicon.ico" rel="icon">
 
+
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -28,36 +29,7 @@
 <body>
     <!-- Topbar Start -->
     <div class="container-fluid">
-        <div class="row bg-secondary py-2 px-xl-5">
-            <div class="col-lg-6 d-none d-lg-block">
-                <div class="d-inline-flex align-items-center">
-                    <a class="text-dark" href="">FAQs</a>
-                    <span class="text-muted px-2">|</span>
-                    <a class="text-dark" href="">Help</a>
-                    <span class="text-muted px-2">|</span>
-                    <a class="text-dark" href="">Support</a>
-                </div>
-            </div>
-            <div class="col-lg-6 text-center text-lg-right">
-                <div class="d-inline-flex align-items-center">
-                    <a class="text-dark px-2" href="">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a class="text-dark px-2" href="">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a class="text-dark px-2" href="">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a class="text-dark px-2" href="">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a class="text-dark pl-2" href="">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
+        
         <div class="row align-items-center py-3 px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
                 <a href="" class="text-decoration-none">
@@ -99,35 +71,11 @@
                 </a>
                 <nav class="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0" id="navbar-vertical">
                     <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link" data-toggle="dropdown">Games<i class="fa fa-angle-down float-right mt-1"></i></a>
-                            <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
-                                <a href="" class="dropdown-item">PS5</a>
-                                <a href="" class="dropdown-item">XONE</a>
-                                <a href="" class="dropdown-item">STEAM</a>
-                                <a href="" class="dropdown-item">OTHERS</a>
-                            </div>
-                        </div>
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link" data-toggle="dropdown">Music<i class="fa fa-angle-down float-right mt-1"></i></a>
-                            <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
-                                <a href="" class="dropdown-item">US/UK</a>
-                                <a href="" class="dropdown-item">GLOBAL</a>
-                                <a href="" class="dropdown-item">KPOP</a>
-                                <a href="" class="dropdown-item">OTHERS</a>
-                            </div>
-                        </div>
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link" data-toggle="dropdown">Movies<i class="fa fa-angle-down float-right mt-1"></i></a>
-                            <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
-                                <a href="" class="dropdown-item">Romance</a>
-                                <a href="" class="dropdown-item">ACTION</a>
-                                <a href="" class="dropdown-item">PSYCHOLOGICAL</a>
-                                <a href="" class="dropdown-item">OTHERS</a>
-                            </div>
-                        </div>
-                        <a href="#" class="nav-item nav-link">News</a>
-                        <a href="#" class="nav-item nav-link">Forum</a>
+                        <a asp-controller="game" asp-action="game" class="nav-item nav-link">Game</a>
+                        <a asp-controller="movies" asp-action="movies" class="nav-item nav-link">Movies</a>
+                        <a asp-controller="shop" asp-action="shop" class="nav-item nav-link">Music</a>
+                        <a asp-controller="news" asp-action="news" class="nav-item nav-link">News</a>
+                       
                     </div>
                 </nav>
             </div>
@@ -151,11 +99,10 @@
                                     <a asp-controller="checkout" asp-action="checkout" class="dropdown-item">Checkout</a>
                                 </div>
                             </div>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
+                            <a asp-controller="contact" asp-action="contact" class="nav-item nav-link">Contact</a>
                         </div>
-                        <div class="navbar-nav ml-auto py-0">
+                        <div class="navbar-nav ml-auto py-0 ">
                             <a asp-controller="login" asp-action="login" class="nav-item nav-link">Login</a>
-                            <a href="" class="nav-item nav-link">Register</a>
                         </div>
                     </div>
                 </nav>
@@ -167,7 +114,7 @@
                                 <div class="p-3" style="max-width: 700px;">
                                     <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
                                     <h3 class="display-4 text-white font-weight-semi-bold mb-4">Mai - Tran Thanh</h3>
-                                    <a href="https://www.youtube.com/watch?v=EX6clvId19s" target="_blank" class="btn btn-light py-2 px-3">View Trailer</a>
+                                   
 
                                 </div>
                             </div>
@@ -178,7 +125,17 @@
                                 <div class="p-3" style="max-width: 700px;">
                                     <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
                                     <h3 class="display-4 text-white font-weight-semi-bold mb-4">League of Legends</h3>
-                                    <a href="https://www.youtube.com/watch?v=aR-KAldshAE" target="_blank" class="btn btn-light py-2 px-3">View Trailer</a>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" style="height: 410px;">
+                            <img width= class="img-fluid" src="~/css/images/MTP.jpg" alt="Image">
+                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                    <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
+                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Chung Ta Cua Tuong Lai - Son Tung MTP</h3>
+                                   
                                 </div>
                             </div>
                         </div>
@@ -198,9 +155,11 @@
         </div>
     </div>
     <!-- Navbar End -->
+    <div class="container-fluid" style="width:80%">
    @RenderBody()
+    </div>
     <!-- Footer Start -->
-    <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
+    <div class="container-fluid  bg-secondary text-dark mt-5 pt-5 ">
         <div class="row px-xl-5 pt-5">
             <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
                 <a href="" class="text-decoration-none">
@@ -211,45 +170,21 @@
                 <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@example.com</p>
                 <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
             </div>
+
             <div class="col-lg-8 col-md-12">
                 <div class="row">
+                    <div class="col-md-4 mb-5">
+                        
+                    </div>
                     <div class="col-md-4 mb-5">
                         <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
                         <div class="d-flex flex-column justify-content-start">
                             <a class="text-dark mb-2" asp-controller="index" asp-action="index"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                            <a class="text-dark mb-2" href="detail.html"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
-                            <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
-                            <a class="text-dark mb-2" href="checkout.html"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                            <a class="text-dark" href="contact.html"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                            <a class="text-dark mb-2" asp-controller="shop" asp-action="shop"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
+                            <a class="text-dark" asp-controller="contact" asp-action="contact"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-5">
-                        <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
-                        <div class="d-flex flex-column justify-content-start">
-                            <a class="text-dark mb-2" href="index.html"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                            <a class="text-dark mb-2" href="detail.html"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
-                            <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
-                            <a class="text-dark mb-2" href="checkout.html"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                            <a class="text-dark" href="contact.html"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-5">
-                        <h5 class="font-weight-bold text-dark mb-4">Newsletter</h5>
-                        <form action="">
-                            <div class="form-group">
-                                <input type="text" class="form-control border-0 py-4" placeholder="Your Name" required="required" />
-                            </div>
-                            <div class="form-group">
-                                <input type="email" class="form-control border-0 py-4" placeholder="Your Email"
-                                       required="required" />
-                            </div>
-                            <div>
-                                <button class="btn btn-primary btn-block border-0 py-3" type="submit">Subscribe Now</button>
-                            </div>
-                        </form>
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -258,7 +193,7 @@
                 <p class="mb-md-0 text-center text-md-left text-dark">
                     &copy; <a class="text-dark font-weight-semi-bold" href="#">Simp(le)</a>. All Rights Reserved. Designed
                     by
-                    <a class="text-dark font-weight-semi-bold" href="https://htmlcodex.com">Simp(le)</a>
+                    <a class="text-dark font-weight-semi-bold" href="#">Simp(le)</a>
                 </p>
             </div>
             <div class="col-md-6 px-xl-0 text-center text-md-right">
