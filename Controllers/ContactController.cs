@@ -2,13 +2,12 @@
 
 namespace DVDShops.Controllers
 {
-    [Route("index")]
-    public class IndexController : Controller
+    [Route("contact")]
+    public class ContactController : Controller
     {
-
+        [Route("contact")]
         [Route("")]
-        [Route("~/")]
-        public IActionResult Index()
+        public IActionResult Contact()
         {
             return View();
         }
