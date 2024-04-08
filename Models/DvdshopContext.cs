@@ -15,9 +15,17 @@ public partial class DvdshopContext : DbContext
     {
     }
 
+    public virtual DbSet<AdminsPermission> AdminsPermissions { get; set; }
+
     public virtual DbSet<Album> Albums { get; set; }
 
+    public virtual DbSet<AlbumsGenre> AlbumsGenres { get; set; }
+
+    public virtual DbSet<AlbumsSong> AlbumsSongs { get; set; }
+
     public virtual DbSet<Artist> Artists { get; set; }
+
+    public virtual DbSet<ArtistsGenre> ArtistsGenres { get; set; }
 
     public virtual DbSet<Cart> Carts { get; set; }
 
@@ -27,15 +35,23 @@ public partial class DvdshopContext : DbContext
 
     public virtual DbSet<Game> Games { get; set; }
 
+    public virtual DbSet<GamesGenre> GamesGenres { get; set; }
+
     public virtual DbSet<Genre> Genres { get; set; }
 
     public virtual DbSet<Invoice> Invoices { get; set; }
 
+    public virtual DbSet<InvoiceDetail> InvoiceDetails { get; set; }
+
     public virtual DbSet<Movie> Movies { get; set; }
+
+    public virtual DbSet<MoviesGenre> MoviesGenres { get; set; }
 
     public virtual DbSet<News> News { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
+
+    public virtual DbSet<Permission> Permissions { get; set; }
 
     public virtual DbSet<Producer> Producers { get; set; }
 
@@ -43,88 +59,176 @@ public partial class DvdshopContext : DbContext
 
     public virtual DbSet<Promotion> Promotions { get; set; }
 
-    public virtual DbSet<Report> Reports { get; set; }
+    public virtual DbSet<Rating> Ratings { get; set; }
+
+    public virtual DbSet<Review> Reviews { get; set; }
 
     public virtual DbSet<Song> Songs { get; set; }
 
+    public virtual DbSet<SongsGenre> SongsGenres { get; set; }
+
     public virtual DbSet<Supplier> Suppliers { get; set; }
 
-    public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<User> Users { get; set; }  
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<AdminsPermission>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__AdminsPe__3213E83F66CC7F0F");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.PermissionId).HasColumnName("permission_id");
+            entity.Property(e => e.UsersId).HasColumnName("users_id");
+
+            entity.HasOne(d => d.Permission).WithMany(p => p.AdminsPermissions)
+                .HasForeignKey(d => d.PermissionId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_permissions");
+
+            entity.HasOne(d => d.Users).WithMany(p => p.AdminsPermissions)
+                .HasForeignKey(d => d.UsersId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_admins");
+        });
+
         modelBuilder.Entity<Album>(entity =>
         {
-            entity.HasKey(e => e.AlbumId).HasName("PK__Albums__B0E1DDB27564D009");
+            entity.HasKey(e => e.AlbumId).HasName("PK__Albums__B0E1DDB249F959F7");
 
             entity.Property(e => e.AlbumId).HasColumnName("album_id");
             entity.Property(e => e.AlbumIntroduction)
                 .HasMaxLength(500)
                 .IsUnicode(false)
                 .HasColumnName("album_introduction");
-            entity.Property(e => e.AlbumPrice).HasColumnName("album_price");
+            entity.Property(e => e.AlbumName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("album_name");
             entity.Property(e => e.ArtistId).HasColumnName("artist_id");
-            entity.Property(e => e.FeedbackId).HasColumnName("feedback_id");
+            entity.Property(e => e.CategoryId).HasColumnName("category_id");
             entity.Property(e => e.IssueDate).HasColumnName("issue_date");
             entity.Property(e => e.ProducerId).HasColumnName("producer_id");
-            entity.Property(e => e.SoldUnit).HasColumnName("sold_unit");
+            entity.Property(e => e.ReviewId).HasColumnName("review_id");
 
             entity.HasOne(d => d.Artist).WithMany(p => p.Albums)
                 .HasForeignKey(d => d.ArtistId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_album_artist");
 
-            entity.HasOne(d => d.Feedback).WithMany(p => p.Albums)
-                .HasForeignKey(d => d.FeedbackId)
-                .HasConstraintName("fk_album_feedback");
+            entity.HasOne(d => d.Category).WithMany(p => p.Albums)
+                .HasForeignKey(d => d.CategoryId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_album_cate");
 
             entity.HasOne(d => d.Producer).WithMany(p => p.Albums)
                 .HasForeignKey(d => d.ProducerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_album_producer");
+
+            entity.HasOne(d => d.Review).WithMany(p => p.Albums)
+                .HasForeignKey(d => d.ReviewId)
+                .HasConstraintName("fk_album_review");
+        });
+
+        modelBuilder.Entity<AlbumsGenre>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__AlbumsGe__3213E83F17594926");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AlbumId).HasColumnName("album_id");
+            entity.Property(e => e.GenreId).HasColumnName("genre_id");
+
+            entity.HasOne(d => d.Album).WithMany(p => p.AlbumsGenres)
+                .HasForeignKey(d => d.AlbumId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_AlbumsGenres_album");
+
+            entity.HasOne(d => d.Genre).WithMany(p => p.AlbumsGenres)
+                .HasForeignKey(d => d.GenreId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_AlbumsGenres_song");
+        });
+
+        modelBuilder.Entity<AlbumsSong>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__AlbumsSo__3213E83F2EC088CE");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AlbumId).HasColumnName("album_id");
+            entity.Property(e => e.SongId).HasColumnName("song_id");
+
+            entity.HasOne(d => d.Album).WithMany(p => p.AlbumsSongs)
+                .HasForeignKey(d => d.AlbumId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_AlbumsSongs_album");
+
+            entity.HasOne(d => d.Song).WithMany(p => p.AlbumsSongs)
+                .HasForeignKey(d => d.SongId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_AlbumsSongs_song");
         });
 
         modelBuilder.Entity<Artist>(entity =>
         {
-            entity.HasKey(e => e.ArtistId).HasName("PK__Artists__6CD04001383AAEF6");
+            entity.HasKey(e => e.ArtistId).HasName("PK__Artists__6CD04001A96F8129");
 
             entity.Property(e => e.ArtistId).HasColumnName("artist_id");
+            entity.Property(e => e.ArtistBiography)
+                .HasColumnType("text")
+                .HasColumnName("artist_biography");
             entity.Property(e => e.ArtistName)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("artist_name");
-            entity.Property(e => e.Bio)
-                .HasMaxLength(500)
+            entity.Property(e => e.ArtistPhoto)
+                .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("bio");
+                .HasColumnName("artist_photo");
+        });
+
+        modelBuilder.Entity<ArtistsGenre>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__ArtistsG__3213E83F7186BB2A");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.ArtistId).HasColumnName("artist_id");
             entity.Property(e => e.GenreId).HasColumnName("genre_id");
 
-            entity.HasOne(d => d.Genre).WithMany(p => p.Artists)
+            entity.HasOne(d => d.Artist).WithMany(p => p.ArtistsGenres)
+                .HasForeignKey(d => d.ArtistId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_Artists_Genres_artist");
+
+            entity.HasOne(d => d.Genre).WithMany(p => p.ArtistsGenres)
                 .HasForeignKey(d => d.GenreId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_artist_genre");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_Artists_Genres_genre");
         });
 
         modelBuilder.Entity<Cart>(entity =>
         {
-            entity.HasKey(e => e.CartId).HasName("PK__Carts__2EF52A2785AAC732");
+            entity.HasKey(e => e.CartId).HasName("PK__Carts__2EF52A27084296DE");
 
             entity.Property(e => e.CartId).HasColumnName("cart_id");
-            entity.Property(e => e.Amount).HasColumnName("amount");
             entity.Property(e => e.ProductId).HasColumnName("product_id");
-            entity.Property(e => e.PromotionId).HasColumnName("promotion_id");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.UsersId).HasColumnName("users_id");
 
-            entity.HasOne(d => d.Promotion).WithMany(p => p.Carts)
-                .HasForeignKey(d => d.PromotionId)
+            entity.HasOne(d => d.Product).WithMany(p => p.Carts)
+                .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_cart_promotion");
+                .HasConstraintName("fk_cart_product");
+
+            entity.HasOne(d => d.Users).WithMany(p => p.Carts)
+                .HasForeignKey(d => d.UsersId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_cart_user");
         });
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__D54EE9B4159893FF");
+            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__D54EE9B4F027A33C");
 
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
             entity.Property(e => e.CategoryName)
@@ -135,7 +239,7 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Feedback>(entity =>
         {
-            entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__7A6B2B8CDD353E5D");
+            entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__7A6B2B8CDE1B1308");
 
             entity.Property(e => e.FeedbackId).HasColumnName("feedback_id");
             entity.Property(e => e.FeedbackContent)
@@ -147,13 +251,7 @@ public partial class DvdshopContext : DbContext
                 .HasMaxLength(500)
                 .IsUnicode(false)
                 .HasColumnName("feedback_reply");
-            entity.Property(e => e.ProductId).HasColumnName("product_id");
             entity.Property(e => e.UsersId).HasColumnName("users_id");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.Feedbacks)
-                .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_feedback_product");
 
             entity.HasOne(d => d.Users).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.UsersId)
@@ -163,10 +261,14 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Game>(entity =>
         {
-            entity.HasKey(e => e.GameId).HasName("PK__Games__FFE11FCF9DCA9A25");
+            entity.HasKey(e => e.GameId).HasName("PK__Games__FFE11FCFBAEA6678");
 
             entity.Property(e => e.GameId).HasColumnName("game_id");
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
+            entity.Property(e => e.DownloadLink)
+                .HasMaxLength(60)
+                .IsUnicode(false)
+                .HasColumnName("download_link");
             entity.Property(e => e.GameDescription)
                 .HasMaxLength(500)
                 .IsUnicode(false)
@@ -180,34 +282,39 @@ public partial class DvdshopContext : DbContext
                 .HasMaxLength(500)
                 .IsUnicode(false)
                 .HasColumnName("game_trailer");
-            entity.Property(e => e.GenreId).HasColumnName("genre_id");
-            entity.Property(e => e.Price).HasColumnName("price");
             entity.Property(e => e.ProducerId).HasColumnName("producer_id");
-            entity.Property(e => e.ProductId).HasColumnName("product_id");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Games)
                 .HasForeignKey(d => d.CategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_game_category");
 
-            entity.HasOne(d => d.Genre).WithMany(p => p.Games)
-                .HasForeignKey(d => d.GenreId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_game_genre");
-
             entity.HasOne(d => d.Producer).WithMany(p => p.Games)
                 .HasForeignKey(d => d.ProducerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_game_producer");
+        });
 
-            entity.HasOne(d => d.Product).WithMany(p => p.Games)
-                .HasForeignKey(d => d.ProductId)
-                .HasConstraintName("fk_game_product");
+        modelBuilder.Entity<GamesGenre>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__GamesGen__3213E83F8189F50A");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.GameId).HasColumnName("game_id");
+            entity.Property(e => e.GenreId).HasColumnName("genre_id");
+
+            entity.HasOne(d => d.Game).WithMany(p => p.GamesGenres)
+                .HasForeignKey(d => d.GameId)
+                .HasConstraintName("fk_gg_game");
+
+            entity.HasOne(d => d.Genre).WithMany(p => p.GamesGenres)
+                .HasForeignKey(d => d.GenreId)
+                .HasConstraintName("fk_gg_genre");
         });
 
         modelBuilder.Entity<Genre>(entity =>
         {
-            entity.HasKey(e => e.GenreId).HasName("PK__Genres__18428D42F08778B5");
+            entity.HasKey(e => e.GenreId).HasName("PK__Genres__18428D42E7590CA7");
 
             entity.Property(e => e.GenreId).HasColumnName("genre_id");
             entity.Property(e => e.GenreDescription)
@@ -222,33 +329,61 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Invoice>(entity =>
         {
-            entity.HasKey(e => e.InvoiceId).HasName("PK__Invoices__F58DFD4952771708");
+            entity.HasKey(e => e.InvoiceId).HasName("PK__Invoice__F58DFD49C75FFC93");
+
+            entity.ToTable("Invoice");
 
             entity.Property(e => e.InvoiceId).HasColumnName("invoice_id");
+            entity.Property(e => e.InvoiceDate).HasColumnName("invoice_date");
             entity.Property(e => e.OrderId).HasColumnName("order_id");
-            entity.Property(e => e.ShipAddress)
-                .HasMaxLength(500)
-                .IsUnicode(false)
-                .HasColumnName("ship_address");
-            entity.Property(e => e.Total).HasColumnName("total");
+            entity.Property(e => e.TotalAmount).HasColumnName("total_amount");
 
             entity.HasOne(d => d.Order).WithMany(p => p.Invoices)
                 .HasForeignKey(d => d.OrderId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_invoice_order");
+        });
+
+        modelBuilder.Entity<InvoiceDetail>(entity =>
+        {
+            entity.HasKey(e => e.DetailId).HasName("PK__InvoiceD__38E9A224689774F0");
+
+            entity.ToTable("InvoiceDetail");
+
+            entity.Property(e => e.DetailId).HasColumnName("detail_id");
+            entity.Property(e => e.InvoiceId).HasColumnName("invoice_id");
+            entity.Property(e => e.OrderId).HasColumnName("order_id");
+            entity.Property(e => e.PriceAfterPromotion).HasColumnName("price_after_promotion");
+            entity.Property(e => e.ProductId).HasColumnName("product_id");
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
+            entity.Property(e => e.TotalAmount).HasColumnName("total_amount");
+
+            entity.HasOne(d => d.Invoice).WithMany(p => p.InvoiceDetails)
+                .HasForeignKey(d => d.InvoiceId)
+                .HasConstraintName("fk_detail_invoice");
+
+            entity.HasOne(d => d.Order).WithMany(p => p.InvoiceDetails)
+                .HasForeignKey(d => d.OrderId)
+                .HasConstraintName("fk_detail_order");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.InvoiceDetails)
+                .HasForeignKey(d => d.ProductId)
+                .HasConstraintName("fk_detail_product");
         });
 
         modelBuilder.Entity<Movie>(entity =>
         {
-            entity.HasKey(e => e.MovieId).HasName("PK__Movies__83CDF749E4421A58");
+            entity.HasKey(e => e.MovieId).HasName("PK__Movies__83CDF7498BFC6ADE");
 
             entity.Property(e => e.MovieId).HasColumnName("movie_id");
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
-            entity.Property(e => e.GenreId).HasColumnName("genre_id");
-            entity.Property(e => e.MovieIntro)
+            entity.Property(e => e.DownloadLink)
+                .HasMaxLength(60)
+                .IsUnicode(false)
+                .HasColumnName("download_link");
+            entity.Property(e => e.MovieDescription)
                 .HasMaxLength(500)
                 .IsUnicode(false)
-                .HasColumnName("movie_intro");
+                .HasColumnName("movie_description");
             entity.Property(e => e.MovieTitle)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -259,31 +394,38 @@ public partial class DvdshopContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("movie_trailer");
             entity.Property(e => e.ProducerId).HasColumnName("producer_id");
-            entity.Property(e => e.ProductId).HasColumnName("product_id");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Movies)
                 .HasForeignKey(d => d.CategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_movie_category");
 
-            entity.HasOne(d => d.Genre).WithMany(p => p.Movies)
-                .HasForeignKey(d => d.GenreId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_movie_genre");
-
             entity.HasOne(d => d.Producer).WithMany(p => p.Movies)
                 .HasForeignKey(d => d.ProducerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_movie_producer");
+        });
 
-            entity.HasOne(d => d.Product).WithMany(p => p.Movies)
-                .HasForeignKey(d => d.ProductId)
-                .HasConstraintName("fk_movie_product");
+        modelBuilder.Entity<MoviesGenre>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__MoviesGe__3213E83FC0E230EE");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.GenreId).HasColumnName("genre_id");
+            entity.Property(e => e.MovieId).HasColumnName("movie_id");
+
+            entity.HasOne(d => d.Genre).WithMany(p => p.MoviesGenres)
+                .HasForeignKey(d => d.GenreId)
+                .HasConstraintName("fk_mg_genre");
+
+            entity.HasOne(d => d.Movie).WithMany(p => p.MoviesGenres)
+                .HasForeignKey(d => d.MovieId)
+                .HasConstraintName("fk_mg_game");
         });
 
         modelBuilder.Entity<News>(entity =>
         {
-            entity.HasKey(e => e.NewsId).HasName("PK__News__4C27CCD8FE40C1D1");
+            entity.HasKey(e => e.NewsId).HasName("PK__News__4C27CCD8BA4C7586");
 
             entity.Property(e => e.NewsId).HasColumnName("news_id");
             entity.Property(e => e.NewsContent)
@@ -307,24 +449,21 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Orders__465962298660AB7B");
+            entity.HasKey(e => e.OrderId).HasName("PK__Orders__465962296C4FCD7D");
 
             entity.Property(e => e.OrderId).HasColumnName("order_id");
-            entity.Property(e => e.CartId).HasColumnName("cart_id");
-            entity.Property(e => e.InvoiceId).HasColumnName("invoice_id");
+            entity.Property(e => e.Note)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("note");
             entity.Property(e => e.OrderDate).HasColumnName("order_date");
             entity.Property(e => e.OrderStatus).HasColumnName("order_status");
+            entity.Property(e => e.ShipAddress)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("ship_address");
+            entity.Property(e => e.TotalAmount).HasColumnName("total_amount");
             entity.Property(e => e.UsersId).HasColumnName("users_id");
-
-            entity.HasOne(d => d.Cart).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.CartId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_order_cart");
-
-            entity.HasOne(d => d.Invoice).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.InvoiceId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_order_invoice");
 
             entity.HasOne(d => d.Users).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.UsersId)
@@ -332,9 +471,22 @@ public partial class DvdshopContext : DbContext
                 .HasConstraintName("fk_order_user");
         });
 
+        modelBuilder.Entity<Permission>(entity =>
+        {
+            entity.HasKey(e => e.PermissionId).HasName("PK__Permissi__E5331AFA42A08C84");
+
+            entity.ToTable("Permission");
+
+            entity.Property(e => e.PermissionId).HasColumnName("permission_id");
+            entity.Property(e => e.PermissionType)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("permission_type");
+        });
+
         modelBuilder.Entity<Producer>(entity =>
         {
-            entity.HasKey(e => e.ProducerId).HasName("PK__Producer__EA7F30C8A14D4C90");
+            entity.HasKey(e => e.ProducerId).HasName("PK__Producer__EA7F30C8270D4ECF");
 
             entity.Property(e => e.ProducerId).HasColumnName("producer_id");
             entity.Property(e => e.DeleteStatus).HasColumnName("delete_status");
@@ -350,53 +502,26 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.ProductId).HasName("PK__Products__47027DF5ABA8627C");
+            entity.HasKey(e => e.ProductId).HasName("PK__Products__47027DF5E99704CA");
 
             entity.Property(e => e.ProductId).HasColumnName("product_id");
             entity.Property(e => e.AlbumId).HasColumnName("album_id");
-            entity.Property(e => e.Comment)
-                .HasMaxLength(500)
-                .IsUnicode(false)
-                .HasColumnName("comment");
-            entity.Property(e => e.FeedbackId).HasColumnName("feedback_id");
-            entity.Property(e => e.GameId).HasColumnName("game_id");
-            entity.Property(e => e.GenreId).HasColumnName("genre_id");
-            entity.Property(e => e.ProducerId).HasColumnName("producer_id");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+            entity.Property(e => e.ProductPrice).HasColumnName("product_price");
+            entity.Property(e => e.ProductQuantity).HasColumnName("product_quantity");
+            entity.Property(e => e.ProductRate).HasColumnName("product_rate");
             entity.Property(e => e.PromotionId).HasColumnName("promotion_id");
-            entity.Property(e => e.Rating).HasColumnName("rating");
-            entity.Property(e => e.SongId).HasColumnName("song_id");
+            entity.Property(e => e.SoldUnit).HasColumnName("sold_unit");
             entity.Property(e => e.SupplierId).HasColumnName("supplier_id");
 
             entity.HasOne(d => d.Album).WithMany(p => p.Products)
                 .HasForeignKey(d => d.AlbumId)
                 .HasConstraintName("fk_product_album");
 
-            entity.HasOne(d => d.Feedback).WithMany(p => p.Products)
-                .HasForeignKey(d => d.FeedbackId)
-                .HasConstraintName("fk_product_feedback");
-
-            entity.HasOne(d => d.Game).WithMany(p => p.Products)
-                .HasForeignKey(d => d.GameId)
-                .HasConstraintName("fk_product_game");
-
-            entity.HasOne(d => d.Genre).WithMany(p => p.Products)
-                .HasForeignKey(d => d.GenreId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_product_genre");
-
-            entity.HasOne(d => d.Producer).WithMany(p => p.Products)
-                .HasForeignKey(d => d.ProducerId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_product_producer");
-
             entity.HasOne(d => d.Promotion).WithMany(p => p.Products)
                 .HasForeignKey(d => d.PromotionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_product_promotion");
-
-            entity.HasOne(d => d.Song).WithMany(p => p.Products)
-                .HasForeignKey(d => d.SongId)
-                .HasConstraintName("fk_product_song");
 
             entity.HasOne(d => d.Supplier).WithMany(p => p.Products)
                 .HasForeignKey(d => d.SupplierId)
@@ -406,7 +531,7 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<Promotion>(entity =>
         {
-            entity.HasKey(e => e.PromotionId).HasName("PK__Promotio__2CB9556B0EB06CFF");
+            entity.HasKey(e => e.PromotionId).HasName("PK__Promotio__2CB9556BA05D4F00");
 
             entity.Property(e => e.PromotionId).HasColumnName("promotion_id");
             entity.Property(e => e.PromotionBanner)
@@ -422,46 +547,70 @@ public partial class DvdshopContext : DbContext
             entity.Property(e => e.PromotionStartDate).HasColumnName("promotion_start_date");
         });
 
-        modelBuilder.Entity<Report>(entity =>
+        modelBuilder.Entity<Rating>(entity =>
         {
-            entity.HasKey(e => e.ReportId).HasName("PK__Reports__779B7C58095FC5DE");
+            entity.HasKey(e => e.RatingId).HasName("PK__Rating__D35B278BD8BB406C");
 
-            entity.Property(e => e.ReportId).HasColumnName("report_id");
-            entity.Property(e => e.ReportContent)
-                .HasMaxLength(500)
+            entity.ToTable("Rating");
+
+            entity.Property(e => e.RatingId).HasColumnName("rating_id");
+            entity.Property(e => e.Comment)
+                .HasMaxLength(250)
                 .IsUnicode(false)
-                .HasColumnName("report_content");
+                .HasColumnName("comment");
+            entity.Property(e => e.ProductId).HasColumnName("product_id");
+            entity.Property(e => e.Rating1).HasColumnName("rating");
             entity.Property(e => e.UsersId).HasColumnName("users_id");
 
-            entity.HasOne(d => d.Users).WithMany(p => p.Reports)
+            entity.HasOne(d => d.Product).WithMany(p => p.Ratings)
+                .HasForeignKey(d => d.ProductId)
+                .HasConstraintName("fk_rating_product");
+
+            entity.HasOne(d => d.Users).WithMany(p => p.Ratings)
                 .HasForeignKey(d => d.UsersId)
-                .HasConstraintName("fk_report_user");
+                .HasConstraintName("fk_rating_user");
+        });
+
+        modelBuilder.Entity<Review>(entity =>
+        {
+            entity.HasKey(e => e.ReviewId).HasName("PK__Reviews__60883D908D1E223C");
+
+            entity.Property(e => e.ReviewId).HasColumnName("review_id");
+            entity.Property(e => e.ReviewContent)
+                .HasColumnType("text")
+                .HasColumnName("review_content");
+            entity.Property(e => e.ReviewTitle)
+                .HasMaxLength(250)
+                .IsUnicode(false)
+                .HasColumnName("review_title");
+            entity.Property(e => e.UsersId).HasColumnName("users_id");
+
+            entity.HasOne(d => d.Users).WithMany(p => p.Reviews)
+                .HasForeignKey(d => d.UsersId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_review_user");
         });
 
         modelBuilder.Entity<Song>(entity =>
         {
-            entity.HasKey(e => e.SongId).HasName("PK__Songs__A535AE1CE057CF49");
+            entity.HasKey(e => e.SongId).HasName("PK__Songs__A535AE1C95CD8021");
 
             entity.Property(e => e.SongId).HasColumnName("song_id");
-            entity.Property(e => e.AlbumId).HasColumnName("album_id");
             entity.Property(e => e.ArtistId).HasColumnName("artist_id");
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
-            entity.Property(e => e.GenreId).HasColumnName("genre_id");
-            entity.Property(e => e.Intro)
+            entity.Property(e => e.DownloadLink)
+                .HasMaxLength(60)
+                .IsUnicode(false)
+                .HasColumnName("download_link");
+            entity.Property(e => e.ProducerId).HasColumnName("producer_id");
+            entity.Property(e => e.SongIntroduction)
                 .HasMaxLength(500)
                 .IsUnicode(false)
-                .HasColumnName("intro");
-            entity.Property(e => e.ProducerId).HasColumnName("producer_id");
-            entity.Property(e => e.SoldUnit).HasColumnName("sold_unit");
+                .HasColumnName("song_introduction");
             entity.Property(e => e.SongName)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("song_name");
-            entity.Property(e => e.SongPrice).HasColumnName("song_price");
-
-            entity.HasOne(d => d.Album).WithMany(p => p.Songs)
-                .HasForeignKey(d => d.AlbumId)
-                .HasConstraintName("fk_song_album");
 
             entity.HasOne(d => d.Artist).WithMany(p => p.Songs)
                 .HasForeignKey(d => d.ArtistId)
@@ -473,20 +622,34 @@ public partial class DvdshopContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_song_category");
 
-            entity.HasOne(d => d.Genre).WithMany(p => p.Songs)
-                .HasForeignKey(d => d.GenreId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_song_genre");
-
             entity.HasOne(d => d.Producer).WithMany(p => p.Songs)
                 .HasForeignKey(d => d.ProducerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_song_producer");
         });
 
+        modelBuilder.Entity<SongsGenre>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__SongsGen__3213E83F5AC50E54");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.GenreId).HasColumnName("genre_id");
+            entity.Property(e => e.SongId).HasColumnName("song_id");
+
+            entity.HasOne(d => d.Genre).WithMany(p => p.SongsGenres)
+                .HasForeignKey(d => d.GenreId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_SongsGenres_genre");
+
+            entity.HasOne(d => d.Song).WithMany(p => p.SongsGenres)
+                .HasForeignKey(d => d.SongId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_SongsGenres_song");
+        });
+
         modelBuilder.Entity<Supplier>(entity =>
         {
-            entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__6EE594E8D3EB8D3A");
+            entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__6EE594E84B708739");
 
             entity.Property(e => e.SupplierId).HasColumnName("supplier_id");
             entity.Property(e => e.DeleteStatus).HasColumnName("delete_status");
@@ -507,13 +670,16 @@ public partial class DvdshopContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UsersId).HasName("PK__Users__EAA7D14B0AF759FE");
+            entity.HasKey(e => e.UsersId).HasName("PK__Users__EAA7D14B35BBFF6C");
 
-            entity.HasIndex(e => e.UsersEmail, "UQ__Users__D156B4FEB9904763").IsUnique();
+            entity.HasIndex(e => e.UsersEmail, "UQ__Users__D156B4FE91119B8B").IsUnique();
 
             entity.Property(e => e.UsersId).HasColumnName("users_id");
+            entity.Property(e => e.DeleteStatus).HasColumnName("delete_status");
             entity.Property(e => e.IsAdmin).HasColumnName("is_admin");
-            entity.Property(e => e.UsersActivate).HasColumnName("users_activate");
+            entity.Property(e => e.IsCancel).HasColumnName("is_cancel");
+            entity.Property(e => e.IsCustomer).HasColumnName("is_customer");
+            entity.Property(e => e.UsersActivated).HasColumnName("users_activated");
             entity.Property(e => e.UsersAddress)
                 .HasMaxLength(100)
                 .IsUnicode(false)

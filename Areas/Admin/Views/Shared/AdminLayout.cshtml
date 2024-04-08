@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewData["Title"]</title>
-    @RenderSection("tableheader", false)
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
@@ -15,6 +14,7 @@
     <link rel="stylesheet" href="~/admin/dist/css/adminlte.min.css">
     <!-- Toastr -->
     <link rel="stylesheet" href="~/admin/plugins/toastr/toastr.min.css">
+    @RenderSection("tableheader", false)
 </head>
 <body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
     <div class="wrapper">
@@ -43,7 +43,7 @@
             <ul class="navbar-nav ml-auto">
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item">
-                    <a class="nav-link" asp-controller="admin" asp-action="logout">
+                    <a class="nav-link" asp-controller="dashboard" asp-action="logout" asp-area="admin">
                         <i class="fas fa-sign-out-alt"></i>
                     </a>
                 </li>
@@ -95,24 +95,6 @@
                         <!-- Add icons to the links using the .nav-icon class
                              with font-awesome or any other icon font library -->
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>
-                                    admin feature
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>function v1</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="nav-item">
                             <a class="nav-link" asp-controller="artist" asp-action="view" asp-area="admin">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
@@ -120,7 +102,6 @@
                                 </p>
                             </a>
                         </li>
-
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="album" asp-action="view" asp-area="admin">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -129,12 +110,43 @@
                                 </p>
                             </a>
                         </li>
-
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="game" asp-action="view" asp-area="admin">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Games
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="movie" asp-action="view" asp-area="admin">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Movies
+                                </p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="provider" asp-action="view" asp-area="admin">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Providers
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="song" asp-action="view" asp-area="admin">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Songs
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="user" asp-action="view" asp-area="admin">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Users
                                 </p>
                             </a>
                         </li>
@@ -166,14 +178,18 @@
     </div>
     <!-- ./wrapper -->
     <!-- REQUIRED SCRIPTS -->
+    <!-- Popper -->
+    <script src="~/admin/plugins/popper/popper.min.js"></script>
     <!-- jQuery -->
     <script src="~/admin/plugins/jquery/jquery.min.js"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"></script> *@
     <!-- Bootstrap -->
     <script src="~/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- overlayScrollbars -->
     <script src="~/admin/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <!-- AdminLTE App -->
     <script src="~/admin/dist/js/adminlte.js"></script>
+    @RenderSection("tablefooter", false)
 
     <!-- PAGE PLUGINS -->
     <!-- jQuery Mapael -->
@@ -184,7 +200,6 @@
     <!-- ChartJS -->
     <script src="~/admin/plugins/chart.js/Chart.min.js"></script>
 
-    @RenderSection("tablefooter", false)
     <script>
         $(document).ready(function () {
             var status = '@TempData["status"]';

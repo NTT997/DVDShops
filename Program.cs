@@ -1,14 +1,20 @@
 using DVDShops.Middlewares;
 using DVDShops.Models;
 using DVDShops.Services.Albums;
+using DVDShops.Services.AlbumsSongs;
 using DVDShops.Services.Artists;
+using DVDShops.Services.ArtistsGenres;
+using DVDShops.Services.Games;
+using DVDShops.Services.GamesGenres;
 using DVDShops.Services.Genres;
 using DVDShops.Services.MailService;
+using DVDShops.Services.Movies;
+using DVDShops.Services.Moviesgenres;
 using DVDShops.Services.Producers;
 using DVDShops.Services.Songs;
+using DVDShops.Services.SongsGenres;
 using DVDShops.Services.Suppliers;
 using DVDShops.Services.Users;
-using DVDShops.Services.Feedbacks;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,14 +28,24 @@ builder.Services.AddDbContext<DvdshopContext>(option => option.UseLazyLoadingPro
 //add scoped service
 builder.Services.AddScoped<IUserService, UserService>()
                 .AddScoped<IMailService, MailService>()
-                .AddScoped<IArtistService, ArtistService>()
-                .AddScoped<ISongService, SongSerivce>()
-                .AddScoped<IAlbumService, AlbumService>()
-                .AddScoped<IGenreService, GenreService>()
                 .AddScoped<IProducerService, ProducerService>()
-                .AddScoped<IFeedbackService, FeedbackService>()
-                .AddScoped<ISupplierService, SupplierService>();
+                .AddScoped<ISupplierService, SupplierService>()
+                .AddScoped<IGenreService, GenreService>();
 
+builder.Services.AddScoped<IArtistService, ArtistService>()
+                .AddScoped<IArtistGenreService, ArtistGenreService>();
+
+builder.Services.AddScoped<ISongService, SongSerivce>()
+                .AddScoped<ISongGenreService, SongGenreService>();
+
+builder.Services.AddScoped<IAlbumService, AlbumService>()
+                .AddScoped<IAlbumsSongsService, AlbumsSongsService>();
+
+builder.Services.AddScoped<IGameService, GameService>()
+                .AddScoped<IGameGenreService, GameGenreService>();
+
+builder.Services.AddScoped<IMovieService, MovieService>()
+                .AddScoped<IMovieGenreService, MovieGenreService>();
 
 builder.Services.AddSession();
 

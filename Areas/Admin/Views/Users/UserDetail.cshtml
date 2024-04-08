@@ -1,0 +1,160 @@
+﻿@model DVDShops.Models.User;
+
+@{
+    ViewData["Title"] = "User Manage";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+}
+
+<!-- Content -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 id="title">User Details</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a asp-area="admin" asp-controller="user" asp-action="view">Back</a>
+                    </li>
+                    <li class="breadcrumb-item active">Users</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+</section>
+
+<!-- /.add-album -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="col-lg-7 col-11 mx-auto">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Member Profile</h3>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+                <form method="post" asp-area="admin" asp-controller="user" asp-action="editUser">
+                    <div class="card-body">
+                        <input type="hidden" asp-for="UsersId" />
+                        <input type="hidden" asp-for="UsersPassword" />
+                        <input type="hidden" asp-for="UsersActivated" />
+                        <input type="hidden" asp-for="IsAdmin" />
+                        <input type="hidden" asp-for="IsCustomer" />
+                        <input type="hidden" asp-for="IsCancel" />
+                        <input type="hidden" asp-for="DeleteStatus" />
+
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label for="email">Current Email</label>
+                                    <div class="d-flex align-items-center">
+                                        <input type="email" class="form-control" asp-for="UsersEmail" disabled>
+                                        <input type="hidden" asp-for="UsersEmail">
+                                        <button class="btn btn-info" type="button" id="toggle_email" onclick="toggleHidden(this)"><i class="fas fa-retweet"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group invisible" id="newEmail">
+                                    <label>New Email</label>
+                                    <div class="form-group">
+                                        <input type="text" name="newEmail" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <label for="profile_name">Full Name</label>
+                            <input id="profile_name" type="text" class="form-control" asp-for="UsersProfileName" placeholder="Enter Full Name..." required>
+                        </div>
+
+                        <div class="row form-group">
+                            <label for="address">Address</label>
+                            <input id="address" type="text" class="form-control" asp-for="UsersAddress" placeholder="Enter Address..." required>
+                        </div>
+
+                        <div class="row form-group">
+                            <label>Type: </label>
+                            <input type="text" disabled class="form-control" value="@(Model.IsCustomer ? "Customer" : "Member")">
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-12 col-md-5">
+                                <label for="date">D.O.B</label>
+                                <input id="date" type="date" class="form-control" name="dob" placeholder="Enter DoB..." required>
+                            </div>
+
+                            <div class="col-12 col-md-5">
+                                <label>Phone Number</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" name="userPhone" placeholder="Enter Phone..." asp-for="UsersPhone" required
+                                           data-inputmask='"mask": "999 999 9999"' data-mask>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label>Role</label>
+                                    <select asp-for="IsAdmin" class="form-control" style="width: 100%">
+                                        <option value=false selected>Member</option>
+                                        <option value=true>Admin</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-start">
+                            <a type="button" class="btn btn-info" asp-area="admin"
+                               asp-controller="user" asp-action="changePassword" asp-route-userId="@Model.UsersId"
+                               onclick="return confirm('Are you Sure?')">Change Password</a> &nbsp;
+                            <a type="button" class="btn btn-info" asp-area="admin"
+                               asp-controller="user" asp-action="resetPassword" asp-route-userId="@Model.UsersId"
+                               onclick="return confirm('Are you Sure?')">Reset Password</a>
+                        </div>
+                    </div>
+
+                    <div class="card-footer d-flex justify-content-end">
+                        <a class="btn btn-warning" asp-area="admin" asp-controller="user" asp-action="view" onclick="return confirm('Are you Sure?')">Cancle</a> &nbsp;
+                        <button type="submit" class="btn btn-info">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section tablefooter {
+    <!-- InputMask -->
+    <script src="~/admin/plugins/moment/moment.min.js"></script>
+    <script src="~/admin/plugins/inputmask/jquery.inputmask.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var date = '@TempData["dob"]';
+            if (date) {
+                var formattedDate = new Date(date).toISOString().split('T')[0];
+                $('#date').val(date);
+            }
+        })
+
+        function toggleHidden(button) {
+            var buttonId = button.id;
+            if (buttonId == "toggle_email") {
+                $('#newEmail').toggleClass('invisible');
+            } else {
+                $('#newLink').toggleClass('invisible');
+            }
+        }
+
+        $(function () {
+            $('[data-mask]').inputmask();
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+    </script>
+}

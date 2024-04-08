@@ -6,10 +6,8 @@ namespace DVDShops.Services.Songs
     {
         List<Song> GetAll();
         Song GetById(int songId);
-        List<Song> GetByName(string songName);
-        List<Song> GetByGenre(int genreId);
-        List<Song> GetByProducer(int producerId);
-        List<Song> GetByArtist(int artistId);
+        Song GetByName(string songName);
+        List<Song> SearchByName(string songName);
         bool Create(Song song);
         bool Update(Song song);
         bool Delete(int songId);

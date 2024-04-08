@@ -58,5 +58,17 @@ namespace DVDShops.Services.Albums
                 return false;
             }
         }
+
+        public List<Album> SearchByName(string albumName)
+        {
+            albumName = albumName.Trim();
+            return dbContext.Albums.Where(album => album.AlbumName.ToLower().Contains(albumName)).ToList();
+        }
+
+        public Album GetByName(string albumName)
+        {
+            albumName = albumName.Trim();
+            return dbContext.Albums.Where(album => album.AlbumName.ToLower() == albumName).OrderByDescending(a => a.AlbumId).FirstOrDefault();
+        }
     }
 }

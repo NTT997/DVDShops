@@ -1,4 +1,4 @@
-﻿using DVDShops.Models;
+﻿ using DVDShops.Models;
 using DVDShops.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -19,6 +19,17 @@ namespace DVDShops.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            return View();
+        }
+
+        [Route("feedback")]
+        [HttpGet]
+        public IActionResult fEEDBACK()
+        {
+            if(HttpContext.Session.GetString("role") != null)
+            {
+
+            }
             return View("login");
         }
 

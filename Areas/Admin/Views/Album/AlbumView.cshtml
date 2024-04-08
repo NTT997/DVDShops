@@ -1,4 +1,5 @@
 ﻿@inject DVDShops.Services.Albums.IAlbumService albumService
+@inject DVDShops.Services.AlbumsSongs.IAlbumsSongsService asService
 
 @{
     ViewData["Title"] = "Album Manage";
@@ -34,67 +35,85 @@
     <div class="container-fluid">
         <div class="row">
             <!-- /.table -->
-            <div class="col-lg-12">
+            <div class="col-12 col-lg-11 mx-auto">
                 <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Album List</h3>
+                    <div class="card-header d-flex justify-content-between align-item-center">
+                        <div class="card-title">Album List</div>
+                        <div class="ml-auto">
+                            <a asp-area="admin" asp-controller="album" asp-action="addAlbum" class="text-info">New Album</a>
+                        </div>
                     </div>
 
                     <div class="card-body table-responsive">
-                        <table id="artistsList" class="table table-bordered table-hover">
+                        <table id="album_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th>Album Name</th>
                                     <th>Producer</th>
                                     <th>Artist</th>
                                     <th>Introduction</th>
-                                    <th>Price</th>
                                     <th>Issue Date</th>
-                                    <th>Sold Copies</th>
-                                    <th>Feedback</th>
-                                    <th>Option</th>
+                                    <th>Songs</th>
+                                    <th style="width: auto">Review</th>
+                                    <th style="width: auto">Option</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var album in albumService.GetAll())
+                                @foreach (var item in albumService.GetAll())
                                 {
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td class="d-flex justify-content-end">
-                                            <button type="button" class="btn btn-info">Edit</button> &nbsp;
-                                            <a type="button" class="btn btn-warning">Delete</a>
+                                        <td>@item.AlbumName</td>
+                                        <td>@item.Producer.ProducerName</td>
+                                        <td>@item.Artist.ArtistName</td>
+                                        <td>@item.AlbumIntroduction</td>
+                                        <td>@item.IssueDate</td>
+                                        <td>
+                                            @(string.Join(", ", asService.GetByAlbumId(item.AlbumId).Select(song => song.Song.SongName)))
+                                        </td>
+                                        @if (item.ReviewId == null)
+                                        {
+                                            <td class="text-center">NO FEEDBACK</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-center">
+                                                <button class="info-box-icon bg-info btn"><i class="far fa-envelope"></i></button>
+                                            </td>
+                                        }
+                                        <td class="text-center">
+                                            <a type="button" class="btn btn-info"
+                                               asp-area="admin" asp-controller="album"
+                                               asp-action="editAlbum" asp-route-albumId="@item.AlbumId">
+                                                Edit
+                                            </a>
+                                            <a type="button" class="btn btn-warning"
+                                               asp-area="admin" asp-controller="album" onclick="return confirm('Are you Sure?')"
+                                               asp-action="deleteAlbum" asp-route-albumId="@item.AlbumId">
+                                                Delete
+                                            </a>
                                         </td>
                                     </tr>
                                 }
                             </tbody>
                             <tfoot>
                                 <tr>
+                                    <th>Album Name</th>
                                     <th>Producer</th>
                                     <th>Artist</th>
                                     <th>Introduction</th>
-                                    <th>Price</th>
                                     <th>Issue Date</th>
-                                    <th>Sold Copies</th>
-                                    <th>Feedback</th>
-                                    <th>Option</th>
+                                    <th>Songs</th>
+                                    <th style="width: auto">Review</th>
+                                    <th style="width: auto">Option</th>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
-                    </<div>
-                    </div>
-
                 </div>
             </div>
         </div>
     </div>
 </section>
-
 
 <!-- Footer -->
 @section tablefooter {
@@ -115,7 +134,7 @@
     <!-- Page specific script -->
     <script>
         $(function () {
-            $('#artistsList').DataTable({
+            $('#album_list').DataTable({
                 "paging": true,
                 "lengthChange": false,
                 "searching": true,
