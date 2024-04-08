@@ -46,13 +46,33 @@
                 <!-- form start -->
                 <form method="post" asp-area="admin" asp-controller="album" asp-action="addAlbum">
                     <div class="card-body">
-                        <div class="row form-group">
-                            <label for="name">Album Name</label>
-                            <input type="text" class="form-control" asp-for="AlbumName" placeholder="Enter Name..." required>
-                        </div>
-                        <div class="row form-group">
-                            <label for="name">Introduction</label>
-                            <input type="text" class="form-control" asp-for="AlbumIntroduction" placeholder="Enter Intro..." required>
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="row form-group">
+                                    <label>Album Cover</label> &nbsp;
+                                    <input type="file" name="coverImage" id="file_input" accept="image/*" onchange="ShowImage(event)" placeholder="Choose an Image" />
+                                </div>
+                                <div class="row">
+                                    <div class="text-center img-thumbnail" style="height: 100%">
+                                        <img class="img-fluid" alt="song_cover" id="cover" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label for="album_name">Album Name</label>
+                                <div class="row">
+                                    <input type="text" id="album_name" class="form-control" asp-for="AlbumName" placeholder="Enter Name..." required>
+                                </div>
+                                <div class="row">
+                                    <label for="intro" class="col-12">Introduction</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12" >
+                                        <textarea type="text" id="intro" class="form-control" asp-for="AlbumIntroduction" placeholder="Enter Intro..." required> </textarea>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row">
@@ -120,6 +140,17 @@
     <script src="~/admin/plugins/select2/js/select2.full.min.js"></script>
     <script src="~/admin/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
     <script>
+        function ShowImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const image = document.getElementById("cover");
+                    image.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
         $(function () {
             //Initialize Select2 Elements
             $('.select2bs4').select2({

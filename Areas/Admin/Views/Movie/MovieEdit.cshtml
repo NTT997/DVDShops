@@ -43,17 +43,38 @@
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form method="post" asp-area="admin" asp-controller="movie" asp-action="editMovie">
+                <form method="post" asp-area="admin" asp-controller="movie" asp-action="editMovie" enctype="multipart/form-data">
                     <div class="card-body">
                         <input type="hidden" asp-for="MovieId" />
                         <input type="hidden" asp-for="CategoryId" />
-                        <div class="row form-group">
-                            <label for="name">Game Title</label>
-                            <input type="text" class="form-control" asp-for="MovieTitle" placeholder="Enter Title..." required>
-                        </div>
-                        <div class="row form-group">
-                            <label for="name">Description</label>
-                            <textarea type="text" class="form-control" asp-for="MovieDescription" placeholder="Enter Description..." required> </textarea>
+                        <input type="hidden" asp-for="MovieCover" />
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="row form-group">
+                                    <label>Game Cover</label> &nbsp;
+                                    <input type="file" name="coverImage" id="file_input" accept="image/*" onchange="ShowImage(event)" placeholder="Choose an Image" />
+                                </div>
+                                <div class="row">
+                                    <div class="text-center img-thumbnail" style="height: 100%">
+                                        <img class="img-fluid" alt="game_cover" id="cover" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label for="game_title">Movie Title</label>
+                                <div class="row">
+                                    <input type="text" id="game_title" class="form-control" asp-for="MovieTitle" placeholder="Enter Name..." required>
+                                </div>
+                                <div class="row">
+                                    <label for="description" class="col-12">Description</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <textarea type="text" id="description" class="form-control" asp-for="MovieDescription" placeholder="Enter Intro..." required> </textarea>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <!-- Add Genres -->
                         <div class="row mb-0">
@@ -133,12 +154,12 @@
                                     </div>
                                 </div>
                             </div>
-                                                        
+
                             <div class="col-md-6 col-sm-12 col-4">
                                 <div class="form-group invisible" id="newLink">
                                     <label>New Download Link</label>
                                     <div class="form-group">
-                                        <input type="text" name="newLink" class="form-control"/>
+                                        <input type="text" name="newLink" class="form-control" />
                                     </div>
                                 </div>
                             </div>
@@ -161,6 +182,17 @@
     <script src="~/admin/plugins/select2/js/select2.full.min.js"></script>
     <script src="~/admin/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
     <script>
+        function ShowImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const image = document.getElementById("cover");
+                    image.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
         function toggleHidden(button) {
             var buttonId = button.id;
             if (buttonId == "toggle_trailer") {

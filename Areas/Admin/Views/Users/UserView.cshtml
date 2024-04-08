@@ -66,8 +66,22 @@
                                         <td>@user.UsersEmail</td>
                                         <td>@user.UsersProfileName</td>
                                         <td>@(user.IsCustomer ? "Customer" : "Member")</td>
-                                        <td>@(user.UsersActivated ? "Yes" : "No")</td>
-                                        <td>@(user.DeleteStatus ? "Yes" : "No")</td>
+                                        @if (user.UsersActivated)
+                                        {
+                                            <td class="text-success">Yes</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-danger">No</td>
+                                        }
+                                        @if (user.DeleteStatus)
+                                        {
+                                            <td class="text-danger">Yes</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-info">No</td>
+                                        }
                                         <td class="text-center">
                                             <a class="btn btn-info" asp-area="admin" asp-controller="user" asp-action="detailUser" asp-route-userId="@user.UsersId">
                                                 Detail

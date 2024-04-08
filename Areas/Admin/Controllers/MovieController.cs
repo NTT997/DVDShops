@@ -15,10 +15,12 @@ namespace DVDShops.Areas.Admin.Controllers
     {
         private IMovieService movieService;
         private IMovieGenreService mgService;
-        public MovieController(IMovieService movieService, IMovieGenreService mgService)
+        private IWebHostEnvironment env;
+        public MovieController(IMovieService movieService, IMovieGenreService mgService, IWebHostEnvironment env)
         {
             this.movieService = movieService;
             this.mgService = mgService;
+            this.env = env;
         }
         private void SetTempData(bool status, string title, string array)
         {
@@ -43,7 +45,7 @@ namespace DVDShops.Areas.Admin.Controllers
 
         [Route("addMovie")]
         [HttpPost]
-        public IActionResult MovieAdd(Movie movie, List<string> genres)
+        public IActionResult MovieAdd(Movie movie, List<string> genres, IFormFile coverImage)
         {
             if (string.IsNullOrWhiteSpace(movie.MovieTitle) || string.IsNullOrWhiteSpace(movie.MovieDescription) ||
                 string.IsNullOrWhiteSpace(movie.MovieTrailer) || string.IsNullOrWhiteSpace(movie.DownloadLink))
@@ -69,6 +71,27 @@ namespace DVDShops.Areas.Admin.Controllers
             {
                 SetTempData(false, "Create Movie Failed!", "Please Choose a Producer!");
                 return View("MovieAdd", movie);
+            }
+
+            if (coverImage != null && coverImage.Length > 0)
+            {
+                string fileExtension = Path.GetExtension(coverImage.FileName);
+                if (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png" && fileExtension != ".ico")
+                {
+                    SetTempData(false, "Create Movie Failed!", "Please Choose Correct File Extension!");
+                    return View("MovieAdd", movie);
+                }
+
+                movie.MovieCover = Guid.NewGuid().ToString().Replace("-", "") + "_" + coverImage.FileName;
+                var path = Path.Combine(env.WebRootPath, "images/movie", movie.MovieCover);
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    coverImage.CopyTo(stream);
+                }
+            }
+            else
+            {
+                movie.MovieCover = "no_image.jpg";
             }
 
             movie.CategoryId = 5;
@@ -108,7 +131,7 @@ namespace DVDShops.Areas.Admin.Controllers
 
         [Route("editMovie")]
         [HttpPost]
-        public IActionResult MovieEdit(Movie movie, string newTrailer, string newLink, List<string> genres)
+        public IActionResult MovieEdit(Movie movie, string newTrailer, string newLink, List<string> genres, IFormFile coverImage)
         {
             if (!string.IsNullOrWhiteSpace(newTrailer))
             {
@@ -166,6 +189,32 @@ namespace DVDShops.Areas.Admin.Controllers
             {
                 SetTempData(false, "Update Movie Failed!", "Please Choose a Producer!");
                 return View("MovieEdit", movie);
+            }
+
+            if (coverImage != null && coverImage.Length > 0)
+            {
+                string fileExtension = Path.GetExtension(coverImage.FileName);
+                if (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png" && fileExtension != ".ico")
+                {
+                    SetTempData(false, "Update Movie Failed!", "Please Choose Correct File Extension!");
+                    return View("MovieEdit", movie);
+                }
+
+                if (movie.MovieCover != "no_image.jpg")
+                {
+                    var oldFile = Path.Combine(env.WebRootPath, "images/movie", movie.MovieCover);
+                    if (System.IO.File.Exists(oldFile))
+                    {
+                        System.IO.File.Delete(oldFile);
+                    }
+                }
+
+                movie.MovieCover = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 16) + "_" + coverImage.FileName;
+                var path = Path.Combine(env.WebRootPath, "images/movie", movie.MovieCover);
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    coverImage.CopyTo(stream);
+                }
             }
 
             var result = movieService.Update(movie);

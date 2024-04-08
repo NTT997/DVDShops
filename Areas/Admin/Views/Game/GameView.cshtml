@@ -48,6 +48,7 @@
                         <table id="album_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th>Game Cover</th>
                                     <th>Game Title</th>
                                     <th>Description</th>
                                     <th>Trailer</th>
@@ -61,6 +62,9 @@
                                 @foreach (var item in gameService.GetAll())
                                 {
                                     <tr>
+                                        <td class="text-center">
+                                            <img alt="@item.GameCover" width="100px" height="100px" src="~/images/game/@item.GameCover" />
+                                        </td>
                                         <td>@item.GameTitle</td>
                                         <td>@item.GameDescription</td>
                                         <td class ="text-justify"><a href="@item.GameTrailer">@item.GameTrailer</a></td>
@@ -96,6 +100,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
+                                    <th>Game Cover</th>
                                     <th>Game Title</th>
                                     <th>Description</th>
                                     <th>Trailer</th>

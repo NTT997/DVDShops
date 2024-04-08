@@ -11,6 +11,8 @@ using DVDShops.Services.MailService;
 using DVDShops.Services.Movies;
 using DVDShops.Services.Moviesgenres;
 using DVDShops.Services.Producers;
+using DVDShops.Services.Products;
+using DVDShops.Services.Promotions;
 using DVDShops.Services.Songs;
 using DVDShops.Services.SongsGenres;
 using DVDShops.Services.Suppliers;
@@ -29,6 +31,8 @@ builder.Services.AddDbContext<DvdshopContext>(option => option.UseLazyLoadingPro
 builder.Services.AddScoped<IUserService, UserService>()
                 .AddScoped<IMailService, MailService>()
                 .AddScoped<IProducerService, ProducerService>()
+                .AddScoped<IProductService, Productservice>()
+                .AddScoped<IPromotionService, PromotionService>()
                 .AddScoped<ISupplierService, SupplierService>()
                 .AddScoped<IGenreService, GenreService>();
 

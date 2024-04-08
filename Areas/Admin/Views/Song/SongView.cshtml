@@ -46,6 +46,7 @@
                         <table id="album_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th>Photo</th>
                                     <th>Song Name</th>
                                     <th>Introduction</th>
                                     <th>Producer</th>
@@ -60,6 +61,9 @@
                                 @foreach (var item in songService.GetAll())
                                 {
                                     <tr>
+                                        <td class="text-center">
+                                            <img alt="@item.SongCover" width="100px" height="100px" src="~/images/song/@item.SongCover" />
+                                        </td>
                                         <td>@item.SongName</td>
                                         <td>@item.SongIntroduction</td>
                                         <td>@item.Producer.ProducerName</td>
@@ -103,6 +107,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
+                                    <th>Photo</th>
                                     <th>Song Name</th>
                                     <th>Introduction</th>
                                     <th>Producer</th>

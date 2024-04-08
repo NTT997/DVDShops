@@ -37,19 +37,12 @@ namespace DVDShops.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult AddSong()
         {
-            ViewBag.ArtistId = 0;
-            if (HttpContext.Request.Query.ContainsKey("artistId"))
-            {
-                var artistId = HttpContext.Request.Query["artistId"];
-                ViewBag.ArtistId = int.Parse(artistId);
-            }
-
             return View("SongAdd");
         }
 
         [Route("addSong")]
         [HttpPost]
-        public IActionResult AddSong(Song song, List<string> genres)
+        public IActionResult AddSong(Song song, List<string> genres, IFormFile songCover)
         {
             if (string.IsNullOrWhiteSpace(song.SongName) || string.IsNullOrWhiteSpace(song.SongIntroduction) || string.IsNullOrWhiteSpace(song.DownloadLink))
             {
@@ -79,6 +72,27 @@ namespace DVDShops.Areas.Admin.Controllers
             {
                 SetTempData(false, "Create Song Failed!", "Please Choose an Artist!");
                 return View("SongAdd", song);
+            }
+
+            if (songCover != null && songCover.Length > 0)
+            {
+                string fileExtension = Path.GetExtension(songCover.FileName);
+                if (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png" && fileExtension != ".ico")
+                {
+                    SetTempData(false, "Create Song Failed!", "Please Choose Correct File Extension!");
+                    return View("SongAdd", song);
+                }
+
+                song.SongCover = Guid.NewGuid().ToString().Replace("-", "") + "_" + songCover.FileName;
+                var path = Path.Combine(env.WebRootPath, "images/song", song.SongCover);
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    songCover.CopyTo(stream);
+                }
+            }
+            else
+            {
+                song.SongCover = "no_image.jpg";
             }
 
             song.CategoryId = 3;
@@ -137,7 +151,7 @@ namespace DVDShops.Areas.Admin.Controllers
 
         [Route("editSong")]
         [HttpPost]
-        public IActionResult EditSong(Song song, List<string> genres, string newLink)
+        public IActionResult EditSong(Song song, List<string> genres, string newLink, IFormFile songCover)
         {
             if (!string.IsNullOrWhiteSpace(newLink))
             {
@@ -182,10 +196,37 @@ namespace DVDShops.Areas.Admin.Controllers
                 return View("SongEdit", song);
             }
 
+            if (songCover != null && songCover.Length > 0)
+            {
+                string fileExtension = Path.GetExtension(songCover.FileName);
+                if (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png" && fileExtension != ".ico")
+                {
+                    SetTempData(false, "Update Song Failed!", "Please Choose Correct File Extension!");
+                    return View("SongEdit", song);
+                }
+
+                if (song.SongCover != "no_image.jpg")
+                {
+                    var oldFile = Path.Combine(env.WebRootPath, "images/song", song.SongCover);
+                    if (System.IO.File.Exists(oldFile))
+                    {
+                        System.IO.File.Delete(oldFile);
+                    }
+                }
+
+
+                song.SongCover = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 16) + "_" + songCover.FileName;
+                var path = Path.Combine(env.WebRootPath, "images/song", song.SongCover);
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    songCover.CopyTo(stream);
+                }
+            }
+
             var result = songService.Update(song);
             if (!result)
             {
-                SetTempData(false, "Update Song Failed!", "Something Wrong, Could Not Create Song!");
+                SetTempData(false, "Update Song Failed!", $"Something Wrong, {song.SongName} Could Not Updated!");
                 return View("SongEdit", song);
             }
 

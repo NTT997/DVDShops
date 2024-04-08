@@ -27,6 +27,10 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="wwwroot\images\game\" />
+    <Folder Include="wwwroot\images\movie\" />
+    <Folder Include="wwwroot\images\album\" />
+    <Folder Include="wwwroot\images\song\" />
 
   </ItemGroup>
 

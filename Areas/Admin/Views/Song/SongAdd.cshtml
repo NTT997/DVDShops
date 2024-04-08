@@ -44,26 +44,38 @@
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form method="post" asp-area="admin" asp-controller="song" asp-action="addSong">
+                <form method="post" asp-area="admin" asp-controller="song" asp-action="addSong" enctype="multipart/form-data">
                     <div class="card-body">
-                        <div class="row form-group">
-                            <label for="name">Song Name</label>
-                            <input type="text" class="form-control" asp-for="SongName" placeholder="Enter Name..." required>
-                        </div>
-                        <div class="row form-group">
-                            <label for="name">Introduction</label>
-                            <textarea type="text" class="form-control" asp-for="SongIntroduction" placeholder="Enter Description..." required> </textarea>
-                        </div>
-                        <!-- Add Genres -->
                         <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group mb-0">
-                                    <label>Music Genres</label>
+                            <div class="col-12 col-md-6">
+                                <div class="row">
+                                    <input type="file" name="songCover" id="file_input" accept="image/*" onchange="ShowImage(event)" placeholder="Choose an Image" />
+                                </div>
+                                <div class="row">
+                                    <div class="text-center img-thumbnail" style="height: 100%">
+                                        <img class="img-fluid" alt="song_cover" id="cover" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label for="song_name">Song Name</label>
+                                <div class="row">
+                                    <input type="text" class="form-control" asp-for="SongName" id="song_name" placeholder="Enter Name..." required>
+                                </div>
+                                <div class="row">
+                                    <label for="name" class="col-12">Introduction</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12" style="height: 100%">
+                                        <textarea type="text" class="form-control h-100" asp-for="SongIntroduction" placeholder="Enter Description..." required> </textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row mt-2">
+                            <label>Music Genres</label>
                             <div class="col-12 col-xl-10 mx-auto">
                                 <div class="form-group">
                                     <select class="duallistbox" multiple="multiple" name="genres">
@@ -107,7 +119,7 @@
                                 <div class="form-group">
                                     <label>Song Dl Link</label>
                                     <div class="form-group">
-                                        <input type="text" placeholder="Enter Dl Link..." class="form-control" asp-for="DownloadLink"/>
+                                        <input type="text" placeholder="Enter Dl Link..." class="form-control" asp-for="DownloadLink" />
                                     </div>
                                 </div>
                             </div>
@@ -130,6 +142,18 @@
     <script src="~/admin/plugins/select2/js/select2.full.min.js"></script>
     <script src="~/admin/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
     <script>
+        function ShowImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const image = document.getElementById("cover");
+                    image.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
         $(function () {
             //Initialize Select2 Elements
             $('.select2bs4').select2({
