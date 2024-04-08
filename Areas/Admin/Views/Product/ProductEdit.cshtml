@@ -1,0 +1,167 @@
+﻿@model DVDShops.Models.Product;
+@inject DVDShops.Services.Suppliers.ISupplierService supplierService
+@inject DVDShops.Services.Promotions.IPromotionService promotionService
+@inject DVDShops.Services.Albums.IAlbumService albumService
+
+@{
+    ViewData["Title"] = "Product Manage";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+}
+
+@section tableheader {
+    <link rel="stylesheet" href="~/admin/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+}
+
+<!-- Content -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 id="title">New Product</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <a asp-area="admin" asp-controller="product" asp-action="view">Back</a>
+                    </li>
+                    <li class="breadcrumb-item active">Products</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+</section>
+
+<!-- /.add-album -->
+<section class="content-header" id="add_album">
+    <div class="container-fluid">
+        <div class="col-12 col-lg-10 mx-auto">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Product Profile</h3>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+                <form method="post" asp-area="admin" asp-controller="product" asp-action="addProduct">
+                    <div class="card-body">
+                        <div class="row">
+                            <input type="hidden" asp-for="ProductId" />
+                            <div class="col-12 col-md-6">
+                                <label>Additional Details</label>
+                                <div class="row">
+                                    <div class="text-center img-thumbnail" style="height: 100%">
+                                        <img class="img-fluid" alt="album_cover" id="cover" src="~/images/album/@Model.Album.AlbumCover" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-4 form-group">
+                                        <span>Sold Unit: </span>  <input type="text" asp-for="SoldUnit" class="form-control" disabled />
+                                    </div>
+                                    <div class="col-12 col-md-4 form-group">
+                                        <span>Rating: </span> <input type="text" asp-for="ProductRate" class="form-control" disabled />
+                                    </div>
+                                    <div class="col-12 col-md-4 form-group">
+                                        <span>Created: </span> <input type="text" asp-for="CreatedAt" class="form-control" disabled />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label>Details</label>
+                                <div class="row">
+                                    <label for="title">Title</label>
+                                    <input type="text" asp-for="ProductTitle" id="title" class="form-control" placeholder="Enter Title...." required />
+                                </div>
+
+                                <div class="row form-group">
+                                    <div class="col-6">
+                                        <label for="price">Price</label>
+                                        <input type="number" asp-for="ProductPrice" id="price" class="form-control" placeholder="Enter Title...." required />
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="quantity">Quantity</label>
+                                        <input type="number" asp-for="ProductQuantity" id="quantity" class="form-control" placeholder="Enter Title...." required />
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label>Supplier</label>
+                                        <select class="form-control select2bs4" style="width: 100%;" asp-for="SupplierId">
+                                            <option selected="selected" value="-1">Select a Supplier</option>
+                                            @foreach (var supplier in supplierService.GetAll())
+                                            {
+                                                <option value="@supplier.SupplierId">@supplier.SupplierName</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <label>Promotion</label>
+                                        <select class="form-control select2bs4" style="width: 100%;" asp-for="PromotionId">
+                                            <option selected="selected" value="-1">Select a Promotion</option>
+                                            @foreach (var promotion in promotionService.GetAll())
+                                            {
+                                                <option value="@promotion.PromotionId">@promotion.PromotionName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group px-2">
+                                    <label>Album</label>
+                                    <select class="select2bs4 form-control" style="width: 100%;" asp-for="AlbumId" id="album_select">
+                                        <option selected="selected" value="-1" class="form-control">Select an Album</option>
+                                        @foreach (var album in albumService.GetAll())
+                                        {
+                                            <option value="@album.AlbumId" class="form-control">@album.AlbumName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- /.card-body -->
+
+                    <div class="card-footer d-flex justify-content-end">
+                        <a class="btn btn-warning" asp-area="admin" asp-controller="product" asp-action="view" onclick="return confirm('Are you Sure?')">CANCLE</a> &nbsp;
+                        <button type="submit" class="btn btn-info">ADD</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+
+@section tablefooter {
+    <!-- Select2 -->
+    <script src="~/admin/plugins/select2/js/select2.full.min.js"></script>
+
+    <script>
+        // function ShowImage() {
+        //     const selectedEl = document.getElementById("album_select");
+        //     const selectedIndex = selectedEl.selectedIndex;
+        //     if (selectedIndex >= 0) {
+        //         const selectedOption = selectedEl.options[selectedIndex];
+        //         const albumId = selectedOption.dataset.albumId; // Access data attribute
+        //         if (albumId) {
+        //             const image = document.getElementById("cover");
+        //             image.src = "~/images/album/" + albumId; // Concatenate album ID with the path
+        //         }
+        //     }
+        // }
+
+
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
+        })
+    </script>
+
+}

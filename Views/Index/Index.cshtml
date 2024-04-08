@@ -1,8 +1,10 @@
-﻿@{
+﻿@inject DVDShops.Services.Products.IProductService productService
+@inject DVDShops.Services.Games.IGameService gameService
+@inject DVDShops.Services.Movies.IMovieService movieService
+
+@{
     Layout = "~/views/shared/layout.cshtml";
 }
-
-
 
 <!-- Featured Start -->
 <div class="container-fluid pt-5">
@@ -34,64 +36,27 @@
     </div>
 </div>
 <!-- Featured End -->
-<!-- Categories Start -->
-<div class="container-fluid pt-5">
-    <div class="text-center mb-4">
-        <h2 class="section-title px-5"><span class="px-2">Music</span></h2>
-    </div>
-    <div class="row px-xl-5 pb-3">
-        <div class="col-lg-4 col-md-6 pb-1">
-            <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                <p class="text-right">15 Products</p>
-                <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                    <img width="500px" height="400px" class="img-fluid" src="~/css/images/1.jpg" alt="">
-                </a>
-                <h5 class="font-weight-semi-bold m-0">K-Pop</h5>
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 pb-1">
-            <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                <p class="text-right">Many Products</p>
-                <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                    <img width="500px" height="400px" class="img-fluid" src="~/css/images/3.jpg" alt="">
-                </a>
-                <h5 class="font-weight-semi-bold m-0">US/UK</h5>
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 pb-1">
-            <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                <p class="text-right">15 Products</p>
-                <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                    <img width="500px" height="400px" class="img-fluid" src="~/css/images/00.jpg" alt="">
-                </a>
-                <h5 class="font-weight-semi-bold m-0">Local</h5>
-            </div>
-        </div>
-
-    </div>
-</div>
-<!-- Categories End -->
 <!-- Products Start -->
 <div class="container-fluid pt-5">
     <div class="text-center mb-4">
-        <h2 class="section-title px-5"><span class="px-2">PRODUCTS/MUSIC</span></h2>
+        <a asp-controller="shop" asp-action="shop"> <h2 class="section-title px-5"><span class="px-2">PRODUCTS/MUSIC</span></h2></a>
     </div>
     <div class="row  px-xl-5 pb-3">
-        @for (int i = 0; i <= 7; i++)
+        @foreach (var item in productService.GetAll())
         {
             <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                 <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="~/css/images/product-1.jpg" alt="">
+                        <img class="img-fluid w-100" src="~/images/album/@item.Album.AlbumCover" alt="Cover">
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
+                        <h6 class="text-truncate mb-3">@item.ProductTitle</h6>
                         <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>
+                            <h6 class="text-danger">$ @(item.ProductPrice * (1 - item.Promotion.PromotionPercent / 100))</h6><h6 class="text-muted ml-2"><del>$@item.ProductPrice</del></h6>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a asp-controller="detail" asp-action="detail" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                        <a asp-controller="detail" asp-action="detail" asp-route-productId="@item.ProductId" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
                         <a asp-controller="cart" asp-action="cart" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
                     </div>
                 </div>
@@ -103,25 +68,32 @@
 <!-- Game Start -->
 <div class="container-fluid pt-5">
     <div class="text-center mb-4">
-        <h2 class="section-title px-5"><span class="px-2">Game</span></h2>
+        <a asp-controller="game" asp-action="game">
+            <h2 class="section-title px-5">
+                <span class="px-2">Games</span>
+            </h2>
+        </a>
     </div>
     <div class="row px-xl-5 pb-3">
-        @for (int i = 0; i <= 7; i++)
+        @{
+            var halfGLength = (int)Math.Ceiling(gameService.GetAll().Count() / 2.0);
+            var firstGHalf = gameService.GetAll().Take(halfGLength);
+        }
+        @foreach (var item in firstGHalf)
         {
             <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                 <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="~/css/images/product-1.jpg" alt="">
+                        <img class="img-fluid w-100" src="~/images/game/@item.GameCover" alt="Game Cover">
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
+                        <h6 class="text-truncate mb-3">@item.GameTitle</h6>
                         <div class="d-flex justify-content-center">
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Trailer</a>
-
-                        <a class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Download</a>
+                        <a href="@item.GameTrailer" target="_blank" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Trailer</a>
+                        <a href="@item.DownloadLink" target="_blank" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Download</a>
                     </div>
                 </div>
             </div>
@@ -131,25 +103,32 @@
 <!-- Movies Start -->
 <div class="container-fluid pt-5">
     <div class="text-center mb-4">
-        <h2 class="section-title px-5"><span class="px-2">MOVIES</span></h2>
+        <a asp-controller="movie" asp-action="movie">
+            <h2 class="section-title px-5">
+                <span class="px-2">Movies</span>
+            </h2>
+        </a>
     </div>
     <div class="row px-xl-5 pb-3">
-        @for (int i = 0; i <= 7; i++)
+        @{
+            var halfMLength = (int)Math.Ceiling(movieService.GetAll().Count() / 2.0);
+            var firstMHalf = movieService.GetAll().Take(halfMLength);
+        }
+        @foreach (var item in firstMHalf)
         {
             <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                 <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="~/css/images/product-1.jpg" alt="">
+                        <img class="img-fluid w-100" src="~/images/movie/@item.MovieCover" alt="Movie Cover">
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
+                        <h6 class="text-truncate mb-3">@item.MovieTitle</h6>
                         <div class="d-flex justify-content-center">
-                            @*  <h6> <i class="btn-danger">Contact for price</i></h6><h6 class="text-muted ml-2"><del></del></h6> *@
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-center bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Trailer</a>
-
+                        <a href="@item.MovieTrailer" target="_blank" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Trailer</a>
+                        <a href="@item.DownloadLink" target="_blank" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Download</a>
                     </div>
                 </div>
             </div>

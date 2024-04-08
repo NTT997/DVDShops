@@ -76,7 +76,14 @@
                                                     <tr>
                                                         <td>@producer.ProducerName</td>
                                                         <td>@producer.ProducerIntroduction</td>
-                                                        <td>@(producer.DeleteStatus ? "Yes" : "No")</td>
+                                                        @if (producer.DeleteStatus)
+                                                        {
+                                                            <td class="text-danger">Yes</td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-success">No</td>
+                                                        }
                                                         <td class="text-center">
                                                             <button class="btn btn-info"
                                                                     id="edit"
@@ -143,7 +150,14 @@
                                                         <td>@supplier.SupplierEmail</td>
                                                         <td>@supplier.SupplierPhone</td>
                                                         <td>@supplier.SupplierAddress</td>
-                                                        <td>@(supplier.DeleteStatus ? "Yes" : "No")</td>
+                                                        @if (supplier.DeleteStatus)
+                                                        {
+                                                            <td class="text-danger">Yes</td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-success">No</td>
+                                                        }
                                                         <td class="text-center">
                                                             <a class="btn btn-info"
                                                                asp-area="admin" asp-controller="provider"

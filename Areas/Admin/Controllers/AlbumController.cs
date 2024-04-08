@@ -4,6 +4,7 @@ using DVDShops.Services.AlbumsSongs;
 using DVDShops.Services.Artists;
 using DVDShops.Services.Producers;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace DVDShops.Areas.Admin.Controllers
 {
@@ -12,15 +13,14 @@ namespace DVDShops.Areas.Admin.Controllers
     public class AlbumController : Controller
     {
         private IAlbumService albumService;
-        private IArtistService artistService;
-        private IProducerService producerService;
         private IAlbumsSongsService albumsSongsService;
-        public AlbumController(IAlbumService albumService, IArtistService artistService, IProducerService producerService, IAlbumsSongsService albumsSongsService)
+        private IWebHostEnvironment env;
+        public AlbumController(IAlbumService albumService,
+            IAlbumsSongsService albumsSongsService, IWebHostEnvironment env)
         {
             this.albumService = albumService;
-            this.artistService = artistService;
-            this.producerService = producerService;
             this.albumsSongsService = albumsSongsService;
+            this.env = env;
         }
         private void SetTempData(bool status, string title, string array)
         {
@@ -62,7 +62,7 @@ namespace DVDShops.Areas.Admin.Controllers
 
         [Route("addAlbum")]
         [HttpPost]
-        public IActionResult AddAlbum(Album album, string issueDate, List<string> songs)
+        public IActionResult AddAlbum(Album album, string issueDate, List<string> songs, IFormFile coverImage)
         {
             if (string.IsNullOrEmpty(issueDate))
             {
@@ -98,6 +98,28 @@ namespace DVDShops.Areas.Admin.Controllers
                 SetTempData(false, "Create Album Failed!", "Please Choose an Artist!");
                 TempData["issue"] = issueDate;
                 return View("AlbumAdd", album);
+            }
+
+            if (coverImage != null && coverImage.Length > 0)
+            {
+                string fileExtension = Path.GetExtension(coverImage.FileName);
+                if (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png" && fileExtension != ".ico")
+                {
+                    SetTempData(false, "Create Album Failed!", "Please Choose Correct File Extension!");
+                    TempData["issue"] = issueDate;
+                    return View("AlbumAdd", album);
+                }
+
+                album.AlbumCover = Guid.NewGuid().ToString().Replace("-", "") + "_" + coverImage.FileName;
+                var path = Path.Combine(env.WebRootPath, "images/album", album.AlbumCover);
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    coverImage.CopyTo(stream);
+                }
+            }
+            else
+            {
+                album.AlbumCover = "no_image.jpg";
             }
 
             album.CategoryId = 2;
@@ -137,7 +159,7 @@ namespace DVDShops.Areas.Admin.Controllers
 
         [Route("editAlbum")]
         [HttpPost]
-        public IActionResult EditAlbum(Album album, string issueDate, List<string> songs)
+        public IActionResult EditAlbum(Album album, string issueDate, List<string> songs, IFormFile coverImage)
         {
             if (string.IsNullOrEmpty(issueDate))
             {
@@ -174,8 +196,35 @@ namespace DVDShops.Areas.Admin.Controllers
                 return View("AlbumEdit", album.AlbumId);
             }
 
+            if (coverImage != null && coverImage.Length > 0)
+            {
+                string fileExtension = Path.GetExtension(coverImage.FileName);
+                if (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png" && fileExtension != ".ico")
+                {
+                    SetTempData(false, "Update Album Failed!", "Please Choose Correct File Extension!");
+                    TempData["issue"] = issueDate;
+                    return View("AlbumEdit", album.AlbumId);
+                }
+
+                if (album.AlbumCover != "no_image.jpg")
+                {
+                    var oldFile = Path.Combine(env.WebRootPath, "images/album", album.AlbumCover);
+                    if (System.IO.File.Exists(oldFile))
+                    {
+                        System.IO.File.Delete(oldFile);
+                    }
+                }
+
+                album.AlbumCover = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 16) + "_" + coverImage.FileName;
+                var path = Path.Combine(env.WebRootPath, "images/album", album.AlbumCover);
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    coverImage.CopyTo(stream);
+                }
+            }
+
             var result = albumService.Update(album);
-            if(!result)
+            if (!result)
             {
                 SetTempData(false, "Update Album Failed!", "Cannot Update Now!");
                 TempData["issue"] = issueDate;
@@ -198,7 +247,7 @@ namespace DVDShops.Areas.Admin.Controllers
                 };
                 albumsSongsService.Create(newAs);
             }
-                SetTempData(true, "Update Album Success!", $"Album {album.AlbumName} Just Updated!");
+            SetTempData(true, "Update Album Success!", $"Album {album.AlbumName} Just Updated!");
             return RedirectToAction("view");
         }
     }

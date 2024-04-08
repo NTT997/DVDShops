@@ -9,6 +9,8 @@ public partial class Game
 
     public string GameTitle { get; set; } = null!;
 
+    public string GameCover { get; set; } = null!;
+
     public string GameDescription { get; set; } = null!;
 
     public string GameTrailer { get; set; } = null!;

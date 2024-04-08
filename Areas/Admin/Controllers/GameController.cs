@@ -12,11 +12,12 @@ namespace DVDShops.Areas.Admin.Controllers
     {
         private IGameService gameService;
         private IGameGenreService ggService;
-
-        public GameController(IGameGenreService ggService, IGameService gameService)
+        private IWebHostEnvironment env;
+        public GameController(IGameGenreService ggService, IGameService gameService, IWebHostEnvironment env)
         {
             this.gameService = gameService;
             this.ggService = ggService;
+            this.env = env;
         }
         private void SetTempData(bool status, string title, string array)
         {
@@ -41,7 +42,7 @@ namespace DVDShops.Areas.Admin.Controllers
 
         [Route("addGame")]
         [HttpPost]
-        public IActionResult GameAdd(Game game, List<string> genres)
+        public IActionResult GameAdd(Game game, List<string> genres, IFormFile coverImage)
         {
             if (string.IsNullOrWhiteSpace(game.GameTitle) || string.IsNullOrWhiteSpace(game.GameDescription) ||
                 string.IsNullOrWhiteSpace(game.GameTrailer) || string.IsNullOrWhiteSpace(game.DownloadLink))
@@ -52,7 +53,7 @@ namespace DVDShops.Areas.Admin.Controllers
 
             if (!CheckRegex.CheckLink(game.GameTrailer) || !CheckRegex.CheckLink(game.DownloadLink))
             {
-                
+
                 SetTempData(false, "Create Game Failed!", "Url is Invalid!");
                 return View("GameAdd", game);
             }
@@ -67,6 +68,27 @@ namespace DVDShops.Areas.Admin.Controllers
             {
                 SetTempData(false, "Create Game Failed!", "Please Choose a Producer!");
                 return View("GameAdd", game);
+            }
+
+            if (coverImage != null && coverImage.Length > 0)
+            {
+                string fileExtension = Path.GetExtension(coverImage.FileName);
+                if (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png" && fileExtension != ".ico")
+                {
+                    SetTempData(false, "Create Game Failed!", "Please Choose Correct File Extension!");
+                    return View("GameAdd", game);
+                }
+
+                game.GameCover = Guid.NewGuid().ToString().Replace("-", "") + "_" + coverImage.FileName;
+                var path = Path.Combine(env.WebRootPath, "images/game", game.GameCover);
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    coverImage.CopyTo(stream);
+                }
+            }
+            else
+            {
+                game.GameCover = "no_image.jpg";
             }
 
             game.CategoryId = 4;
@@ -104,7 +126,7 @@ namespace DVDShops.Areas.Admin.Controllers
 
         [Route("editGame")]
         [HttpPost]
-        public IActionResult GameEdit(Game game, string newTrailer, string newLink, List<string> genres)
+        public IActionResult GameEdit(Game game, string newTrailer, string newLink, List<string> genres, IFormFile coverImage)
         {
             if (!string.IsNullOrWhiteSpace(newTrailer))
             {
@@ -162,6 +184,32 @@ namespace DVDShops.Areas.Admin.Controllers
             {
                 SetTempData(false, "Update Game Failed!", "Please Choose a Producer!");
                 return View("GameEdit", game);
+            }
+
+            if (coverImage != null && coverImage.Length > 0)
+            {
+                string fileExtension = Path.GetExtension(coverImage.FileName);
+                if (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png" && fileExtension != ".ico")
+                {
+                    SetTempData(false, "Update Game Failed!", "Please Choose Correct File Extension!");
+                    return View("GameEdit", game);
+                }
+
+                if (game.GameCover != "no_image.jpg")
+                {
+                    var oldFile = Path.Combine(env.WebRootPath, "images/game", game.GameCover);
+                    if (System.IO.File.Exists(oldFile))
+                    {
+                        System.IO.File.Delete(oldFile);
+                    }
+                }
+
+                game.GameCover = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 16) + "_" + coverImage.FileName;
+                var path = Path.Combine(env.WebRootPath, "images/game", game.GameCover);
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    coverImage.CopyTo(stream);
+                }
             }
 
             var result = gameService.Update(game);

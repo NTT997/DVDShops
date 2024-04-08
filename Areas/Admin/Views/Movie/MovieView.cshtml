@@ -47,6 +47,7 @@
                         <table id="album_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th>Movie Cover</th>
                                     <th>Movie Title</th>
                                     <th>Description</th>
                                     <th>Trailer</th>
@@ -60,6 +61,9 @@
                                 @foreach (var item in movieService.GetAll())
                                 {
                                     <tr>
+                                        <td class="text-center">
+                                            <img alt="@item.MovieCover" width="100px" height="100px" src="~/images/movie/@item.MovieCover" />
+                                        </td>
                                         <td>@item.MovieTitle</td>
                                         <td>@item.MovieDescription</td>
                                         <td class="text-justify"><a href="@item.MovieTrailer">@item.MovieTrailer</a></td>
@@ -95,6 +99,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
+                                    <th>Movie Cover</th>
                                     <th>Movie Title</th>
                                     <th>Description</th>
                                     <th>Trailer</th>
