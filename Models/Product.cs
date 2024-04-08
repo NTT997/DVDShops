@@ -7,7 +7,9 @@ public partial class Product
 {
     public int ProductId { get; set; }
 
-    public float? ProductPrice { get; set; }
+    public string ProductTitle { get; set; } = null!;
+
+    public double? ProductPrice { get; set; }
 
     public int ProductQuantity { get; set; }
 
@@ -16,6 +18,8 @@ public partial class Product
     public int? ProductRate { get; set; }
 
     public DateOnly CreatedAt { get; set; }
+
+    public bool IsDelete { get; set; }
 
     public int SupplierId { get; set; }
 

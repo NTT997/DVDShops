@@ -11,5 +11,6 @@ namespace DVDShops.Services.Users
         bool Update(User user);
         bool Delete(int id);
         bool VerifyUser(int userId, string verifyLink);
+        bool Login(string email, string password);
     }
 }

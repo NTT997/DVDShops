@@ -9,6 +9,8 @@ public partial class Album
 
     public string AlbumName { get; set; } = null!;
 
+    public string AlbumCover { get; set; } = null!;
+
     public int ProducerId { get; set; }
 
     public int ArtistId { get; set; }

@@ -9,6 +9,8 @@ public partial class Song
 
     public string SongName { get; set; } = null!;
 
+    public string SongCover { get; set; } = null!;
+
     public string? SongIntroduction { get; set; }
 
     public string? DownloadLink { get; set; }
