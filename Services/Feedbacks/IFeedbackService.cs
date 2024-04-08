@@ -1,14 +1,14 @@
 ﻿using DVDShops.Models;
+using System.Collections.Generic;
 
-namespace DVDShops.Services.Feedbacks
+namespace DVDShops.Services
 {
     public interface IFeedbackService
     {
-        bool Delete(int feedbackId);
-        bool Create(Feedback feedback);
-        Feedback GetById(int id);
-        List<Feedback> GetAll();
-        List<Feedback> GetByMemberId(int memberId);
-        List<Feedback> GetByProductId(int productId);
+        IEnumerable<Feedback> GetAllFeedbacks();
+        Feedback GetFeedbackById(int feedbackId);
+        void AddFeedback(Feedback feedback);
+        void UpdateFeedback(Feedback feedback);
+        void DeleteFeedback(int feedbackId);
     }
 }

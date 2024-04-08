@@ -1,88 +1,63 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using DVDShops.Models;
-using System.Linq;
+﻿using DVDShops.Models;
+using DVDShops.Services;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
-namespace DVDShops.Areas.Admin.Controllers
+namespace DVDShops.Controllers
 {
     [Area("admin")]
-    [Route("admin/feedback")]
-    public class FeedbackController : Controller
+    [Route("admin/news")]
+    public class FeedbackController : ControllerBase
     {
-        private readonly DvdshopContext _context;
+        private readonly IFeedbackService _feedbackService;
 
-        public FeedbackController(DvdshopContext context)
+        public FeedbackController(IFeedbackService feedbackService)
         {
-            _context = context;
-        }
-
-        public IActionResult Index()
-        {
-            var feedbackList = _context.Feedback.ToList();
-            return View(feedbackList);
+            _feedbackService = feedbackService;
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public ActionResult<IEnumerable<Feedback>> GetAllFeedbacks()
         {
-            return View();
+            var feedbacks = _feedbackService.GetAllFeedbacks();
+            return Ok(feedbacks);
         }
 
-        [HttpPost]
-        public IActionResult Create(Feedback feedback)
+        [HttpGet("{id}")]
+        public ActionResult<Feedback> GetFeedbackById(int id)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Feedback.Add(feedback);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(feedback);
-        }
-
-        [HttpGet]
-        public IActionResult Edit(int id)
-        {
-            var feedback = _context.Feedback.Find(id);
+            var feedback = _feedbackService.GetFeedbackById(id);
             if (feedback == null)
             {
                 return NotFound();
             }
-            return View(feedback);
+            return Ok(feedback);
         }
 
         [HttpPost]
-        public IActionResult Edit(Feedback feedback)
+        public IActionResult AddFeedback(Feedback feedback)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Feedback.Update(feedback);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(feedback);
+            _feedbackService.AddFeedback(feedback);
+            return CreatedAtAction(nameof(GetFeedbackById), new { id = feedback.FeedbackId }, feedback);
         }
 
-        [HttpGet]
-        public IActionResult Delete(int id)
+        [HttpPut("{id}")]
+        public IActionResult UpdateFeedback(int id, Feedback feedback)
         {
-            var feedback = _context.Feedback.Find(id);
-            if (feedback == null)
+            if (id != feedback.FeedbackId)
             {
-                return NotFound();
+                return BadRequest();
             }
-            return View(feedback);
+
+            _feedbackService.UpdateFeedback(feedback);
+            return NoContent();
         }
 
-        [HttpPost, ActionName("Delete")]
-        public IActionResult DeleteConfirmed(int id)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteFeedback(int id)
         {
-            var feedback = _context.Feedback.Find(id);
-            if (feedback != null)
-            {
-                _context.Feedback.Remove(feedback);
-                _context.SaveChanges();
-            }
-            return RedirectToAction("Index");
+            _feedbackService.DeleteFeedback(id);
+            return NoContent();
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DVDShops.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("admin")]
     [Route("admin/promotion")]
     public class PromotionsController : Controller
     {

@@ -1,36 +1,133 @@
 ﻿@model List<DVDShops.Models.News>
+@inject DVDShops.Services.Newss.NewssService newsService
+    @{
+    ViewData["Title"] = "Feedback";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+    }
+    <!-- Header -->
+    @section tableheader {
+        <link rel="stylesheet" href="~/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+        <link rel="stylesheet" href="~/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+        <link rel="stylesheet" href="~/admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    }
 
-<h2>News List</h2>
+    <!-- Content -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Manage News</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item">
+                            <a asp-area="admin" asp-controller="dashboard" asp-action="index">Home</a>
+                        </li>
+                        <li class="breadcrumb-item active">Feedback</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Image</th>
-            <th>Content</th>
-            <th>Source</th>
-            <th>Publish Date</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var news in Model)
-        {
-            <tr>
-                <td>@news.NewsId</td>
-                <td>@news.NewsTitle</td>
-                <td>@news.NewsImage</td>
-                <td>@news.NewsContent</td>
-                <td>@news.NewsSource</td>
-                <td>@news.PublishDate.ToString()</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@news.NewsId">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@news.NewsId">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- /.table -->
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">News List</h3>
+                        </div>
 
-<a asp-action="Create">Add New News</a>
+                        <div class="card-body table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Image</th>
+                                    <th>Content</th>
+                                    <th>Source</th>
+                                    <th>Publish Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var news in Model)
+                                {
+                                    <tr>
+                                        <td>@news.NewsId</td>
+                                        <td>@news.NewsTitle</td>
+                                        <td>@news.NewsImage</td>
+                                        <td>@news.NewsContent</td>
+                                        <td>@news.NewsSource</td>
+                                        <td>@news.PublishDate.ToString()</td>
+                                        <td>
+                                            <a asp-action="Edit" asp-route-id="@news.NewsId">Edit</a> |
+                                            <a asp-action="Delete" asp-route-id="@news.NewsId">Delete</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        <a asp-action="Create">Add New News</a>
+                                <tfoot>
+                                    <tr>
+                                        <th>Producer</th>
+                                        <th>Artist</th>
+                                        <th>Introduction</th>
+                                        <th>Price</th>
+                                        <th>Issue Date</th>
+                                        <th>Sold Copies</th>
+                                        <th>Feedback</th>
+                                        <th>Option</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        </<div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    @section tablefooter {
+        <!-- DataTables  & Plugins -->
+        <script src="~/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="~/admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+        <script src="~/admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+        <script src="~/admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+        <script src="~/admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+        <script src="~/admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+        <script src="~/admin/plugins/jszip/jszip.min.js"></script>
+        <script src="~/admin/plugins/pdfmake/pdfmake.min.js"></script>
+        <script src="~/admin/plugins/pdfmake/vfs_fonts.js"></script>
+        <script src="~/admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+        <script src="~/admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+        <script src="~/admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+        <!-- Page specific script -->
+        <script>
+        $(function () {
+            $('#artistsList').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+        </script>
+}
+
+
+
