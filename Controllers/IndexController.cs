@@ -5,7 +5,7 @@ namespace DVDShops.Controllers
     [Route("index")]
     public class IndexController : Controller
     {
-
+        [Route("index")]
         [Route("")]
         [Route("~/")]
         public IActionResult Index()

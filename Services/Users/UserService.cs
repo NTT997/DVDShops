@@ -1,4 +1,5 @@
 ﻿using DVDShops.Models;
+using BCrypt.Net;
 
 namespace DVDShops.Services.Users
 {
@@ -63,7 +64,7 @@ namespace DVDShops.Services.Users
 
         public User GetByEmail(string userEmail)
         {
-            userEmail = userEmail.Trim();
+            
             return dbContext.Users.Where(user => user.UsersEmail == userEmail).OrderByDescending(u => u.UsersId).FirstOrDefault();
         }
 
@@ -78,6 +79,28 @@ namespace DVDShops.Services.Users
                 account.UsersActivated = true;
             }
             return Update(account);
+        }
+
+        public bool Login(string email, string password)
+        {
+            // Retrieve the user account associated with the given email
+            var account = GetByEmail(email);
+
+            // If no account is found, return false
+            if (account == null)
+            {
+                return false;
+            }
+
+            // Verify whether the provided password matches the hashed password stored in the user account
+            if (!BCrypt.Net.BCrypt.Verify(password, account.UsersPassword))
+            {
+                // If password verification fails, return false
+                return false;
+            }
+
+            // If both account retrieval and password verification are successful, return true
+            return true;
         }
     }
 }
