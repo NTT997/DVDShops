@@ -1,65 +1,50 @@
 ﻿using DVDShops.Models;
+using DVDShops.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace DVDShops.Services.Feedbacks
+namespace DVDShops.Services
 {
     public class FeedbackService : IFeedbackService
     {
+        private readonly DvdshopContext _dbContext;
 
-        private DvdshopContext dbContext;
         public FeedbackService(DvdshopContext dbContext)
         {
-            this.dbContext = dbContext;
+            _dbContext = dbContext;
         }
-        public bool Create(Feedback feedback)
+
+        public IEnumerable<Feedback> GetAllFeedbacks()
         {
-            try
+            return _dbContext.Feedbacks.ToList();
+        }
+
+        public Feedback GetFeedbackById(int feedbackId)
+        {
+            return _dbContext.Feedbacks.Find(feedbackId);
+        }
+
+        public void AddFeedback(Feedback feedback)
+        {
+            _dbContext.Feedbacks.Add(feedback);
+            _dbContext.SaveChanges();
+        }
+
+        public void UpdateFeedback(Feedback feedback)
+        {
+            _dbContext.Feedbacks.Update(feedback);
+            _dbContext.SaveChanges();
+        }
+
+        public void DeleteFeedback(int feedbackId)
+        {
+            var feedback = _dbContext.Feedbacks.Find(feedbackId);
+            if (feedback != null)
             {
-                dbContext.Feedbacks.Add(feedback);
-                return dbContext.SaveChanges() > 0;
+                _dbContext.Feedbacks.Remove(feedback);
+                _dbContext.SaveChanges();
             }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        public bool Delete(int feedbackId)
-        {
-            var feedback = GetById(feedbackId);
-            try
-            {
-                dbContext.Feedbacks.Remove(feedback);
-                return dbContext.SaveChanges() > 0;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        private Feedback GetById(int feedbackId)
-        {
-            return dbContext.Feedbacks.Find(feedbackId);
-        }
-
-        public List<Feedback> GetAll()
-        {
-            return dbContext.Feedbacks.ToList();
-        }
-
-        public List<Feedback> GetByMemberId(int memberId)
-        {
-            return dbContext.Feedbacks.Where(f => f.UsersId == memberId).ToList();
-        }
-
-        public List<Feedback> GetByProductId(int productId)
-        {
-            return dbContext.Feedbacks.Where(f => f.FeedbackId == productId).ToList();
-        }
-
-        Feedback IFeedbackService.GetById(int id)
-        {
-            return dbContext.Feedbacks.Find(id);
         }
     }
 }

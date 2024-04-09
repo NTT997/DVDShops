@@ -26,7 +26,6 @@
                 <div class="carousel-inner border">
                     @foreach (var song in alsService.GetByAlbumId((int)Model.AlbumId))
                     {
-
                         <div class="carousel-item @(song == alsService.GetByAlbumId((int)Model.AlbumId).First() ? "active" : "")">
                             <img class="w-100 h-100" src="~/images/song/@song.Song.SongCover" alt="Song">
                         </div>
@@ -52,7 +51,7 @@
                     }
                 </div>
             </div>
-            <h3 class="font-weight-semi-bold mb-4">$@Model.ProductPrice</h3>
+            <h3 class="text-danger">$ @Math.Round((decimal)(@Model.ProductPrice * (1 - (double)Model.Promotion.PromotionPercent / 100)), 2)</h3><h3 class="text-muted ml-2"><del>$@Model.ProductPrice</del></h3>
             <p class="mb-4">Introduction: @Model.Album.AlbumIntroduction. Sold @Model.SoldUnit Copies in Total</p>
 
             <form method="get" asp-controller="cart" asp-action="cart">

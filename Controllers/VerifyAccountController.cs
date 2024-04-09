@@ -21,7 +21,8 @@ namespace DVDShops.Controllers
                 user.UsersActivated = true;
                 userService.Update(user);
             }
-            return RedirectToAction("index", "index");
+            TempData["msg"] = "Activated Please Login Again!";
+            return RedirectToAction("login", "login");
         }
     }
 }

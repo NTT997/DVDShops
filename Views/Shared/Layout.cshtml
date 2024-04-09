@@ -1,9 +1,14 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@inject DVDShops.Services.Users.IUserService userService
+@inject DVDShops.Services.Promotions.IPromotionService promoService
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
-    <title>EShopper - Bootstrap Shop Template</title>
+    <title>Dvds Shop</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -27,9 +32,14 @@
 </head>
 
 <body>
+    @{
+        var role = HttpContextAccessor?.HttpContext?.Session.GetString("role");
+        var email = HttpContextAccessor?.HttpContext?.Session.GetString("email");
+        var user = userService.GetByEmail(email);
+    }
     <!-- Topbar Start -->
     <div class="container-fluid">
-        
+
         <div class="row align-items-center py-3 px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
                 <a asp-controller="index" asp-action="index" class="text-decoration-none">
@@ -53,10 +63,20 @@
                     <i class="fas fa-heart text-primary"></i>
                     <span class="badge">0</span>
                 </a>
-                <a href="" class="btn border">
-                    <i class="fas fa-shopping-cart text-primary"></i>
-                    <span class="badge">0</span>
-                </a>
+                @if (user != null)
+                {
+                    <a asp-controller="cart" asp-action="cart" class="btn border">
+                        <i class="fas fa-shopping-cart text-primary"></i>
+                        <span class="badge">0</span>
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="login" asp-action="login" class="btn border">
+                        <i class="fas fa-shopping-cart text-primary"></i>
+                        <span class="badge">0</span>
+                    </a>
+                }                
             </div>
         </div>
     </div>
@@ -75,7 +95,7 @@
                         <a asp-controller="movies" asp-action="movies" class="nav-item nav-link">Movies</a>
                         <a asp-controller="shop" asp-action="shop" class="nav-item nav-link">Music</a>
                         <a asp-controller="news" asp-action="news" class="nav-item nav-link">News</a>
-                       
+
                     </div>
                 </nav>
             </div>
@@ -95,50 +115,48 @@
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                                 <div class="dropdown-menu rounded-0 m-0">
-                                    <a asp-controller="cart" asp-action="cart" class="dropdown-item">Shopping Cart</a>
+                                    @if (user != null)
+                                    {
+                                        <a asp-controller="cart" asp-action="cart" class="dropdown-item">Shopping Cart</a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-controller="login" asp-action="login" class="dropdown-item">Shopping Cart</a>
+                                    }
                                     <a asp-controller="checkout" asp-action="checkout" class="dropdown-item">Checkout</a>
                                 </div>
                             </div>
                             <a asp-controller="contact" asp-action="contact" class="nav-item nav-link">Contact</a>
                         </div>
-                        <div class="navbar-nav ml-auto py-0 ">
-                            <a asp-controller="login" asp-action="login" class="nav-item nav-link">Login</a>
-                        </div>
+                        @if (role != null)
+                        {
+                            <div class="navbar-nav ml-auto py-0 ">
+                                <a asp-controller="user" asp-action="profile" class="nav-item nav-link">Profile</a>
+                                <a asp-controller="login" asp-action="logout" class="nav-item nav-link">Logout</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="navbar-nav ml-auto py-0 ">
+                                <a asp-controller="login" asp-action="login" class="nav-item nav-link">Login</a>
+                            </div>
+                        }
+
                     </div>
                 </nav>
                 <div id="header-carousel" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
-                        <div class="carousel-item active" style="height: 410px;">
-                            <img class="img-fluid" src="~/css/images/mai.jpg" alt="Image">
-                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                                <div class="p-3" style="max-width: 700px;">
-                                    <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
-                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Mai - Tran Thanh</h3>
-                                   
-
+                        @foreach (var promo in promoService.GetAll())
+                        {
+                            <div class="carousel-item @(promo == promoService.GetAll().First() ? "active" : "")" style="height: 410px;">
+                                <img class="img-fluid w-100 h-100" src="~/images/promotion/@promo.PromotionBanner" alt="Image">
+                                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                    <div class="p-3" style="max-width: 700px;">
+                                        <h4 class="display-4 text-white font-weight-semi-bold mb-4">Enter Coupon: @promo.PromotionName to get Discount</h4>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="carousel-item" style="height: 410px;">
-                            <img class="img-fluid" src="~/css/images/lol.jpg" alt="Image">
-                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                                <div class="p-3" style="max-width: 700px;">
-                                    <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
-                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">League of Legends</h3>
-                                   
-                                </div>
-                            </div>
-                        </div>
-                        <div class="carousel-item" style="height: 410px;">
-                            <img width= class="img-fluid" src="~/css/images/MTP.jpg" alt="Image">
-                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                                <div class="p-3" style="max-width: 700px;">
-                                    <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
-                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Chung Ta Cua Tuong Lai - Son Tung MTP</h3>
-                                   
-                                </div>
-                            </div>
-                        </div>
+                        }
                     </div>
                     <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
                         <div class="btn btn-dark" style="width: 45px; height: 45px;">
@@ -156,7 +174,7 @@
     </div>
     <!-- Navbar End -->
     <div class="container-fluid" style="width:80%">
-   @RenderBody()
+        @RenderBody()
     </div>
     <!-- Footer Start -->
     <div class="container-fluid  bg-secondary text-dark mt-5 pt-5 ">
@@ -174,7 +192,6 @@
             <div class="col-lg-8 col-md-12">
                 <div class="row">
                     <div class="col-md-4 mb-5">
-                        
                     </div>
                     <div class="col-md-4 mb-5">
                         <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
@@ -184,7 +201,7 @@
                             <a class="text-dark" asp-controller="contact" asp-action="contact"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -218,6 +235,14 @@
 
     <!-- Template Javascript -->
     <script src="~/js/main.js"></script>
+    <script>
+        $(document).ready(function () {
+            var msg = '@TempData["msg"]';
+            if (msg) {
+                alert(msg);
+            }
+        });
+    </script>
 </body>
 
 </html>

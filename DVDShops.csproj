@@ -30,6 +30,7 @@
     <Folder Include="wwwroot\images\game\" />
     <Folder Include="wwwroot\images\movie\" />
     <Folder Include="wwwroot\images\album\" />
+    <Folder Include="wwwroot\images\promotion\" />
     <Folder Include="wwwroot\images\song\" />
 
   </ItemGroup>

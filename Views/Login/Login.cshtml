@@ -1,13 +1,15 @@
-﻿<!DOCTYPE html>
+﻿@model DVDShops.Models.User
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Sign Up Form by Colorlib</title>
+    <title>Login/Register</title>
 
     <!-- Font Icon -->
-    <link rel="stylesheet" href="~/fonts2//material-icon/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet" href="~/fonts2/material-icon/css/material-design-iconic-font.min.css">
 
     <!-- Main css -->
     <link rel="stylesheet" href="~/css/stylelogin.css">
@@ -22,30 +24,26 @@
                 <div class="signin-content">
                     <div class="signin-image">
                         <figure><img src="~/css/images/signin-image.jpg" alt="sing up image"></figure>
-                        <a href="#" class="signup-image-link">Create an account</a>
-                        
+                        <a href="#" class="signup-image-link" id="create_account">Create an account</a>
                     </div>
 
                     <div class="signin-form">
                         <h2 class="form-title">Sign in</h2>
-                        <form method="POST" class="register-form" id="login-form">
+                        <form asp-controller="login" asp-action="login" method="post" class="register-form" id="login-form">
                             <div class="form-group">
                                 <label for="email"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                                <input type="email" name="email" id="email" placeholder="Your E-Mail" />
+                                <input asp-for="UsersEmail" type="email" id="email" placeholder="Your E-Mail" />
                             </div>
                             <div class="form-group">
                                 <label for="your_pass"><i class="zmdi zmdi-lock"></i></label>
-                                <input type="password" name="your_pass" id="your_pass" placeholder="Password" />
+                                <input asp-for="UsersPassword" type="password" id="your_pass" placeholder="Password" />
                             </div>
-                            <div class="form-group">
-                                <input type="checkbox" name="remember-me" id="remember-me" class="agree-term" />
-                                <label for="remember-me" class="label-agree-term"><span><span></span></span>Remember me</label>
-                            </div>
+
                             <div class="form-group form-button">
-                                <input type="submit" name="signin" id="signin" class="form-submit" value="Log in" />
+                                <button type="submit" class="btn form-submit">Login</button>
                             </div>
                         </form>
-                        <a href="#" class="signup-image-link">Fogot password</a>
+                        <a asp-controller="login" asp-action="forgotPassword" class="signup-image-link">Forgot password</a>
                         <a asp-controller="index" asp-action="index" class="signup-image-link">Back to Home</a>
                     </div>
                 </div>
@@ -57,26 +55,23 @@
                 <div class="signup-content">
                     <div class="signup-form">
                         <h2 class="form-title">Sign up</h2>
-                        <form method="POST" class="register-form" id="register-form">
-                           
+                        <form asp-controller="login" asp-action="register" method="post" class="register-form" id="register-form">
+
                             <div class="form-group">
                                 <label for="email"><i class="zmdi zmdi-email"></i></label>
-                                <input type="email" name="email" id="email" placeholder="Your E-mail" />
+                                <input asp-for="UsersEmail" type="email" id="email" placeholder="Your E-mail" />
                             </div>
                             <div class="form-group">
                                 <label for="pass"><i class="zmdi zmdi-lock"></i></label>
-                                <input type="password" name="pass" id="pass" placeholder="Password" />
+                                <input asp-for="UsersPassword" type="password" id="pass" placeholder="Must be 6-12 Characters" />
                             </div>
                             <div class="form-group">
                                 <label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
-                                <input type="password" name="re_pass" id="re_pass" placeholder="Repeat your password" />
+                                <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password" />
                             </div>
-                            <div class="form-group">
-                                <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
-                                <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all statements in  <a href="#" class="term-service">Terms of service</a></label>
-                            </div>
+
                             <div class="form-group form-button">
-                                <input type="submit" name="signup" id="signup" class="form-submit" value="Register" />
+                                <button type="submit" class="btn form-submit">Register</button>
                             </div>
                         </form>
                     </div>
@@ -88,13 +83,25 @@
                 </div>
             </div>
         </section>
-
-        
-
     </div>
 
     <!-- JS -->
     <script src="~/vendor/jquery/jquery.min.js"></script>
     <script src="~/js/main.js"></script>
+    <script>
+        $(document).ready(function () {
+            var msg = '@TempData["msg"]';
+            if (msg) {
+                alert(msg);
+            }
+
+            $('#create_account').click(function () {
+                $('html, body').animate({
+                    scrollTop: $(document).height()
+                }, 500);
+                return false;
+            });
+        });        
+    </script>
 </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 </html>

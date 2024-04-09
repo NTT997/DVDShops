@@ -1,6 +1,7 @@
-﻿ using DVDShops.Models;
+﻿using DVDShops.Models;
 using DVDShops.Services.Users;
 using Microsoft.AspNetCore.Mvc;
+using DVDShops.Services.MailService;
 using System.Diagnostics;
 
 namespace DVDShops.Controllers
@@ -8,82 +9,120 @@ namespace DVDShops.Controllers
     [Route("login")]
     public class LoginController : Controller
     {
-        private IUserService userService;
 
-        public LoginController(IUserService userService)
+        private IUserService userService;
+        private IMailService mailService;
+        private IConfiguration configuration;
+
+        public LoginController(IUserService userService, IMailService mailService, IConfiguration configuration)
         {
+
             this.userService = userService;
+            this.mailService = mailService;
+            this.configuration = configuration;
         }
 
         [Route("")]
+        [Route("login")]
         [HttpGet]
         public IActionResult Login()
         {
-            return View();
-        }
-
-        [Route("feedback")]
-        [HttpGet]
-        public IActionResult fEEDBACK()
-        {
-            if(HttpContext.Session.GetString("role") != null)
-            {
-
-            }
             return View("login");
         }
 
+        [Route("login")]
         [HttpPost]
-        public IActionResult Login(string email, string password)
+        public IActionResult Login(User user)
         {
-            var account = userService.GetByEmail(email);
-            if (account != null)
+            var result = userService.Login(user.UsersEmail, user.UsersPassword);
+            Debug.WriteLine("==========================================");
+            Debug.WriteLine(result);
+            if (result)
             {
-                if (string.Equals(password, account.UsersPassword.Trim()))
+                var getUser = userService.GetByEmail(user.UsersEmail);
+                if (getUser.IsAdmin)
                 {
-                    if (account.IsAdmin)
-                    {
-                        HttpContext.Session.SetString("role", "admin");
-                    }
-                    else
-                    {
-                        HttpContext.Session.SetString("role", "member");
-                    }
-
-                    /*
-                     * neu co the hay viet 1 cai modal thong bao cho user dang nhap => neu role == admin
-                     * hien ra 1 modal confirm ban dang nhap role la admin, ban co muon vao trang admin hay ko
-                     * co => return RedirectToAction("admin", "admin", new{ area="admin" });
-                     * khong => return RedirectToAction("index", "index");
-                     * ======
-                     * neu lam modal thi sua doan return ben duoi thang return view login khong lam duoc modal thi bo qua comment nay
-                    */
-                    return RedirectToAction("index", "index");
+                    HttpContext.Session.SetString("role", "admin");
+                    HttpContext.Session.SetString("email", $"{getUser.UsersEmail}");
+                    return RedirectToAction("index", "dashboard",new {area = "admin"});
                 }
-
-                // viet lai login cho nay khi user dang nhap sai password, khi tra ve trang login hien thong bao sai password => thong bao hien ra o trang html
-                ViewBag.msg = "wrong password";
-                return View("login");
+                else
+                {
+                    HttpContext.Session.SetString("role", "member");
+                    HttpContext.Session.SetString("email", $"{getUser.UsersEmail}");
+                }
+                TempData["msg"] = "Login Success";
+                return RedirectToAction("index", "index");
             }
-
-            // viet lai login cho nay khi username ko ton tai, khi tra ve trang login hien thong bao ko ton tai username => thong bao hien ra o trang html
-            ViewBag.msg = "null account";
+            TempData["msg"] = "Invalid Email or Password";
             return View("login");
         }
 
+        [Route("register")]
+        [HttpPost]
+        public IActionResult Register(User user, string confirmPassword)
+        {
+            if (confirmPassword != user.UsersPassword)
+            {
+                TempData["msg"] = "Password & Confirm Not Match";
+                return View("login", user);
+            }
+            if (string.IsNullOrWhiteSpace(user.UsersEmail) || string.IsNullOrWhiteSpace(user.UsersPassword))
+            {
 
-        //uncomment doan code duoi lam tiep
-        // viet logic xu ly register
-        // su dung @model, xem lai clip, ss23
-        // viet lai code regis cac truong thong tin theo yeu cau cua database
-        // sau khi regis thang cong tra lai trang login su dung redirecttoaction
-        // nho rang buoc dk input, check ben trong database khi regis can nhung du lieu gi
+                TempData["msg"] = "Not All Field Is Filled";
+                return View("login", user);
+            }
 
-        //[HttpPost]
-        //[Route("register")]
-        //public IActionResult Register( dua du lieu can vao day )
-        //{
-        //    return View();
-        //}
+            if (user.UsersPassword.Length < 6 || user.UsersPassword.Length > 12)
+            {
+                TempData["msg"] = "Password Must Be 6-12 Characters";
+                return View("login", user);
+            }
+
+            if (userService.GetByEmail(user.UsersEmail) != null)
+            {
+                TempData["msg"] = "The Email already exists";
+                return View("login", user);
+            }
+
+            var newUser = new User
+            {
+                UsersEmail = user.UsersEmail,
+                UsersPassword = BCrypt.Net.BCrypt.HashPassword(user.UsersPassword),
+                UsersProfileName = user.UsersEmail,
+                UsersDateOfBirth = DateOnly.FromDateTime(DateTime.Now),
+                UsersAddress = "Default",
+                UsersPhone = 1111111111,
+
+                UsersActivated = false,
+                IsAdmin = false,
+                IsCustomer = false,
+                IsCancel = false,
+                DeleteStatus = false
+            };
+
+            var result = userService.Create(newUser);
+            if (!result)
+            {
+                TempData["msg"] = "Cannot Regist Account";
+                return View("login", user);
+            }
+
+            var baseUrl = configuration["BaseUrl"];
+            mailService.SendMail(newUser, "Activate Your Account", $"Please click this link to activate your account: {baseUrl}/verify?userEmail={newUser.UsersEmail}");
+
+            TempData["msg"] = "We have sent an activation email, please check your register email";
+            return RedirectToAction("index", "index");
+        }
+
+        [Route("logout")]
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("index", "index");
+        }
+
     }
 }

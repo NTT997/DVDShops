@@ -34,7 +34,7 @@ namespace DVDShops.Services.Promotions
 
         public List<Promotion> GetAll()
         {
-            return dbContext.Promotions.ToList();
+            return dbContext.Promotions.Where(pr => pr.PromotionId != 1).ToList();
         }
 
         public Promotion GetById(int promoId)

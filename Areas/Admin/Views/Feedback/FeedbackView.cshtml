@@ -1,6 +1,5 @@
-
-    @* @inject DVDShops.Services. *@
-
+@inject DVDShops.Services.FeedbackService feedbackService
+@model List<DVDShops.Models.Feedback>
     @{
     ViewData["Title"] = "Feedback";
     Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
@@ -53,27 +52,27 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var feedback in Model)
-                                    {
-                                        <tr>
-                                            <td>@feedback.FeedbackDate.ToString("dd/MM/yyyy")</td>
-                                            <td>@feedback.FeedbackContent</td>
-                                            <td>@(string.IsNullOrEmpty(feedback.FeedbackReply) ? "No reply yet" : feedback.FeedbackReply)</td>
-                                            <td>
-                                                <form asp-controller="Feedback" asp-action="Reply" method="post">
-                                                    <input type="hidden" name="id" value="@feedback.FeedbackId" />
-                                                    <input type="text" name="reply" placeholder="Enter your response" />
-                                                    <button type="submit">Reply</button>
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form asp-controller="Feedback" asp-action="Delete" method="post">
-                                                    <input type="hidden" name="id" value="@feedback.FeedbackId" />
-                                                    <button type="submit">Delete</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    }
+                                @foreach (var feedback in Model)
+                                {
+                                    <tr>
+                                        <td>@feedback.FeedbackDate.ToString("dd/MM/yyyy")</td>
+                                        <td>@feedback.FeedbackContent</td>
+                                        <td>@(string.IsNullOrEmpty(feedback.FeedbackReply) ? "No reply yet" : feedback.FeedbackReply)</td>
+                                        <td>
+                                            <form asp-controller="Feedback" asp-action="Reply" method="post">
+                                                <input type="hidden" name="id" value="@feedback.FeedbackId" />
+                                                <input type="text" name="reply" placeholder="Enter your response" />
+                                                <button type="submit">Reply</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form asp-controller="Feedback" asp-action="Delete" method="post">
+                                                <input type="hidden" name="id" value="@feedback.FeedbackId" />
+                                                <button type="submit">Delete</button>
+                                            </form>
+                                    </tr>
+                                }
+
                                 </tbody>
                                 <tfoot>
                                     <tr>
@@ -129,4 +128,4 @@
             });
         });
         </script>
-    }
+}
