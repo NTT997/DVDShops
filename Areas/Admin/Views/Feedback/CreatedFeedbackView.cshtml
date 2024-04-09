@@ -1,0 +1,29 @@
+@model DVDShops.Models.Feedback
+
+@{
+    ViewData["Title"] = "Feedback";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+}
+
+<h1>Create</h1>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="FeedbackContent" class="control-label"></label>
+        <input asp-for="FeedbackContent" class="form-control" />
+        <span asp-validation-for="FeedbackContent" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FeedbackReply" class="control-label"></label>
+        <input asp-for="FeedbackReply" class="form-control" />
+        <span asp-validation-for="FeedbackReply" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FeedbackDate" class="control-label"></label>
+        <input asp-for="FeedbackDate" class="form-control" />
+        <span asp-validation-for="FeedbackDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>

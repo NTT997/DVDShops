@@ -1,5 +1,5 @@
-@inject DVDShops.Services.FeedbackService feedbackService
-@model List<DVDShops.Models.Feedback>
+﻿@model List<DVDShops.Models.News>
+@inject DVDShops.Services.Newss.NewssService newsService
     @{
     ViewData["Title"] = "Feedback";
     Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
@@ -16,7 +16,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Manage Feedback</h1>
+                    <h1>Manage News</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -37,43 +37,42 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Feedback List</h3>
+                            <h3 class="card-title">News List</h3>
                         </div>
 
                         <div class="card-body table-responsive">
-                            <table id="feedbackList" class="table table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Feedback Day</th>
-                                        <th>Content</th>
-                                        <th>Reply</th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                @foreach (var feedback in Model)
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Image</th>
+                                    <th>Content</th>
+                                    <th>Source</th>
+                                    <th>Publish Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var news in Model)
                                 {
                                     <tr>
-                                        <td>@feedback.FeedbackDate.ToString("dd/MM/yyyy")</td>
-                                        <td>@feedback.FeedbackContent</td>
-                                        <td>@(string.IsNullOrEmpty(feedback.FeedbackReply) ? "No reply yet" : feedback.FeedbackReply)</td>
+                                        <td>@news.NewsId</td>
+                                        <td>@news.NewsTitle</td>
+                                        <td>@news.NewsImage</td>
+                                        <td>@news.NewsContent</td>
+                                        <td>@news.NewsSource</td>
+                                        <td>@news.PublishDate.ToString()</td>
                                         <td>
-                                            <form asp-controller="Feedback" asp-action="Reply" method="post">
-                                                <input type="hidden" name="id" value="@feedback.FeedbackId" />
-                                                <input type="text" name="reply" placeholder="Enter your response" />
-                                                <button type="submit">Reply</button>
-                                            </form>
+                                            <a asp-action="Edit" asp-route-id="@news.NewsId">Edit</a> |
+                                            <a asp-action="Delete" asp-route-id="@news.NewsId">Delete</a>
                                         </td>
-                                        <td>
-                                            <form asp-controller="Feedback" asp-action="Delete" method="post">
-                                                <input type="hidden" name="id" value="@feedback.FeedbackId" />
-                                                <button type="submit">Delete</button>
-                                            </form>
                                     </tr>
                                 }
+                            </tbody>
+                        </table>
 
-                                </tbody>
+                        <a asp-action="Create">Add New News</a>
                                 <tfoot>
                                     <tr>
                                         <th>Producer</th>
@@ -129,3 +128,6 @@
         });
         </script>
 }
+
+
+

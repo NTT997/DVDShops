@@ -1,0 +1,33 @@
+﻿@model DVDShops.Models.Promotion
+
+@{
+    ViewData["Title"] = "Add New Promotion";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+}
+
+<h2>Add New Promotion</h2>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label>Name</label>
+        <input asp-for="PromotionName" class="form-control" />
+        <span asp-validation-for="PromotionName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Percent</label>
+        <input asp-for="PromotionPercent" class="form-control" />
+        <span asp-validation-for="PromotionPercent" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Start Date</label>
+        <input asp-for="PromotionStartDate" type="date" class="form-control" />
+        <span asp-validation-for="PromotionStartDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>End Date</label>
+        <input asp-for="PromotionExpireDate" type="date" class="form-control" />
+        <span asp-validation-for="PromotionExpireDate" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Promotion</button>
+</form>

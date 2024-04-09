@@ -14,6 +14,12 @@ public partial class Feedback
     public DateOnly FeedbackDate { get; set; }
 
     public int UsersId { get; set; }
+    public DateTime PromotionExpireDate { get; set; }
 
     public virtual User Users { get; set; } = null!;
 }
+
+
+
+
+        
