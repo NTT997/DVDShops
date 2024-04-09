@@ -114,7 +114,6 @@ namespace DVDShops.Areas.Admin.Controllers
             {
                 SetTempData(false, "Create User Failed!", "Invalid Password!");
                 TempData["dob"] = dob;
-                TempData["msg"] = "password is invaid";
                 return View("UserAdd", user);
             }
 
