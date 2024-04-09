@@ -1,9 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@inject DVDShops.Services.Users.IUserService userService
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
-    <title>EShopper - Bootstrap Shop Template</title>
+    <title>Dvds Shop</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -29,7 +33,7 @@
 <body>
     <!-- Topbar Start -->
     <div class="container-fluid">
-        
+
         <div class="row align-items-center py-3 px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
                 <a asp-controller="index" asp-action="index" class="text-decoration-none">
@@ -75,7 +79,7 @@
                         <a asp-controller="movies" asp-action="movies" class="nav-item nav-link">Movies</a>
                         <a asp-controller="shop" asp-action="shop" class="nav-item nav-link">Music</a>
                         <a asp-controller="news" asp-action="news" class="nav-item nav-link">News</a>
-                       
+
                     </div>
                 </nav>
             </div>
@@ -101,9 +105,26 @@
                             </div>
                             <a asp-controller="contact" asp-action="contact" class="nav-item nav-link">Contact</a>
                         </div>
-                        <div class="navbar-nav ml-auto py-0 ">
-                            <a asp-controller="login" asp-action="login" class="nav-item nav-link">Login</a>
-                        </div>
+                        @{
+                            var role = HttpContextAccessor?.HttpContext?.Session.GetString("role");
+                            var email = HttpContextAccessor?.HttpContext?.Session.GetString("email");
+                            var user = userService.GetByEmail(email);
+                        }
+
+                        @if (role != null)
+                        {
+                            <div class="navbar-nav ml-auto py-0 ">
+                                <a asp-controller="user" asp-action="profile" class="nav-item nav-link">Profile</a>
+                                <a asp-controller="login" asp-action="logout" class="nav-item nav-link">Logout</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="navbar-nav ml-auto py-0 ">
+                                <a asp-controller="login" asp-action="login" class="nav-item nav-link">Login</a>
+                            </div>
+                        }
+
                     </div>
                 </nav>
                 <div id="header-carousel" class="carousel slide" data-ride="carousel">
@@ -114,8 +135,6 @@
                                 <div class="p-3" style="max-width: 700px;">
                                     <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
                                     <h3 class="display-4 text-white font-weight-semi-bold mb-4">Mai - Tran Thanh</h3>
-                                   
-
                                 </div>
                             </div>
                         </div>
@@ -125,7 +144,7 @@
                                 <div class="p-3" style="max-width: 700px;">
                                     <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
                                     <h3 class="display-4 text-white font-weight-semi-bold mb-4">League of Legends</h3>
-                                   
+
                                 </div>
                             </div>
                         </div>
@@ -135,7 +154,7 @@
                                 <div class="p-3" style="max-width: 700px;">
                                     <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
                                     <h3 class="display-4 text-white font-weight-semi-bold mb-4">Chung Ta Cua Tuong Lai - Son Tung MTP</h3>
-                                   
+
                                 </div>
                             </div>
                         </div>
@@ -156,7 +175,7 @@
     </div>
     <!-- Navbar End -->
     <div class="container-fluid" style="width:80%">
-   @RenderBody()
+        @RenderBody()
     </div>
     <!-- Footer Start -->
     <div class="container-fluid  bg-secondary text-dark mt-5 pt-5 ">
@@ -174,7 +193,6 @@
             <div class="col-lg-8 col-md-12">
                 <div class="row">
                     <div class="col-md-4 mb-5">
-                        
                     </div>
                     <div class="col-md-4 mb-5">
                         <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
@@ -184,7 +202,7 @@
                             <a class="text-dark" asp-controller="contact" asp-action="contact"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -218,6 +236,14 @@
 
     <!-- Template Javascript -->
     <script src="~/js/main.js"></script>
+    <script>
+        $(document).ready(function () {
+            var msg = '@TempData["msg"]';
+            if (msg) {
+                alert(msg);
+            }
+        });
+    </script>
 </body>
 
 </html>

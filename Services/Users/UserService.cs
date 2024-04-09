@@ -65,7 +65,7 @@ namespace DVDShops.Services.Users
         public User GetByEmail(string userEmail)
         {
             
-            return dbContext.Users.Where(user => user.UsersEmail == userEmail).OrderByDescending(u => u.UsersId).FirstOrDefault();
+            return dbContext.Users.FirstOrDefault(user => user.UsersEmail == userEmail);
         }
 
         public bool VerifyUser(int userId, string link)

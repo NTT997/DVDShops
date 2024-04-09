@@ -52,16 +52,20 @@ builder.Services.AddScoped<IMovieService, MovieService>()
                 .AddScoped<IMovieGenreService, MovieGenreService>();
 
 builder.Services.AddSession();
-
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 var app = builder.Build();
+
+
+app.UseRouting();
 app.UseSession();
 
 //only comment this line to test in admin
-//app.UseMiddleware<LoginAuthMiddleware>();
+app.UseMiddleware<LoginAuthMiddleware>();
 
 app.UseStaticFiles();
 
 app.MapControllerRoute(name: "default", pattern: "{area:exists}/{controller}/{action}");
 app.MapControllerRoute(name: "default", pattern: "{controller}/{action}");
+
 app.Run();
 

@@ -81,7 +81,7 @@ namespace DVDShops.Areas.Admin.Controllers
             {
                 if (long.TryParse(userPhone.Replace(" ", ""), out parsedPhone))
                 {
-                    if (parsedPhone < 999999999)
+                    if (parsedPhone < 111111111)
                     {
                         SetTempData(false, "Create User Failed!", "Invalid Phone Number!");
                         TempData["dob"] = dob;

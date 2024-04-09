@@ -1,9 +1,8 @@
 ﻿using DVDShops.Models;
 using DVDShops.Services.Users;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using DVDShops.Services.MailService;
-using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace DVDShops.Controllers
 {
@@ -24,70 +23,66 @@ namespace DVDShops.Controllers
         }
 
         [Route("")]
+        [Route("login")]
         [HttpGet]
         public IActionResult Login()
         {
-            return View();
-        }
-
-        [Route("feedback")]
-        [HttpGet]
-        public IActionResult fEEDBACK()
-        {
-            if (HttpContext.Session.GetString("role") != null)
-            {
-
-            }
             return View("login");
         }
-        
+
+        [Route("login")]
         [HttpPost]
         public IActionResult Login(User user)
         {
             var result = userService.Login(user.UsersEmail, user.UsersPassword);
+            Debug.WriteLine("==========================================");
+            Debug.WriteLine(result);
             if (result)
             {
-                if (user.IsAdmin)
+                var getUser = userService.GetByEmail(user.UsersEmail);
+                if (getUser.IsAdmin)
                 {
                     HttpContext.Session.SetString("role", "admin");
+                    HttpContext.Session.SetString("email", $"{user.UsersEmail}");
+                    return RedirectToAction("index", "dashboard",new {area = "admin"});
                 }
                 else
                 {
                     HttpContext.Session.SetString("role", "member");
+                    HttpContext.Session.SetString("email", $"{user.UsersEmail}");
                 }
-                TempData["Success"] = "Login Success";
+                TempData["msg"] = "Login Success";
                 return RedirectToAction("index", "index");
             }
-            TempData["Invalid"] = "Invalid Email or Password";
+            TempData["msg"] = "Invalid Email or Password";
             return View("login");
-
         }
-        [Route("register")]     
+
+        [Route("register")]
         [HttpPost]
-        public IActionResult Register(User user, string userPhone, string dob, string confirmPassword)
+        public IActionResult Register(User user, string confirmPassword)
         {
             if (confirmPassword != user.UsersPassword)
             {
-                TempData["confirmpassword"] = "PassWord is uncorrect";
+                TempData["msg"] = "Password & Confirm Not Match";
                 return View("login", user);
             }
-            if (string.IsNullOrWhiteSpace(user.UsersEmail) || string.IsNullOrWhiteSpace(user.UsersPassword) ||
-                string.IsNullOrWhiteSpace(user.UsersProfileName) || string.IsNullOrWhiteSpace(user.UsersAddress))
+            if (string.IsNullOrWhiteSpace(user.UsersEmail) || string.IsNullOrWhiteSpace(user.UsersPassword))
             {
 
-                TempData["checkmail"] = "Email or password is invalid";
+                TempData["msg"] = "Not All Field Is Filled";
                 return View("login", user);
             }
 
             if (user.UsersPassword.Length < 6 || user.UsersPassword.Length > 12)
             {
-                TempData["checkpassword"] = "password is invaid";
+                TempData["msg"] = "Password Must Be 6-12 Characters";
                 return View("login", user);
             }
 
             if (userService.GetByEmail(user.UsersEmail) != null)
             {
-                TempData["emailexists"] = "The Email already exists";
+                TempData["msg"] = "The Email already exists";
                 return View("login", user);
             }
 
@@ -97,8 +92,8 @@ namespace DVDShops.Controllers
                 UsersPassword = BCrypt.Net.BCrypt.HashPassword(user.UsersPassword),
                 UsersProfileName = user.UsersEmail,
                 UsersDateOfBirth = DateOnly.FromDateTime(DateTime.Now),
-                UsersAddress = user.UsersAddress,
-                UsersPhone = 0000000000,
+                UsersAddress = "Default",
+                UsersPhone = 1111111111,
 
                 UsersActivated = false,
                 IsAdmin = false,
@@ -110,16 +105,24 @@ namespace DVDShops.Controllers
             var result = userService.Create(newUser);
             if (!result)
             {
+                TempData["msg"] = "Cannot Regist Account";
                 return View("login", user);
             }
 
             var baseUrl = configuration["BaseUrl"];
-            mailService.SendMail(newUser, "We have sent an activation email, please check to activate your account", $"{baseUrl}/verify?userEmail={newUser.UsersEmail}");
+            mailService.SendMail(newUser, "Activate Your Account", $"Please click this link to activate your account: {baseUrl}/verify?userEmail={newUser.UsersEmail}");
 
-
-            return RedirectToAction("view", "user");
+            TempData["msg"] = "We have sent an activation email, please check your register email";
+            return RedirectToAction("index", "index");
         }
 
+        [Route("logout")]
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("index", "index");
+        }
 
     }
 }
