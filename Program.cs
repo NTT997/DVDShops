@@ -1,15 +1,18 @@
 using DVDShops.Middlewares;
 using DVDShops.Models;
+using DVDShops.Services;
 using DVDShops.Services.Albums;
 using DVDShops.Services.AlbumsSongs;
 using DVDShops.Services.Artists;
 using DVDShops.Services.ArtistsGenres;
+using DVDShops.Services.Carts;
 using DVDShops.Services.Games;
 using DVDShops.Services.GamesGenres;
 using DVDShops.Services.Genres;
 using DVDShops.Services.MailService;
 using DVDShops.Services.Movies;
 using DVDShops.Services.Moviesgenres;
+using DVDShops.Services.Newss;
 using DVDShops.Services.Producers;
 using DVDShops.Services.Products;
 using DVDShops.Services.Promotions;
@@ -30,10 +33,13 @@ builder.Services.AddDbContext<DvdshopContext>(option => option.UseLazyLoadingPro
 //add scoped service
 builder.Services.AddScoped<IUserService, UserService>()
                 .AddScoped<IMailService, MailService>()
+                .AddScoped<ICartService, CartService>()
                 .AddScoped<IProducerService, ProducerService>()
                 .AddScoped<IProductService, Productservice>()
                 .AddScoped<IPromotionService, PromotionService>()
                 .AddScoped<ISupplierService, SupplierService>()
+                .AddScoped<IFeedbackService, FeedbackService>()
+                .AddScoped<INewssService, NewssService>()
                 .AddScoped<IGenreService, GenreService>();
 
 builder.Services.AddScoped<IArtistService, ArtistService>()

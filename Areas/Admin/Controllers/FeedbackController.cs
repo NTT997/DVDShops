@@ -17,6 +17,8 @@ namespace DVDShops.Controllers
         }
 
         [HttpGet]
+        [Route("view")]
+        [Route("")]
         public ActionResult<IEnumerable<Feedback>> GetAllFeedbacks()
         {
             var feedbacks = _feedbackService.GetAllFeedbacks();

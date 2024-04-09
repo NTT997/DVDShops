@@ -83,7 +83,8 @@
                                             <td class="text-info">No</td>
                                         }
                                         <td class="text-center">
-                                            <a class="btn btn-info" asp-area="admin" asp-controller="user" asp-action="detailUser" asp-route-userId="@user.UsersId">
+                                            <a class="btn btn-info" asp-area="admin" asp-controller="user"
+                                               asp-action="detailUser" asp-route-userId="@user.UsersId">
                                                 Detail
                                             </a>
                                             <a class="btn btn-warning"
@@ -143,7 +144,8 @@
                                         <td>@user.UsersProfileName</td>
                                         <td>@(user.DeleteStatus ? "Yes" : "No")</td>
                                         <td class="text-center">
-                                            <a class="btn btn-info" asp-area="admin" asp-controller="user" asp-action="detailUser">
+                                            <a class="btn btn-info" asp-area="admin" asp-controller="user"
+                                               asp-action="detailUser" asp-route-userId="@user.UsersId">
                                                 Detail
                                             </a>
                                             <a class="btn btn-warning"

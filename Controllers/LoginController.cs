@@ -43,13 +43,13 @@ namespace DVDShops.Controllers
                 if (getUser.IsAdmin)
                 {
                     HttpContext.Session.SetString("role", "admin");
-                    HttpContext.Session.SetString("email", $"{user.UsersEmail}");
+                    HttpContext.Session.SetString("email", $"{getUser.UsersEmail}");
                     return RedirectToAction("index", "dashboard",new {area = "admin"});
                 }
                 else
                 {
                     HttpContext.Session.SetString("role", "member");
-                    HttpContext.Session.SetString("email", $"{user.UsersEmail}");
+                    HttpContext.Session.SetString("email", $"{getUser.UsersEmail}");
                 }
                 TempData["msg"] = "Login Success";
                 return RedirectToAction("index", "index");
