@@ -1,4 +1,5 @@
 ﻿using DVDShops.Models;
+using System.Collections.Generic;
 
 namespace DVDShops.Services.Promotions
 {
