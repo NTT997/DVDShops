@@ -114,11 +114,13 @@
                                 <a asp-controller="detail" asp-action="detail" asp-route-productId="@item.ProductId" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
                                 @if (user != null)
                                 {
-                                    <a asp-controller="cart" asp-action="addToCart"
-                                       asp-route-userId="@user.UsersId" asp-route-productId="@item.ProductId" asp-route-quantity="1"
-                                       class="btn btn-sm text-dark p-0">
-                                        <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
-                                    </a>
+                                    <form method="post" asp-controller="cart" asp-action="addTocart">
+                                        <input type="hidden" name="productId" value="@item.ProductId" />
+                                        <input type="number" name="quantity" value="1" style="display: none" />
+                                        <button class="btn btn-sm text-dark p-0" type="submit">
+                                            <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
+                                        </button>
+                                    </form>
                                 }
                                 else
                                 {
