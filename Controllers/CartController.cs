@@ -1,5 +1,7 @@
 ﻿using DVDShops.Models;
 using DVDShops.Services.Carts;
+using DVDShops.Services.Producers;
+using DVDShops.Services.Products;
 using DVDShops.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -12,53 +14,74 @@ namespace DVDShops.Controllers
     {
         private ICartService cartService;
         private IUserService userService;
-        public CartController(ICartService cartService, IUserService userService)
+        private IProductService productService;
+        public CartController(ICartService cartService, IUserService userService, IProductService productService)
         {
             this.cartService = cartService;
             this.userService = userService;
+            this.productService = productService;
         }
 
         [Route("cart")]
         [Route("")]
         public IActionResult Cart()
         {
-            var cart = cartService.GetByUserId(userService.GetByEmail(HttpContext.Session.GetString("email")).UsersId);
-            ViewBag.Cart = cart;
+            string email = HttpContext.Session.GetString("email");
+            if (email == null)
+            {
+                TempData["msg"] = "Please Login Before Using Cart!";
+                return RedirectToAction("login", "login");
+            }
+
+            var user = userService.GetByEmail(email);
+            var usersCart = cartService.GetByUserId(user.UsersId);
+            ViewBag.Cart = usersCart;
+            ViewBag.Total = usersCart.Sum(c => c.Price * c.Quantity);
             return View();
         }
 
         [Route("addTocart")]
-        public IActionResult addTocart(string quantity, int productId)
+        [HttpPost]
+        public IActionResult addTocart(int quantity, int productId)
         {
-            int parsedQuantity;
-            if (!int.TryParse(quantity, out parsedQuantity))
-            {
-                TempData["msg"] = "Invalid Quantity";
-                return RedirectToAction("shop", "shop");
-            };
-
             var user = userService.GetByEmail(HttpContext.Session.GetString("email"));
             var usersCart = cartService.GetByUserId(user.UsersId);
-
+            var product = productService.GetById(productId);
+            var price = @Math.Round((double)(product.ProductPrice * (1 - product.Promotion.PromotionPercent / 100)), 2);
             if (usersCart.IsNullOrEmpty())
             {
                 var cart = new Cart
                 {
                     UsersId = user.UsersId,
                     ProductId = productId,
-                    Quantity = parsedQuantity,
+                    Quantity = quantity,
+                    Price = price,
                 };
 
                 cartService.Create(cart);
             }
             else
             {
-                var productInCart = usersCart.FirstOrDefault(prod => prod.ProductId == productId);
-                productInCart.Quantity += parsedQuantity;
-                cartService.Update(productInCart);
+                if (!usersCart.Any(c => c.ProductId == productId))
+                {
+                    var newProdInCart = new Cart
+                    {
+                        UsersId = user.UsersId,
+                        ProductId = productId,
+                        Price = price,
+                        Quantity = quantity
+                    };
+                    cartService.Create(newProdInCart);
+                }
+                else
+                {
+                    var existedProd = cartService.GetByProductId(productId);
+                    existedProd.Quantity += quantity;
+                    cartService.Update(existedProd);
+                }
             }
 
-            return RedirectToAction("cart");
+            return RedirectToAction("shop", "shop");
         }
 
         [Route("remove")]
@@ -67,6 +90,37 @@ namespace DVDShops.Controllers
             cartService.Delete(cartId);
             TempData["msg"] = "Removed Item!";
             return RedirectToAction("cart", "cart");
+        }
+
+        [Route("empty")]
+        public IActionResult Empty()
+        {
+            string email = HttpContext.Session.GetString("email");
+            if (email == null)
+            {
+                TempData["msg"] = "Please Login Before Using Cart!";
+                return RedirectToAction("login", "login");
+            }
+
+            var user = userService.GetByEmail(email);
+            cartService.EmptyUserCart(user.UsersId);
+            TempData["msg"] = "Removed Item!";
+            return RedirectToAction("cart", "cart");
+        }
+
+        [Route("update")]
+        [HttpPost]
+        public IActionResult Update(List<int> cartIds, List<int> pQuantities)
+        {
+            for (int i = 0; i < cartIds.Count; i++)
+            {
+                var cart = cartService.GetById(cartIds[i]);
+                cart.Quantity = pQuantities[i];
+                cartService.Update(cart);
+            }
+
+            TempData["msg"] = "Cart Updated!";
+            return RedirectToAction("cart");
         }
     }
 }

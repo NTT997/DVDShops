@@ -54,16 +54,16 @@
             <h3 class="text-danger">$ @Math.Round((decimal)(@Model.ProductPrice * (1 - (double)Model.Promotion.PromotionPercent / 100)), 2)</h3><h3 class="text-muted ml-2"><del>$@Model.ProductPrice</del></h3>
             <p class="mb-4">Introduction: @Model.Album.AlbumIntroduction. Sold @Model.SoldUnit Copies in Total</p>
 
-            <form method="get" asp-controller="cart" asp-action="cart">
+            <form method="post" asp-controller="cart" asp-action="addTocart" asp-route-productId="@Model.ProductId">
                 <div class="d-flex align-items-center mb-4 pt-2">
-                    <input type="hidden" asp-for="ProductId"/>
                     <div class="input-group quantity mr-3" style="width: 130px;">
                         <div class="input-group-btn">
                             <button class="btn btn-primary btn-minus" type="button">
                                 <i class="fa fa-minus"></i>
                             </button>
                         </div>
-                        <input type="text" class="form-control bg-secondary text-center" value="1" name="quantity">
+                        <input type="number" class="form-control bg-secondary text-center" value="1" name="quantity" id="quantity_input"
+                               style="-webkit-appearance: none; -moz-appearance: textfield; margin: 0;" min="1">
                         <div class="input-group-btn">
                             <button class="btn btn-primary btn-plus" type="button">
                                 <i class="fa fa-plus"></i>

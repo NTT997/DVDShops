@@ -2,6 +2,7 @@
 @inject IHttpContextAccessor HttpContextAccessor
 @inject DVDShops.Services.Users.IUserService userService
 @inject DVDShops.Services.Promotions.IPromotionService promoService
+@inject DVDShops.Services.Carts.ICartService cartService
 
 <!DOCTYPE html>
 <html lang="en">
@@ -59,15 +60,11 @@
                 </form>
             </div>
             <div class="col-lg-3 col-6 text-right">
-                <a href="" class="btn border">
-                    <i class="fas fa-heart text-primary"></i>
-                    <span class="badge">0</span>
-                </a>
                 @if (user != null)
                 {
                     <a asp-controller="cart" asp-action="cart" class="btn border">
                         <i class="fas fa-shopping-cart text-primary"></i>
-                        <span class="badge">0</span>
+                        <span class="badge">@cartService.GetByUserId(user.UsersId).Count()</span>
                     </a>
                 }
                 else
@@ -76,7 +73,7 @@
                         <i class="fas fa-shopping-cart text-primary"></i>
                         <span class="badge">0</span>
                     </a>
-                }                
+                }
             </div>
         </div>
     </div>

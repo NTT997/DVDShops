@@ -1,4 +1,6 @@
-﻿@{
+﻿@inject IConfiguration configuration
+
+@{
     Layout = "~/views/shared/layout.cshtml";
 }
 
@@ -17,62 +19,98 @@
 <!-- Cart Start -->
 <div class="container-fluid pt-5">
     <div class="row px-xl-5">
-        <div class="col-lg-8 table-responsive mb-5">
-            <table class="table table-bordered text-center mb-0">
-                <thead class="bg-secondary text-dark">
-                    <tr>
-                        <th>Products</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Total</th>
-                        <th>Remove</th>
-                    </tr>
-                </thead>
-                <tbody class="align-middle">
-                    @if (ViewBag.Cart != null)
-                    {
+        <div class="col-lg-8 mb-5">
+            <form asp-controller="cart" asp-action="update" method="post" class="form">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover text-center mb-0" style="width: 100%;">
+                                <thead class="bg-secondary text-dark">
+                                    <tr>
+                                        <th>Products</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>SubTotal</th>
+                                        <th>Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="align-middle">
+                                    @if (ViewBag.Cart.Count > 0)
+                                    {
 
-                        @foreach (var cart in ViewBag.Cart)
-                        {
-                            <tr>
-                                <td class="align-middle"><img src="~/images/album/@cart.Product.Album.AlbumCover" alt="" style="width: 50px;">@cart.Product.ProductTitle</td>
-                                <td class="align-middle">$ @cart.Product.ProductPrice</td>
-                                <td class="align-middle">
-                                    <div class="input-group quantity mx-auto" style="width: 100px;">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-primary btn-minus">
-                                                <i class="fa fa-minus"></i>
-                                            </button>
-                                        </div>
-                                        <input type="text" class="form-control form-control-sm bg-secondary text-center" value="@cart.Quantity">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-primary btn-plus">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="align-middle">@(cart.Product.ProductPrice * @cart.Quantity)</td>
-                                <td class="align-middle">
-                                    <a class="btn btn-sm btn-primary" asp-controller="cart" asp-action="remove" asp-route-cartId="@cart.CartId">
-                                        <i class="fa fa-times"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div class="col-lg-4">
-            <form class="mb-5" action="">
-                <div class="input-group">
-                    <input type="text" class="form-control p-4" placeholder="Coupon Code">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary">Apply Coupon</button>
+                                        var index = 1;
+
+                                        @foreach (var cart in ViewBag.Cart)
+                                        {
+                                            <tr>
+                                                <input type="hidden" value="@cart.CartId" name="cartIds" />
+                                                <td class="align-middle">
+                                                    <a asp-controller="detail" asp-action="detail" asp-route-productId="@cart.ProductId">
+                                                        <img src="~/images/album/@cart.Product.Album.AlbumCover" alt="" style="width: 75px;">
+                                                    </a>
+                                                    <div>@cart.Product.ProductTitle</div>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <span>
+                                                        $ @cart.Product.ProductPrice
+                                                    </span>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <div class="input-group quantity mx-auto" style="width: 100px;">
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-sm btn-primary btn-minus" type="button">
+                                                                <i class="fa fa-minus"></i>
+                                                            </button>
+                                                        </div>
+                                                        <input type="number" class="form-control form-control-sm bg-secondary text-center"
+                                                               name="pQuantities" value="@cart.Quantity"
+                                                               style="-webkit-appearance: none; -moz-appearance: textfield; margin: 0;">
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-sm btn-primary btn-plus" type="button">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="align-middle">@(cart.Product.ProductPrice * @cart.Quantity)</td>
+                                                <td class="align-middle">
+                                                    <a class="btn btn-sm btn-primary" asp-controller="cart" asp-action="remove"
+                                                       asp-route-cartId="@cart.CartId" onclick="return confirm('Are You Sure?')'">
+                                                        <i class="fa fa-times"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            index++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="5">Your Cart is Empty <a asp-controller="shop" asp-action="shop" class="text-decoration-underline text-primary">Go Shoping</a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-between">
+                        <a asp-controller="shop" asp-action="shop" class="btn btn-primary rounded-pill">Continue Shopping</a>
+                        <div class="d-flex justify-content-between">
+                            <div class="">
+                                <a type="button" asp-controller="cart" asp-action="empty" onclick="return confirm('Are you Sure?')" class="btn btn-primary rounded-pill">Empty Cart</a>
+                            </div>&nbsp;
+                            <div>
+                                <button type="submit" class="btn btn-primary rounded-pill">Update Cart</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
+        </div>
+        <div class="col-lg-4">
             <div class="card border-secondary mb-5">
                 <div class="card-header bg-secondary border-0">
                     <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
@@ -80,19 +118,19 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-3 pt-1">
                         <h6 class="font-weight-medium">Subtotal</h6>
-                        <h6 class="font-weight-medium">$150</h6>
+                        <h6 class="font-weight-medium">$ @ViewBag.Total</h6>
                     </div>
                     <div class="d-flex justify-content-between">
                         <h6 class="font-weight-medium">Shipping</h6>
-                        <h6 class="font-weight-medium">$10</h6>
+                        <h6 class="font-weight-medium text-success">FreeShip</h6>
                     </div>
                 </div>
                 <div class="card-footer border-secondary bg-transparent">
                     <div class="d-flex justify-content-between mt-2">
                         <h5 class="font-weight-bold">Total</h5>
-                        <h5 class="font-weight-bold">$160</h5>
+                        <h5 class="font-weight-bold">$ @ViewBag.Total</h5>
                     </div>
-                    <button class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button>
+                    <a class="btn btn-block btn-primary my-3 py-3" asp-controller="checkout" asp-action="checkout">Proceed To Checkout</a>
                 </div>
             </div>
         </div>

@@ -36,9 +36,31 @@ namespace DVDShops.Services.Carts
             }
         }
 
+        public bool EmptyUserCart(int userId)
+        {
+            var deleteList = GetByUserId(userId);
+            try
+            {
+                foreach (var item in deleteList)
+                {
+                    dbContext.Carts.Remove(item);
+                }
+                return dbContext.SaveChanges() > 0;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public Cart GetById(int cartId)
         {
             return dbContext.Carts.Find(cartId);
+        }
+
+        public Cart GetByProductId(int productId)
+        {
+            return dbContext.Carts.SingleOrDefault(c => c.ProductId == productId);
         }
 
         public List<Cart> GetByUserId(int userId)

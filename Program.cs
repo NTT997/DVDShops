@@ -13,6 +13,7 @@ using DVDShops.Services.MailService;
 using DVDShops.Services.Movies;
 using DVDShops.Services.Moviesgenres;
 using DVDShops.Services.Newss;
+using DVDShops.Services.Orders;
 using DVDShops.Services.Producers;
 using DVDShops.Services.Products;
 using DVDShops.Services.Promotions;
@@ -40,6 +41,7 @@ builder.Services.AddScoped<IUserService, UserService>()
                 .AddScoped<ISupplierService, SupplierService>()
                 .AddScoped<IFeedbackService, FeedbackService>()
                 .AddScoped<INewssService, NewssService>()
+                .AddScoped<IOrderService, OrderService>()
                 .AddScoped<IGenreService, GenreService>();
 
 builder.Services.AddScoped<IArtistService, ArtistService>()
